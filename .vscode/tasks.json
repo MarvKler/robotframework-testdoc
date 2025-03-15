@@ -1,0 +1,17 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Python Script",
+            "type": "shell",
+            "command": "testdoc",
+            "args": [
+                "-p", "E:\\40_Projekte\\SiemensAG\\connector\\test\\system-test\\TestCases",
+                "-o", "output_doc.html",
+                "-c", "TestConfig.toml"
+            ]
+        }
+    ]
+}

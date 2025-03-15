@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "robotframework-testdoc"
+version = "0.1.0"
+description = "A CLI Tool to generate a Test Documentation for your RobotFramework Test Scripts."
+readme = "README.md"
+requires-python = ">=3.7"
+authors = [{ name = "Marvin Klerx", email = "marvinklerx1@gmail.com" }]
+license = { text = "MIT" }
+
+dependencies = [
+    "setuptools",
+    "click",
+    "robotframework",
+    "jinja2"
+]
+
+[project.scripts]
+testdoc = "testdoc.cli:main"

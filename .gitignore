@@ -1,0 +1,3 @@
+__pycache__/**
+src/robotframework_testdoc.egg-info/**
+**/__pycache__/**.pyc
