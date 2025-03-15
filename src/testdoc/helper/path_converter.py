@@ -8,11 +8,12 @@ class PathConverter():
     def __init__(self):
         self.cli_args = CommandLineArguments()
 
-    def path_convertion(self,
-            suite_path: str,
-            output_path: str,
-            config_path: str                
-        ) -> str:
+    def path_convertion(self) -> str:
+
+        # Read vars
+        suite_path = self.cli_args.get_suite_file()
+        output_path = self.cli_args.get_output_file()
+        config_path = self.cli_args.get_config_file()
 
         # Convert path to suite file / directory
         suite_path = PathConverter().conv_generic_path(path=suite_path)

@@ -156,30 +156,35 @@
         .accordion-item {
             background-color: {{ colors.inner_color }} !important;
             border-radius: 6px;
+            margin: 1px;
             border: 1px solid {{ colors.border_color }};
-            margin-bottom: 3px;
             font-size: 14px;
+            box-sizing: border-box;
         }
     
         .accordion-header {
             font-size: 14px;
         }
     
-        .accordion .accordion-item .accordion-button {
+        .accordion-button {
             background-color: {{ colors.inner_color }};
             color: {{ colors.text_color }};
             font-size: 14px;
-            padding: 6px 10px;
             height: 35px;
         }
     
         .accordion-button:hover {
             background-color: {{ colors.button_hover_color }} !important;
         }
+
+        .accordion-button:focus {
+            outline: none;
+            box-shadow: none; /* Falls du auch den Schatten entfernen möchtest */
+        }
     
         .accordion-body {
             background-color: {{ colors.inner_color }};
-            padding: 8px;
+            padding: 5px;
             font-size: 14px;
         }
     
