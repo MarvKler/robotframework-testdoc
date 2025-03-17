@@ -177,9 +177,12 @@
             background-color: {{ colors.button_hover_color }} !important;
         }
 
-        .accordion-button:focus {
-            outline: none;
-            box-shadow: none; /* Falls du auch den Schatten entfernen möchtest */
+        .accordion-button:not(.collapsed),
+        .accordion-button:focus,
+        .accordion-button:active {
+            background-color: {{ colors.inner_color }} !important; /* Auch wenn der Button aktiv oder offen ist */
+            box-shadow: none !important; /* Entfernt den Bootstrap-Fokus-Stil */
+            border-color: gray !important;
         }
     
         .accordion-body {
@@ -212,12 +215,14 @@
         }
     
         table {
+            
+            height: 10px;
             font-size: 14px;
             color: {{ colors.text_color }};
         }
     
         td {
-            padding: 3px 6px;
+            padding: 1px 1px;
         }
     
         /* Titelgröße */

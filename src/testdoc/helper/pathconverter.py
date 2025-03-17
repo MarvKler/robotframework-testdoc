@@ -1,7 +1,7 @@
 import os
 import click
 
-from .cli_args import CommandLineArguments
+from .cliargs import CommandLineArguments
 
 class PathConverter():
 

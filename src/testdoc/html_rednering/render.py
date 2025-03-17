@@ -2,7 +2,7 @@ from jinja2 import Environment, FileSystemLoader
 import click
 import os
 
-from ..helper.datetime_converter import DateTimeConverter
+from ..helper.datetimeconverter import DateTimeConverter
 from ..html.themes.theme_config import DEFAULT_THEME, ROBOT_THEME, DARK_THEME
 
 class TestDocHtmlRendering():

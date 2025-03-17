@@ -1,12 +1,12 @@
 import click
 
 from .testdoc import TestDoc
-from .helper.cli_args import CommandLineArguments
+from .helper.cliargs import CommandLineArguments
 
 @click.command()
 @click.option("-p", "--path", required=True)
 @click.option("-o", "--output", required=True)
-@click.option("-c", "--configfile", required=True)
+@click.option("-c", "--configfile", required=False)
 @click.option("-v", "--verbose", is_flag=True, default=False, help="More precise debugging")
 def main(
       path,
