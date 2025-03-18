@@ -3,7 +3,7 @@ import click
 import os
 
 from ..helper.datetimeconverter import DateTimeConverter
-from ..html.themes.theme_config import DEFAULT_THEME, ROBOT_THEME, DARK_THEME
+from ..html.themes.theme_config import DEFAULT_THEME, ROBOT_THEME, DARK_THEME, CUSTOM_THEME_01
 
 class TestDocHtmlRendering():
 
@@ -21,6 +21,7 @@ class TestDocHtmlRendering():
             suites=suites,
             generated_at=DateTimeConverter().get_generated_datetime(),
             colors=DEFAULT_THEME
+            # colors=CUSTOM_THEME_01
         )
 
         with open(output_file, "w", encoding="utf-8") as f:

@@ -180,9 +180,10 @@
         .accordion-button:not(.collapsed),
         .accordion-button:focus,
         .accordion-button:active {
-            background-color: {{ colors.inner_color }} !important; /* Auch wenn der Button aktiv oder offen ist */
-            box-shadow: none !important; /* Entfernt den Bootstrap-Fokus-Stil */
+            background-color: {{ colors.button_active_color }} !important;
+            box-shadow: none !important;
             border-color: gray !important;
+            color: {{ colors.text_color }} !important;
         }
     
         .accordion-body {

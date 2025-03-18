@@ -2,6 +2,7 @@
 DEFAULT_THEME = {
     "background": "#f8f9fa",
     "inner_color": "#f8f9fa",
+    "button_active_color": "#f8f9fa",
     "button_hover_color": "#C2C2C2",
     "border_color": "#353535",
     "text_color": "#353535",
@@ -26,4 +27,15 @@ DARK_THEME = {
     "border_color": "white",
     "text_color": "white",
     "robot_icon": "#00c0b5"
+}
+
+CUSTOM_THEME_01 = {
+    "background": "#000028",
+    "inner_color": "#000028",
+    "button_active_color": "#193966",
+    "button_hover_color": "#193966",
+    "border_color": "#f8f9fa",
+    "text_color": "#f8f9fa",
+    "title_color": "#f8f9fa",
+    "robot_icon": "#00ffb9",
 }
