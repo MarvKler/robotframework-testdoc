@@ -1,35 +1,29 @@
+from dataclasses import dataclass, field
+from typing import List, Optional
+
+@dataclass
+class CommandLineArgumentsData:
+    title: str = ""
+    name: str = ""
+    include: List[str] = field(default_factory=list)
+    exclude: List[str] = field(default_factory=list)
+    suite_file: Optional[str] = None
+    output_file: Optional[str] = None
+    show_tags: bool = True
+    show_test_doc: bool = True
+    show_suite_doc: bool = True
+    show_source: bool = True
+    show_keywords: bool = True
+
+    config_file: Optional[str] = None
+    verbose_mode: Optional[bool] = None
+
 class CommandLineArguments:
     _instance = None  # Singleton-Instanz
 
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super(CommandLineArguments, cls).__new__(cls)
-            cls._instance.suite_file = None
-            cls._instance.output_file = None
-            cls._instance.config_file = None
-            cls._instance.verbose_mode = None
+            cls._instance = super().__new__(cls)
+            
+            cls.data = CommandLineArgumentsData()
         return cls._instance
-
-    def set_suite_file(self, path: str):
-        self.suite_file = path
-    
-    def get_suite_file(self) -> str:
-        return self.suite_file
-    
-    def set_output_file(self, path: str):
-        self.output_file = path
-
-    def get_output_file(self) -> str:
-        return self.output_file
-    
-    def set_config_file(self, path: str):
-        self.config_file = path
-
-    def get_config_file(self) -> str:
-        return self.config_file
-    
-    def set_verbose_mode(self, state: bool):
-        self.verbose_mode = state
-
-    def get_verbose_mode(self) -> bool:
-        return self.verbose_mode
