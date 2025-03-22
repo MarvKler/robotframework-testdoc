@@ -2,18 +2,18 @@ import os
 import click
 
 from .cliargs import CommandLineArguments
+from .logger import Logger
 
 class PathConverter():
 
     def __init__(self):
-        self.cli_args = CommandLineArguments()
+        self.args = CommandLineArguments().data
 
     def path_convertion(self) -> str:
-
-        # Read vars
-        suite_path = self.cli_args.get_suite_file()
-        output_path = self.cli_args.get_output_file()
-        config_path = self.cli_args.get_config_file()
+        
+        suite_path = self.args.suite_file
+        output_path = self.args.output_file
+        config_path = self.args.config_file
 
         # Convert path to suite file / directory
         suite_path = PathConverter().conv_generic_path(path=suite_path)
@@ -26,16 +26,15 @@ class PathConverter():
         output_path = PathConverter().conv_generic_path(path=output_path)
 
         # Convert path to config file
-        config_path = PathConverter().conv_generic_path(path=config_path)
+        if self.args.config_file:
+            config_path = PathConverter().conv_generic_path(path=config_path)
 
         # Print to console
-        if self.cli_args.get_verbose_mode():
-            click.echo("=> Generating Test Documentation for:")
-            click.echo(click.style(msg, fg="green"))
-            click.echo("=> Saving to output file:")
-            click.echo(click.style(f"'{output_path}'", fg="green"))
-            click.echo("=> Using config file:")
-            click.echo(click.style(f"'{config_path}'", fg="green"))
+        if self.args.verbose_mode:
+            Logger().Log("=== TestDoc  ===")
+            Logger().LogKeyValue("Generating Test Documentation for: ", msg)
+            Logger().LogKeyValue("Saving to output file: ", output_path)
+            Logger().LogKeyValue("Using config file: ", config_path) if not config_path == False else None
 
         return suite_path, output_path, config_path
 

@@ -9,21 +9,21 @@ class RobotSuiteParser(SuiteVisitor):
         self.tests = []
 
     def visit_suite(self, suite):
-        """Wird für jede Test-Suite aufgerufen und speichert ihre Hierarchie."""
-
+        
         # Skip suite if its already parsed into list
         self._already_parsed(suite)
 
         # Test Suite Parser
         suite_info = {
             "name": suite.name,
-            "doc": "<br>".join([line for line in suite.doc.split("\n") if line.strip()]) if suite.doc else "No suite documentation available - please add!", 
+            "doc": "<br>".join(line.replace("\\n","") for line in suite.doc.splitlines() if line.strip()) if suite.doc else None,
             "is_folder": self._is_directory(suite),
             "num_tests": len(suite.tests),
             "source": str(suite.source),
             "total_tests": 0,
             "tests": [],
-            "sub_suites": []
+            "sub_suites": [],
+            "metadata": None
         }
 
         # Parse Test Cases

@@ -1,6 +1,7 @@
 from .helper.pathconverter import PathConverter
 from .parser.testsuiteparser import RobotSuiteParser
-from .html_rednering.render import TestDocHtmlRendering
+from .html_rendering.render import TestDocHtmlRendering
+from .parser.modifier.suitefilemodifier import SuiteFileModifier
 
 class TestDoc():
     
@@ -8,8 +9,11 @@ class TestDoc():
         # Convert to correct pathes
         suite_path, output_path, config_path = PathConverter().path_convertion()
         
-        # Parse suite object
-        suites_tests = RobotSuiteParser().parse_suite(suite_path)
+        # Parse suite object & return complete suite object with all information
+        suite_object = RobotSuiteParser().parse_suite(suite_path)
+        
+        # Run SuiteFileModifier to modify the test suite object
+        suite_object = SuiteFileModifier().run_modifier(suite_object)
 
         # Render HTML file
-        TestDocHtmlRendering().render_testdoc(suites_tests, output_path)
+        TestDocHtmlRendering().render_testdoc(suite_object, output_path)

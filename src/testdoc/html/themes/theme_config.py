@@ -34,8 +34,9 @@ CUSTOM_THEME_01 = {
     "inner_color": "#000028",
     "button_active_color": "#193966",
     "button_hover_color": "#193966",
-    "border_color": "#f8f9fa",
-    "text_color": "#f8f9fa",
-    "title_color": "#f8f9fa",
+    # "border_color": "#f8f9fa",
+    "border_color": "#CCCCCC",
+    "text_color": "#CCCCCC",
+    "title_color": "#00ffb9",
     "robot_icon": "#00ffb9",
 }
