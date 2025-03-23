@@ -1,3 +1,5 @@
 __pycache__/**
 src/robotframework_testdoc.egg-info/**
 **/__pycache__/**.pyc
+.vscode/launch.json
+.vscode/

@@ -7,15 +7,18 @@
                     data-bs-target="#collapse{{ index }}"
                     aria-expanded="{% if first %}true{% else %}false{% endif %}"
                     aria-controls="collapse{{ index }}">
-                    {% if suite.is_folder %}
-                        📁 Suite Directory:&nbsp;<strong>{{ suite.name }}</strong>
-                    {% else %}
-                        <svg class="svg-icon" width="20" height="20" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <title>Robot Framework</title>
-                            <path d="M4.9565 10.2246c0-1.8766 1.5257-3.4023 3.4-3.4023 1.8766 0 3.4024 1.5257 3.4024 3.4023 0 .6838-.5526 1.2364-1.2341 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364 0-.513-.4185-.9296-.9338-.9296-.5129 0-.9317.4165-.9317.9296 0 .6838-.5523 1.2364-1.234 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364m14.0868 5.717c0 .6842-.5524 1.2363-1.2341 1.2363H6.3575c-.6818 0-1.2344-.552-1.2344-1.2363 0-.6837.5526-1.2363 1.2344-1.2363h11.4517c.6817 0 1.234 5526 1.234 1.2363m-5.351-5.0244c-.3814-.5657-.2323-1.3328.3334-1.7143l2.8628-1.9334c.5613-.3902 1.3329-.2324 1.7144.3289.3815.5654.2323 1.3329-.3334 1.7144l-2.8628 1.9333c-.5442.3831-1.3348.2379-1.7144-.3289zm7.8393 7.6018a.8815.8815 0 0 1-.258.6227l-2.1277 2.1277a.8822.8822 0 0 1-.623.258H5.4772a.8822.8822 0 0 1-.623-.258l-2.1277-2.1277a.8815.8815 0 0 1-.258-.6227V5.4818a.8797.8797 0 0 1 .258-.6228l2.1277-2.1282a.8816.8816 0 0 1 .623-.2578h13.0456a.8816.8816 0 0 1 .623.2578l2.1277 2.1282a.8797.8797 0 0 1 .258.6228V18.519zm1.811-15.0835L20.5644.6577A2.2454 2.2454 0 0 0 18.9775 0H5.0207A2.2445 2.2445 0 0 0 3.433.658L.657 3.4359A2.2449 2.2449 0 0 0 0 5.0228v13.9547c0 .5953.2366 1.1667.6575 1.5872l2.778 2.7779c.421.421.9918.6573 1.5871.6573h13.9548a2.2448 2.2448 0 0 0 1.5872-.6573l2.7779-2.7779A2.2436 2.2436 0 0 0 24 18.9775V5.023a2.2451 2.2451 0 0 0-.6575-1.5875z"/>
-                        </svg>    
-                        &nbsp;Suite File:&nbsp;<strong>{{ suite.name }}.robot</strong>
-                    {% endif %}
+                        <span class="custom-chevron">
+                            ⯈
+                        </span>
+                        {% if suite.is_folder %}
+                            📁 Suite Directory:&nbsp;<strong>{{ suite.name }}</strong>
+                        {% else %}
+                            <svg class="svg-icon" width="20" height="20" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <title>Robot Framework</title>
+                                <path d="M4.9565 10.2246c0-1.8766 1.5257-3.4023 3.4-3.4023 1.8766 0 3.4024 1.5257 3.4024 3.4023 0 .6838-.5526 1.2364-1.2341 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364 0-.513-.4185-.9296-.9338-.9296-.5129 0-.9317.4165-.9317.9296 0 .6838-.5523 1.2364-1.234 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364m14.0868 5.717c0 .6842-.5524 1.2363-1.2341 1.2363H6.3575c-.6818 0-1.2344-.552-1.2344-1.2363 0-.6837.5526-1.2363 1.2344-1.2363h11.4517c.6817 0 1.234 5526 1.234 1.2363m-5.351-5.0244c-.3814-.5657-.2323-1.3328.3334-1.7143l2.8628-1.9334c.5613-.3902 1.3329-.2324 1.7144.3289.3815.5654.2323 1.3329-.3334 1.7144l-2.8628 1.9333c-.5442.3831-1.3348.2379-1.7144-.3289zm7.8393 7.6018a.8815.8815 0 0 1-.258.6227l-2.1277 2.1277a.8822.8822 0 0 1-.623.258H5.4772a.8822.8822 0 0 1-.623-.258l-2.1277-2.1277a.8815.8815 0 0 1-.258-.6227V5.4818a.8797.8797 0 0 1 .258-.6228l2.1277-2.1282a.8816.8816 0 0 1 .623-.2578h13.0456a.8816.8816 0 0 1 .623.2578l2.1277 2.1282a.8797.8797 0 0 1 .258.6228V18.519zm1.811-15.0835L20.5644.6577A2.2454 2.2454 0 0 0 18.9775 0H5.0207A2.2445 2.2445 0 0 0 3.433.658L.657 3.4359A2.2449 2.2449 0 0 0 0 5.0228v13.9547c0 .5953.2366 1.1667.6575 1.5872l2.778 2.7779c.421.421.9918.6573 1.5871.6573h13.9548a2.2448 2.2448 0 0 0 1.5872-.6573l2.7779-2.7779A2.2436 2.2436 0 0 0 24 18.9775V5.023a2.2451 2.2451 0 0 0-.6575-1.5875z"/>
+                            </svg>    
+                            &nbsp;Suite File:&nbsp;<strong>{{ suite.name }}.robot</strong>
+                        {% endif %}
             </button>
         </h2>
         <div id="collapse{{ index }}" class="accordion-collapse collapse"
@@ -24,19 +27,37 @@
                 <div class="alert alert-secondary small-text text-start p-2 mb-3" role="alert">
                     <table style="width: 100%; border-collapse: collapse;">
                         {% if suite.is_folder %}
+                            {% if suite.doc is not none %}
+                                <tr>
+                                    <td style="width: 10%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
+                                    <td style="text-align: left;">{{ suite.doc }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if suite.metadata is not none %}
+                                <tr>
+                                    <td style="width: 10%; font-weight: bold; vertical-align: top;">⚙️ Metadata:</td>
+                                    <td style="text-align: left;">{{ suite.metadata }}</td>
+                                </tr>
+                            {% endif %}
                             <tr>
                                 <td style="width: 10%; font-weight: bold;">📊 Number of Tests:</td>
                                 <td style="text-align: left;">{{ suite.total_tests  }}</td>
                             </tr>
                         {% else %}
-                            <tr>
-                                <td style="width: 10%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
-                                <td style="text-align: left;">{{ suite.doc }}</td>
-                            </tr>
-                            <tr>
-                                <td style="width: 10%; font-weight: bold; vertical-align: top;">🔗 Source:</td>
-                                <td style="text-align: left;">{{ suite.source }}</td>
-                            </tr>
+                            {% if suite.doc is not none %}
+                                <tr>
+                                    <td style="width: 10%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
+                                    <td style="text-align: left;">{{ suite.doc }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if suite.source is not none %}
+                                <tr>
+                                    <td style="width: 10%; font-weight: bold; vertical-align: top;">🔗 Source:</td>
+                                    <td style="text-align: left;">
+                                        <a href="{{ suite.source }}" target="_blank">{{ suite.source }}</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
                             <tr>
                                 <td style="width: 10%; font-weight: bold;">📊 Number of Tests:</td>
                                 <td style="text-align: left;">{{ suite.num_tests }}</td>
@@ -55,6 +76,9 @@
                                         data-bs-target="#collapseTest{{ index }}-{{ loop.index }}"
                                         aria-expanded="false"
                                         aria-controls="collapseTest{{ index }}-{{ loop.index }}">
+                                        <span class="custom-chevron">
+                                            ⯈
+                                        </span>
                                         <svg class="svg-icon" width="20" height="20" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                             <title>Robot Framework</title>
                                             <path d="M4.9565 10.2246c0-1.8766 1.5257-3.4023 3.4-3.4023 1.8766 0 3.4024 1.5257 3.4024 3.4023 0 .6838-.5526 1.2364-1.2341 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364 0-.513-.4185-.9296-.9338-.9296-.5129 0-.9317.4165-.9317.9296 0 .6838-.5523 1.2364-1.234 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364m14.0868 5.717c0 .6842-.5524 1.2363-1.2341 1.2363H6.3575c-.6818 0-1.2344-.552-1.2344-1.2363 0-.6837.5526-1.2363 1.2344-1.2363h11.4517c.6817 0 1.234 5526 1.234 1.2363m-5.351-5.0244c-.3814-.5657-.2323-1.3328.3334-1.7143l2.8628-1.9334c.5613-.3902 1.3329-.2324 1.7144.3289.3815.5654.2323 1.3329-.3334 1.7144l-2.8628 1.9333c-.5442.3831-1.3348.2379-1.7144-.3289zm7.8393 7.6018a.8815.8815 0 0 1-.258.6227l-2.1277 2.1277a.8822.8822 0 0 1-.623.258H5.4772a.8822.8822 0 0 1-.623-.258l-2.1277-2.1277a.8815.8815 0 0 1-.258-.6227V5.4818a.8797.8797 0 0 1 .258-.6228l2.1277-2.1282a.8816.8816 0 0 1 .623-.2578h13.0456a.8816.8816 0 0 1 .623.2578l2.1277 2.1282a.8797.8797 0 0 1 .258.6228V18.519zm1.811-15.0835L20.5644.6577A2.2454 2.2454 0 0 0 18.9775 0H5.0207A2.2445 2.2445 0 0 0 3.433.658L.657 3.4359A2.2449 2.2449 0 0 0 0 5.0228v13.9547c0 .5953.2366 1.1667.6575 1.5872l2.778 2.7779c.421.421.9918.6573 1.5871.6573h13.9548a2.2448 2.2448 0 0 0 1.5872-.6573l2.7779-2.7779A2.2436 2.2436 0 0 0 24 18.9775V5.023a2.2451 2.2451 0 0 0-.6575-1.5875z"/>
@@ -66,35 +90,49 @@
                                  aria-labelledby="headingTest{{ index }}-{{ loop.index }}">
                                 <div class="accordion-body">
                                     <div class="alert alert-light text-start p-2 mb-3" role="alert">
+                                        {% set has_info = test.doc is not none or test.source is not none or test.tags is not none or test.keywords is not none %}
                                         <table style="width: 100%; border-collapse: collapse;">
-                                            <tr>
-                                                <td style="width: 10%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
-                                                <td style="text-align: left;">{{ test.doc }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width: 10%; font-weight: bold; vertical-align: top;">🔗 Source:</td>
-                                                <td style="text-align: left;">{{ test.source }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width: 10%; font-weight: bold;">🏷 Tags:</td>
-                                                <td style="text-align: left;">
-                                                    {% if test.tags %}
-                                                        {{ test.tags | join(', ') }}
-                                                    {% else %}
-                                                        No Tags
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width: 10%; font-weight: bold; vertical-align: top;">🔑 Keywords:</td>
-                                                <td style="text-align: left;">
-                                                    {% if test.keywords %}
-                                                        - {{ test.keywords | join('<br>- ') }}
-                                                    {% else %}
-                                                        No keywords
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
+                                            {% if test.doc is not none %}
+                                                <tr>
+                                                    <td style="width: 10%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
+                                                    <td style="text-align: left;">{{ test.doc }}</td>
+                                                </tr>
+                                            {% endif %}
+                                            {% if test.source is not none %}
+                                                <tr>
+                                                    <td style="width: 10%; font-weight: bold; vertical-align: top;">🔗 Source:</td>
+                                                    <td style="text-align: left;">
+                                                        <a href="{{ test.source }}" target="_blank">{{ test.source }}</a>
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                            {% if test.tags is not none %}
+                                                <tr>
+                                                    <td style="width: 10%; font-weight: bold;">🏷 Tags:</td>
+                                                    <td style="text-align: left;">
+                                                        {% if test.tags %}
+                                                            {{ test.tags | join(', ') }}
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                            {% if test.keywords is not none %}
+                                                <tr>
+                                                    <td style="width: 10%; font-weight: bold; vertical-align: top;">🔑 Keywords:</td>
+                                                    <td style="text-align: left;">
+                                                        {% if test.keywords %}
+                                                            - {{ test.keywords | join('<br>- ') }}
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                            {% if not has_info %}
+                                                <tr>
+                                                    <td class="info-msg" style="width: 10%; vertical-align: top; text-align: center;">
+                                                        No Details Available!
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
                                         </table>
                                     </div>
                                 </div>
@@ -119,136 +157,165 @@
 {% endmacro %}
 
 
-
-                
-
-
-<!-- Hauptteil des Templates -->
+<!-- Templates - Main Part -->
 <!DOCTYPE html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Robot Framework - Test Documentation</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- In-File CSS Style Sheet -->
-    <style>
-        /* Hintergrundfarbe der Seite */
-        html, body, .container-fluid {
-            background-color: {{ colors.background }};
-            color: {{ colors.text_color }}
-            font-size: 14px;
-        }
-    
-        #testSuiteAccordion {
-            background-color: {{ colors.background }} !important;
-            max-width: 98%;
-            margin: 0 auto;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Robot Framework - Test Documentation</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
+        <!-- In-File CSS Style Sheet -->
+        <style>
+            /* Hintergrundfarbe der Seite */
+            html, body, .container-fluid {
+                background-color: {{ colors.background }};
+                color: {{ colors.text_color }}
+                font-size: 14px;
+            }
 
-        .svg-icon {
-            fill: {{ colors.robot_icon }};
-        }
-    
-        /* Style für das Accordion */
-        .accordion-item {
-            background-color: {{ colors.inner_color }} !important;
-            border-radius: 6px;
-            margin: 1px;
-            border: 1px solid {{ colors.border_color }};
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-    
-        .accordion-header {
-            font-size: 14px;
-        }
-    
-        .accordion-button {
-            background-color: {{ colors.inner_color }};
-            color: {{ colors.text_color }};
-            font-size: 14px;
-            height: 35px;
-        }
-    
-        .accordion-button:hover {
-            background-color: {{ colors.button_hover_color }} !important;
-        }
+            a {
+                color: {{ colors.text_color }}
+            }
+            a:hover {
+                color: {{ colors.robot_icon }}
+            }
+        
+            #testSuiteAccordion {
+                background-color: {{ colors.background }} !important;
+                max-width: 98%;
+                margin: 0 auto;
+            }
 
-        .accordion-button:not(.collapsed),
-        .accordion-button:focus,
-        .accordion-button:active {
-            background-color: {{ colors.button_active_color }} !important;
-            box-shadow: none !important;
-            border-color: gray !important;
-            color: {{ colors.text_color }} !important;
-        }
-    
-        .accordion-body {
-            background-color: {{ colors.inner_color }};
-            padding: 5px;
-            font-size: 14px;
-        }
-    
-        /* Liste der Testfälle */
-        .list-group-item {
-            background-color: #fff;
-            border: 1px solid {{ colors.border_color }};
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            padding: 6px 10px;
-        }
-    
-        /* Testfall Hover Effekt */
-        .list-group-item:hover {
-            background-color: {{ colors.inner_color }};
-        }
-    
-        /* Tabelle für Test Suite Informationen */
-        .alert {
-            font-size: 14px;
-            padding: 6px 10px;
-            background-color: {{ colors.inner_color }};
-            border: 1px solid {{ colors.border_color }};
-        }
-    
-        table {
-            
-            height: 10px;
-            font-size: 14px;
-            color: {{ colors.text_color }};
-        }
-    
-        td {
-            padding: 1px 1px;
-        }
-    
-        /* Titelgröße */
-        h1 {
-            color: {{ colors.title_color }};
-            font-size: 30px;
-        }
+            .svg-icon {
+                fill: {{ colors.robot_icon }};
+            }
+        
+            /* Style für das Accordion */
+            .accordion-item {
+                background-color: {{ colors.inner_color }} !important;
+                border-radius: 6px;
+                margin: 1px;
+                border: 1px solid {{ colors.border_color }};
+                font-size: 14px;
+                box-sizing: border-box;
+            }
+        
+            .accordion-header {
+                font-size: 14px;
+            }
+        
+            .accordion-button {
+                background-color: {{ colors.inner_color }};
+                color: {{ colors.text_color }};
+                font-size: 14px;
+                height: 35px;
+            }
+        
+            .accordion-button:hover {
+                background-color: {{ colors.button_hover_color }} !important;
+            }
 
-        .generated_at {
-            color: {{ colors.title_color }}
-        }
-    </style>
-    
-</head>
-<body class="bg-light">
+            .accordion-button:not(.collapsed),
+            .accordion-button:focus,
+            .accordion-button:active {
+                background-color: {{ colors.button_active_color }} !important;
+                box-shadow: none !important;
+                border-color: gray !important;
+                color: {{ colors.text_color }} !important;
+            }
 
-<div class="container-fluid mt-5">
-    <h1 class="text-center">Robot Framework - Test Documentation</h1>
-    <div class="accordion mt-4" id="testSuiteAccordion">
-        {% for suite in suites %}
-            {{ render_suite(suite, loop.index, loop.first) }}
-        {% endfor %}
-    </div>
-    <p class="text-center generated_at">Generated at: {{ generated_at }}<br>robotframework-testdoc by Marvin Klerx</p>
-</div>
+            .custom-chevron {
+                color: {{ colors.text_color }};
+                margin-right: 8px;
+            }
 
-</body>
+            .accordion-button.collapsed .custom-chevron {
+                transform: rotate(0deg);
+                transition: transform 0.3s ease;
+            }
+
+            .accordion-button .custom-chevron {
+                transform: rotate(90deg);
+                transition: transform 0.3s ease;
+            }
+
+            .accordion-button::after {
+                background-image: none !important;
+                content: none !important;
+            }
+        
+            .accordion-body {
+                background-color: {{ colors.inner_color }};
+                padding: 5px;
+                font-size: 14px;
+            }
+        
+            /* Liste der Testfälle */
+            .list-group-item {
+                background-color: #fff;
+                border: 1px solid {{ colors.border_color }};
+                display: flex;
+                align-items: center;
+                font-size: 14px;
+                padding: 6px 10px;
+            }
+        
+            /* Testfall Hover Effekt */
+            .list-group-item:hover {
+                background-color: {{ colors.inner_color }};
+            }
+        
+            /* Tabelle für Test Suite Informationen */
+            .alert {
+                font-size: 14px;
+                padding: 6px 10px;
+                background-color: {{ colors.inner_color }};
+                border: 1px solid {{ colors.border_color }};
+            }
+        
+            table {
+                
+                height: 10px;
+                font-size: 14px;
+                color: {{ colors.text_color }};
+            }
+        
+            td {
+                padding: 1px 1px;
+            }
+        
+            /* Titelgröße */
+            h1 {
+                color: {{ colors.title_color }};
+                font-size: 30px;
+            }
+
+            .info-msg {
+                color: {{ colors.title_color }};
+            }
+
+            .generated_at {
+                color: {{ colors.title_color }}
+            }
+        </style>
+    </head>
+    <body class="d-flex flex-column min-vh-100">
+        <div class="container-fluid mt-5 flex-grow-1">
+            <h1 class="text-center">{{ title }}</h1>
+
+            <div class="accordion mt-4" id="testSuiteAccordion">
+                {% for suite in suites %}
+                    {{ render_suite(suite, loop.index, loop.first) }}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <p class="text-center generated_at py-1 border-top">
+            Generated at: {{ generated_at }}<br>robotframework-testdoc 2.0 by Marvin Klerx
+        </p>
+    </body>
 </html>
