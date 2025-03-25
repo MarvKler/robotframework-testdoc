@@ -2,6 +2,9 @@
 {% macro render_suite(suite, index, first) %}
     <div class="accordion-item">
         <h2 class="accordion-header" id="heading{{ index }}">
+            {% if not suite.is_folder %}
+                <div class="custom-line" style="height: 3px; margin-bottom: 5px; border-radius: 2px;"></div>
+            {% endif %}
             <button class="accordion-button {% if not first %}collapsed{% endif %}" type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#collapse{{ index }}"
@@ -181,6 +184,10 @@
             }
             a:hover {
                 color: {{ colors.robot_icon }}
+            }
+
+            .custom-line {
+                background-color: {{ colors.robot_icon }}
             }
         
             #testSuiteAccordion {

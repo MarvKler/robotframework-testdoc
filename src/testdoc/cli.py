@@ -4,7 +4,7 @@ from .testdoc import TestDoc
 from .helper.cliargs import CommandLineArguments
 
 @click.command()
-@click.option("-t","--title",       required=False, help="Modify the title of the test documentation")
+@click.option("-t","--title",       required=False, default="Robot Framework - Test Documentation", help="Modify the title of the test documentation")
 @click.option("-n","--name",        required=False, help="Modify the name of the root suite element")
 @click.option("-d","--doc",         required=False, help="Modify the documentation of the root suite element")
 @click.option("-m","--metadata",    multiple=True, required=False, help="Modify the metadata of the root suite element")

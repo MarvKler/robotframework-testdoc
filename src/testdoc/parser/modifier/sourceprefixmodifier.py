@@ -12,6 +12,22 @@ class SourcePrefixModifier():
     def __init__(self):
         self.args = CommandLineArguments().data
     
+    def _modify(self, suite: TestSuite, prefix: str):
+        prefix = self.args.sourceprefix.split("::")
+        if "gitlab" in prefix[0].lower():
+            SourcePrefixGitLab()._apply_gitlab_source_to_suite(suite, prefix[1])
+    
+    def modify_source_prefix(self, suite_object: TestSuite) -> TestSuite:
+        Logger().LogKeyValue("Using Prefix for Source: ", self.args.sourceprefix, "yellow") if self.args.verbose_mode else None
+        for suite in suite_object:
+            self._modify(suite, self.args.sourceprefix)
+        return suite_object
+    
+class SourcePrefixGitLab():
+    """
+    Source Prefix Modifier for "GitLab" Projects.
+    Expected CMD Line Arg: "gitlab::prefix"
+    """
     def _get_git_root(self, path):
         current = os.path.abspath(path)
         while current != os.path.dirname(current):
@@ -52,10 +68,3 @@ class SourcePrefixModifier():
 
         for sub_suite in suite_dict.get("sub_suites", []):
             self._apply_gitlab_source_to_suite(sub_suite, prefix)
-
-    def _modify_source_prefix(self, suite_object: TestSuite) -> TestSuite:
-        Logger().LogKeyValue("Using Prefix for Source: ", self.args.sourceprefix, "yellow") if self.args.verbose_mode else None
-        for suite in suite_object:
-            self._apply_gitlab_source_to_suite(suite, self.args.sourceprefix)
-        return suite_object
-            

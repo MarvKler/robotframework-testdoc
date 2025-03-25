@@ -36,6 +36,16 @@ class RobotSuiteParser(SuiteVisitor):
         suite_info["total_tests"] = total_tests
         self.suites.append(suite_info)
 
+    def parse_suite(self, suite_path):
+        suite = TestSuite.from_file_system(suite_path)
+        suite = TestCaseParser().consider_tags(suite)
+        suite.visit(self)
+        return self.suites
+    
+    ##############################################################################################
+    # Helper:
+    ##############################################################################################
+
     def _recursive_sub_suite(self,
             suite: TestSuite,
             suite_info: dict
@@ -56,9 +66,3 @@ class RobotSuiteParser(SuiteVisitor):
         existing_suite = next((s for s in self.suites if s["name"] == suite.name), None)
         if existing_suite:
             return
-
-    def parse_suite(self, suite_path):
-        """Lädt eine `.robot` Suite oder einen Ordner mit Suiten."""
-        suite = TestSuite.from_file_system(suite_path)
-        suite.visit(self)
-        return self.suites

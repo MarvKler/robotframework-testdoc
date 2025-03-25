@@ -19,14 +19,13 @@ class TestDocHtmlRendering():
         ):
         env = Environment(loader=FileSystemLoader(self.TEMPLATE_DIR))
         template = env.get_template("jinja_template_01.html")
-        # template = env.get_template("jinja_template_02.html")
 
         rendered_html = template.render(
             suites=suites,
             generated_at=DateTimeConverter().get_generated_datetime(),
             title=self.DOC_TITLE,
-            # colors=DEFAULT_THEME
-            colors=CUSTOM_THEME_01
+            colors=DEFAULT_THEME
+            # colors=CUSTOM_THEME_01
         )
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(rendered_html)

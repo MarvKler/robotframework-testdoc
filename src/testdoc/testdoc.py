@@ -13,7 +13,7 @@ class TestDoc():
         suite_object = RobotSuiteParser().parse_suite(suite_path)
         
         # Run SuiteFileModifier to modify the test suite object
-        suite_object = SuiteFileModifier().run_modifier(suite_object)
+        suite_object = SuiteFileModifier().run(suite_object)
 
         # Render HTML file
         TestDocHtmlRendering().render_testdoc(suite_object, output_path)

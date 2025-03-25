@@ -3,7 +3,7 @@ from typing import List
 
 @dataclass
 class CommandLineArgumentsData:
-    title: str = "Robot Framework - Test Documentation"
+    title: str = None
     name: str = None
     doc: str = None
     metadata: dict = None

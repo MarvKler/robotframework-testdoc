@@ -1,6 +1,10 @@
 from robot.api import TestSuite
+from ..helper.cliargs import CommandLineArguments
 
 class TestCaseParser():
+
+    def __init__(self):
+        self.args = CommandLineArguments().data
 
     def parse_test(self,
             suite: TestSuite,
@@ -17,3 +21,10 @@ class TestCaseParser():
             }
             suite_info["tests"].append(test_info)
         return suite_info
+        
+    def consider_tags(self, suite: TestSuite) -> TestSuite:
+        if len(self.args.include) > 0:
+            suite.configure(include_tags=self.args.include) 
+        if len(self.args.exclude) > 0:
+            suite.configure(exclude_tags=self.args.exclude)
+        return suite
