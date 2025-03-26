@@ -42,7 +42,7 @@ jobs:
         testdoc --help
 
     - name: Run unit tests
-      run: pytest tests/
+      run: pytest atest/
 
     - name: Publish to TestPyPI
       env:
