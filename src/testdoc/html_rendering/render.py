@@ -4,7 +4,7 @@ import os
 from ..helper.cliargs import CommandLineArguments
 from ..helper.datetimeconverter import DateTimeConverter
 from ..helper.logger import Logger
-from ..html.themes.theme_config import DEFAULT_THEME, ROBOT_THEME, DARK_THEME, CUSTOM_THEME_01
+from ..html.themes.theme_config import DEFAULT_THEME#, ROBOT_THEME, DARK_THEME, CUSTOM_THEME_01
 
 class TestDocHtmlRendering():
 

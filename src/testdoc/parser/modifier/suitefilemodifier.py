@@ -1,4 +1,3 @@
-import os
 from robot.api import TestSuite
 
 from ...helper.cliargs import CommandLineArguments

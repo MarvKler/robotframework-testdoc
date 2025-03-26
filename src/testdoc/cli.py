@@ -9,7 +9,9 @@ from .helper.cliargs import CommandLineArguments
 @click.option("-n","--name",        required=False, help="Modify the name of the root suite element")
 @click.option("-d","--doc",         required=False, help="Modify the documentation of the root suite element")
 @click.option("-m","--metadata",    multiple=True, required=False, help="Modify the metadata of the root suite element")
-@click.option("-s","--sourceprefix",required=False, help="Set a prefix used for Test Suite / Test Suite Source Information, e.g. GitLab Prefix Path to navigate directly to your repository!")
+@click.option("-s","--sourceprefix",required=False, help=(
+    "Set a prefix used for Test Suite / Test Suite Source Information, e.g. GitLab Prefix Path to navigate directly to your repository!"
+))
 @click.option("-i","--include",     multiple=True, required=False, help="Include test cases with given tags")
 @click.option("-e","--exclude",     multiple=True, required=False, help="Exclude test cases with given tags")
 @click.option("--hide-tags",        is_flag=True, required=False, help="If given, test case tags are hidden")

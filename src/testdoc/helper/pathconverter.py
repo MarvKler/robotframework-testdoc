@@ -1,5 +1,4 @@
 import os
-import click
 
 from .cliargs import CommandLineArguments
 from .logger import Logger
@@ -34,7 +33,7 @@ class PathConverter():
             Logger().Log("=== TestDoc  ===")
             Logger().LogKeyValue("Generating Test Documentation for: ", msg)
             Logger().LogKeyValue("Saving to output file: ", output_path)
-            Logger().LogKeyValue("Using config file: ", config_path) if not config_path == False else None
+            Logger().LogKeyValue("Using config file: ", config_path) if config_path else None
 
         return suite_path, output_path, config_path
 
