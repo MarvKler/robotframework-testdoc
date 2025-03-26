@@ -11,8 +11,10 @@ def test_cli_help():
 
 def test_cli_cmd():
     current_dir = os.path.dirname(os.path.abspath(__file__))
+    robot = os.path.join(current_dir, "test_cli.robot")
+    output = os.path.join(current_dir, "output.html")
     runner = CliRunner()
-    result = runner.invoke(main, [f"{current_dir}\\test_cli.robot", f"{current_dir}\\output.html"])
+    result = runner.invoke(main, [robot, output])
     assert result.exit_code == 0
     assert "Generated" in result.output
     assert "output.html" in result.output
@@ -21,8 +23,10 @@ def test_cli_cmd():
 
 def test_cli_cmd_verbose():
     current_dir = os.path.dirname(os.path.abspath(__file__))
+    robot = os.path.join(current_dir, "test_cli.robot")
+    output = os.path.join(current_dir, "output.html")
     runner = CliRunner()
-    result = runner.invoke(main, [f"{current_dir}\\test_cli.robot", f"{current_dir}\\output.html", "-v"])
+    result = runner.invoke(main, [robot, output, "-v"])
     assert result.exit_code == 0
     assert "Generated" in result.output
     assert "output.html" in result.output
