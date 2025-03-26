@@ -41,11 +41,11 @@ jobs:
         pip install .
         testdoc --help
 
-    # - name: Publish to TestPyPI (only on main)
-    #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    #   env:
-    #     TWINE_USERNAME: __token__
-    #     TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
-    #   run: |
-    #     pip install twine
-    #     twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+    - name: Publish to TestPyPI
+      # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+      run: |
+        pip install twine
+        twine upload --repository-url https://test.pypi.org/legacy/ dist/*
