@@ -127,7 +127,7 @@ border_color = "#CCCCCC"
 text_color = "#CCCCCC"
 title_color = "#00ffb9"
 robot_icon = "#00ffb9"
-```^
+```
 
 > [!TIP]
 > Please make sure to configure all available color values from this example — missing values may cause layout or rendering issues in the generated HTML document!
