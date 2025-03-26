@@ -1,0 +1,16 @@
+sourceprefix = "gitlab::https://gitlab.com/myrepo/repo_path"
+hide_suite_doc = true
+verbose_mode = true
+
+[colors]
+# DEFAULT THEME:
+default = "dark"
+# OR CUSTOM THEME: 
+# background = "#000028"
+# inner_color = "#000028"
+# button_active_color = "#193966"
+# button_hover_color = "#193966"
+# border_color = "#CCCCCC"
+# text_color = "#CCCCCC"
+# title_color = "#00ffb9"
+# robot_icon = "#00ffb9"

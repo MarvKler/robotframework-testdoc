@@ -82,3 +82,52 @@ For using this config file, just call the following command:
 # Generate docu with options defined in TOML file
 testdoc -c path/to/config.toml tests/ TestDocumentation.html
 ```
+
+## Theme Selection / Color Configuration
+
+You can select between several themes (color configurations) for your HTML document to create!
+
+> [!CAUTION]
+> This is only possible via toml-configuration file, but not via cmd args directly!
+
+### Default Themes
+
+There are a few predefined default themes available that you can choose via the toml-configuration file.   
+Therefore, please use the following syntax:
+```toml
+[colors]
+# Use the default theme
+default = "default"
+default = 0
+# Use the default theme
+default = "dark"
+default = 1
+# Use the default theme
+default = "blue"
+default = 2
+# Use the default theme
+default = "robot"
+default = 3
+```
+
+> [!TIP]
+> You can select the default theme using either a string value or an integer value.
+
+### Custom Themes
+
+You can apply your own custom theme to modify the colors of the created HTML document.   
+Use the following syntax & parameters in your toml-configuration file, to overwrite the predefined themes:
+```toml
+[colors]
+background = "#000028"
+inner_color = "#000028"
+button_active_color = "#193966"
+button_hover_color = "#193966"
+border_color = "#CCCCCC"
+text_color = "#CCCCCC"
+title_color = "#00ffb9"
+robot_icon = "#00ffb9"
+```^
+
+> [!TIP]
+> Please make sure to configure all available color values from this example — missing values may cause layout or rendering issues in the generated HTML document!

@@ -20,6 +20,7 @@ class CommandLineArgumentsData:
     verbose_mode: bool = False
     suite_file: str = None
     output_file: str = None
+    colors: dict = None
 
 class CommandLineArguments:
     _instance = None
@@ -33,6 +34,9 @@ class CommandLineArguments:
     def load_from_config_file(self, file_path: str):
         with open(file_path, "rb") as f:
             config = tomli.load(f)
+
+        if "colors" in config:
+            self.data.colors = config["colors"]
 
         for key, value in config.items():
             if hasattr(self.data, key):
