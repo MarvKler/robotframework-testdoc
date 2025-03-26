@@ -1,0 +1,49 @@
+name: Release on Tag
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine tomli
+
+    - name: Check Tag Matches pyproject.toml Version
+      run: |
+        VERSION_IN_FILE=$(python -c "import tomli; print(tomli.load(open('pyproject.toml', 'rb'))['project']['version'])")
+        TAG_VERSION=${GITHUB_REF#refs/tags/v}
+        echo "Version in pyproject.toml: $VERSION_IN_FILE"
+        echo "Git Tag Version: $TAG_VERSION"
+        if [ "$VERSION_IN_FILE" != "$TAG_VERSION" ]; then
+          echo "Version mismatch between createdxtag and pyproject.toml"
+          exit 1
+        fi
+
+    - name: Build Package
+      run: python -m build
+
+    - name: Publish to PyPI
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      run: twine upload dist/*
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        generate_release_notes: true
