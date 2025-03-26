@@ -82,7 +82,6 @@ def main(
     args.suite_file = path
     args.output_file = output
 
-    # If CLI arg was set -> set / overwrite toml arg value
     for key, value in cli_params.items():
         if value is not None:
             setattr(args, key, value)    
