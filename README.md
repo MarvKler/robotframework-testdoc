@@ -7,7 +7,7 @@ Install the tool using the following command:
 pip install robotframework-testdoc
 ```
 
-> [!NOTE]
+> [!IMPORTANT]
 > Preconditions: Python & Pip Installation.
 
 ## Usage
@@ -24,13 +24,15 @@ testdoc suite_file output.html
 testdoc [OPTIONS] suite_directory output.html
 ```
 
-### Included Usage Help
-Please execute ``testdoc --help`` for further details about the commandline arguments or see the examples below.
+> [!TIP]
+> **Included Help:** Please execute ``testdoc --help`` for further details about the commandline arguments or see the examples below.
 
 ## Examples
 
-Below you can find some example of using the testdoc library.    
-Of course, you can combine all of them!
+Below you can find some example of using the testdoc library.  
+
+> [!TIP]
+> Of course, you can combine all of them!
 
 ```shell
 # Generating docu without option
