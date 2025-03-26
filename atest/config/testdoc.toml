@@ -1,0 +1,10 @@
+sourceprefix = "gitlab::https://gitlab.com/myrepo/repo_path"
+hide_suite_doc = true
+verbose_mode = true
+
+include = ["TagA", "TagB"]
+exclude = ["TagC"]
+
+[metadata]
+Author = "Marvin Klerx"
+Version = "1.0.0"

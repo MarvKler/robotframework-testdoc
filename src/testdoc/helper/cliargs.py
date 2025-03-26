@@ -1,9 +1,10 @@
 from dataclasses import dataclass, field
 from typing import List
+import tomli
 
 @dataclass
 class CommandLineArgumentsData:
-    title: str = None
+    title: str = "Robot Framework - Test Documentation"
     name: str = None
     doc: str = None
     metadata: dict = None
@@ -28,3 +29,11 @@ class CommandLineArguments:
             
             cls.data = CommandLineArgumentsData()
         return cls._instance
+    
+    def load_from_config_file(self, file_path: str):
+        with open(file_path, "rb") as f:
+            config = tomli.load(f)
+
+        for key, value in config.items():
+            if hasattr(self.data, key):
+                setattr(self.data, key, value)

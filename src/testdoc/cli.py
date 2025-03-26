@@ -1,23 +1,24 @@
 import click
+import os
 
 from .testdoc import TestDoc
 from .helper.cliargs import CommandLineArguments
 
 @click.command()
-@click.option("-t","--title",       required=False, default="Robot Framework - Test Documentation", help="Modify the title of the test documentation")
+@click.option("-t","--title",       required=False, help="Modify the title of the test documentation page")
 @click.option("-n","--name",        required=False, help="Modify the name of the root suite element")
 @click.option("-d","--doc",         required=False, help="Modify the documentation of the root suite element")
 @click.option("-m","--metadata",    multiple=True, required=False, help="Modify the metadata of the root suite element")
 @click.option("-s","--sourceprefix",required=False, help="Set a prefix used for Test Suite / Test Suite Source Information, e.g. GitLab Prefix Path to navigate directly to your repository!")
-@click.option("-i","--include",     multiple=True, required=False, help="Include only test cases with given tags")
+@click.option("-i","--include",     multiple=True, required=False, help="Include test cases with given tags")
 @click.option("-e","--exclude",     multiple=True, required=False, help="Exclude test cases with given tags")
-@click.option("--hide-tags",        is_flag=True, required=False, help="If given, related tags for each test case are hidden")
+@click.option("--hide-tags",        is_flag=True, required=False, help="If given, test case tags are hidden")
 @click.option("--hide-test-doc",    is_flag=True,required=False, help="If given, test documentation is hidden")
 @click.option("--hide-suite-doc",   is_flag=True, required=False, help="If given, suite documentation is hidden")
-@click.option("--hide-source",      is_flag=True, required=False, help="If given, test suite/case source is hidden")
-@click.option("--hide-keywords",    is_flag=True, required=False, help="If given, keyword calls are hidden")
-@click.option("-c", "--configfile", is_flag=True, required=False, help="Optional configuration file (includes all cmd-args)")
-@click.option("-v", "--verbose",    is_flag=True, required=False, help="More precise debugging")
+@click.option("--hide-source",      is_flag=True, required=False, help="If given, test suite/ test case source is hidden")
+@click.option("--hide-keywords",    is_flag=True, required=False, help="If given, keyword calls in test cases are hidden")
+@click.option("-c", "--configfile", required=False, help="Optional .toml configuration file (includes all cmd-args)")
+@click.option("-v", "--verbose",    is_flag=True, required=False, help="More precise debugging into shell")
 @click.argument("PATH")
 @click.argument("OUTPUT")
 def main(
@@ -52,25 +53,41 @@ def main(
       """, fg=color)
     )
 
+    args_instance = CommandLineArguments()
+
+    if configfile:
+        if os.path.exists(configfile):
+            args_instance.load_from_config_file(configfile)
+        else:
+            click.echo(click.style(f"⚠️ Config File not found: {configfile}", fg="yellow"))
+
     # Save args into singleton method
-    args = CommandLineArguments().data
-    args.title = title
-    args.name = name
-    args.doc = doc
-    args.metadata = dict(item.split("=", 1) for item in metadata)
-    args.sourceprefix = sourceprefix
-    args.include = list(include)
-    args.exclude = list(exclude)
-    args.hide_tags = hide_tags
-    args.hide_test_doc = hide_test_doc
-    args.hide_suite_doc = hide_suite_doc
-    args.hide_source = hide_source
-    args.hide_keywords = hide_keywords
-    args.config_file = configfile
-    args.verbose_mode = verbose
+    args = args_instance.data
+
+    # Create dict for args given via CLI
+    cli_params = {
+        "title": title or None,
+        "name": name or None,
+        "doc": doc or None,
+        "metadata": dict(item.split("=", 1) for item in metadata) if metadata else None,
+        "sourceprefix": sourceprefix,
+        "include": list(include) if include else None,
+        "exclude": list(exclude) if exclude else None,
+        "hide_tags": hide_tags or None,
+        "hide_test_doc": hide_test_doc or None,
+        "hide_suite_doc": hide_suite_doc or None,
+        "hide_source": hide_source or None,
+        "hide_keywords": hide_keywords or None,
+        "verbose_mode": verbose or None,
+        "config_file": configfile or None,
+    }
     args.suite_file = path
     args.output_file = output
-    
+
+    # If CLI arg was set -> set / overwrite toml arg value
+    for key, value in cli_params.items():
+        if value is not None:
+            setattr(args, key, value)    
     TestDoc().main()
 
 if __name__ == "__main__":

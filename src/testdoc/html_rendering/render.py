@@ -11,7 +11,7 @@ class TestDocHtmlRendering():
     TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "html", "templates")
     
     def __init__(self):
-        self.DOC_TITLE = CommandLineArguments().data.title
+        self.args = CommandLineArguments().data
 
     def render_testdoc(self,
             suites,
@@ -23,7 +23,7 @@ class TestDocHtmlRendering():
         rendered_html = template.render(
             suites=suites,
             generated_at=DateTimeConverter().get_generated_datetime(),
-            title=self.DOC_TITLE,
+            title=self.args.title,
             colors=DEFAULT_THEME
             # colors=CUSTOM_THEME_01
         )

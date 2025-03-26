@@ -15,7 +15,8 @@ dependencies = [
     "setuptools",
     "click",
     "robotframework",
-    "jinja2"
+    "jinja2",
+    "tomli"
 ]
 
 [project.scripts]

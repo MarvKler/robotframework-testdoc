@@ -13,9 +13,17 @@ class SourcePrefixModifier():
         self.args = CommandLineArguments().data
     
     def _modify(self, suite: TestSuite, prefix: str):
+        prefix_type, prefix = self._prefix_validation(prefix)
+        if "gitlab" in prefix_type:
+            SourcePrefixGitLab()._apply_gitlab_source_to_suite(suite, prefix)
+        else:
+            raise ValueError(f"No matching source-prefix modifier found for: {prefix_type} with prefix: {prefix}")
+
+    def _prefix_validation(self, prefix: str) -> list:
+        if "::" not in prefix:
+            raise ValueError("Missing source-prefix type - expected type in format like 'gitlab::source-prefix!'")
         prefix = self.args.sourceprefix.split("::")
-        if "gitlab" in prefix[0].lower():
-            SourcePrefixGitLab()._apply_gitlab_source_to_suite(suite, prefix[1])
+        return prefix[0], prefix[1]
     
     def modify_source_prefix(self, suite_object: TestSuite) -> TestSuite:
         Logger().LogKeyValue("Using Prefix for Source: ", self.args.sourceprefix, "yellow") if self.args.verbose_mode else None
