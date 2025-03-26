@@ -12,23 +12,24 @@ DEFAULT_THEME = {
 
 ROBOT_THEME = {
     "background": "#f8f9fa",
-    "accordion_background": "#00c0b5",  # Offizielles Türkis
-    "accordion_hover": "#e83e8c",  # Offizielles Pink
-    "border_color": "#353535",  # Dunkelgrau für Kontraste
-    "text_color": "white",
-    "table_text_color": "#000000",
-    "alert_background": "#d1ecf1",  # Helles Blau für Infoboxen
+    "inner_color": "#f8f9fa",
+    "button_active_color": "#C2C2C2",
+    "button_hover_color": "#C2C2C2",
+    "border_color": "black",
+    "text_color": "black",
+    "title_color": "black",
+    "robot_icon": "#00c0b5",
 }
 
 DARK_THEME = {    
-    "background": "#343a40",
-    "inner_color": "#495057",
-    "button_active_color": "#6c757d",
-    "button_hover_color": "#6c757d",
+    "background": "#303030",
+    "inner_color": "#303030",
+    "button_active_color": "#5F5F5F",
+    "button_hover_color": "#5F5F5F",
     "border_color": "white",
     "text_color": "white",
-    "title_color": "white",
-    "robot_icon": "#00ffb9",
+    "title_color": "#00c0b5",
+    "robot_icon": "#00c0b5",
 }
 
 BLUE_THEME = {
@@ -36,7 +37,6 @@ BLUE_THEME = {
     "inner_color": "#000028",
     "button_active_color": "#193966",
     "button_hover_color": "#193966",
-    # "border_color": "#f8f9fa",
     "border_color": "#CCCCCC",
     "text_color": "#CCCCCC",
     "title_color": "#00ffb9",

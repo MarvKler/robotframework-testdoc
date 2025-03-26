@@ -5,7 +5,6 @@ from ..html.themes.theme_config import ThemeConfig
 from ..helper.cliargs import CommandLineArguments
 from ..helper.datetimeconverter import DateTimeConverter
 from ..helper.logger import Logger
-from ..html.themes.themes import *
 
 class TestDocHtmlRendering():
 

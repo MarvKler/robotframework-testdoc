@@ -4,7 +4,7 @@ verbose_mode = true
 
 [colors]
 # DEFAULT THEME:
-default = "dark"
+default = "robot"
 # OR CUSTOM THEME: 
 # background = "#000028"
 # inner_color = "#000028"

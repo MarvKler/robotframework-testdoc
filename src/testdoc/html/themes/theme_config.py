@@ -1,5 +1,5 @@
 from ...helper.cliargs import CommandLineArguments
-from .themes import *
+from .themes import DEFAULT_THEME, ROBOT_THEME, DARK_THEME, BLUE_THEME
 
 class ThemeConfig():
     
@@ -12,7 +12,7 @@ class ThemeConfig():
             if "default" in _theme:
                 return self._get_predefined_theme(_theme.get("default"))    
             return _theme
-        return DEFAULT_THEME
+        return DARK_THEME
     
     def _get_predefined_theme(self, theme: str):
         theme = theme.strip()
