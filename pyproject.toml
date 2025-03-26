@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "robotframework-testdoc"
-version = "0.1.0"
+version = "0.1.1"
 description = "A CLI Tool to generate a Test Documentation for your RobotFramework Test Scripts."
 readme = "README.md"
 requires-python = ">=3.7"
@@ -12,7 +12,6 @@ authors = [{ name = "Marvin Klerx", email = "marvinklerx1@gmail.com" }]
 license = { text = "MIT" }
 
 dependencies = [
-    "setuptools",
     "click",
     "robotframework",
     "jinja2",
@@ -24,6 +23,6 @@ testdoc = "testdoc.cli:main"
 
 [tool.ruff]
 line-length = 150
-lint.select = ["E", "F"]  # z. B. nur Pyflakes & pycodestyle
+lint.select = ["E", "F"]  # Pyflakes & pycodestyle
 lint.ignore = ["E722"]
 exclude = ["build", "dist"]

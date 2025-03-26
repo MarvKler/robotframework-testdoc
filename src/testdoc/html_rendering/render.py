@@ -1,10 +1,10 @@
 from jinja2 import Environment, FileSystemLoader
 import os
 
+from ..html.themes.theme_config import ThemeConfig
 from ..helper.cliargs import CommandLineArguments
 from ..helper.datetimeconverter import DateTimeConverter
 from ..helper.logger import Logger
-from ..html.themes.theme_config import DEFAULT_THEME#, ROBOT_THEME, DARK_THEME, CUSTOM_THEME_01
 
 class TestDocHtmlRendering():
 
@@ -24,8 +24,7 @@ class TestDocHtmlRendering():
             suites=suites,
             generated_at=DateTimeConverter().get_generated_datetime(),
             title=self.args.title,
-            colors=DEFAULT_THEME
-            # colors=CUSTOM_THEME_01
+            colors=ThemeConfig().theme()
         )
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(rendered_html)

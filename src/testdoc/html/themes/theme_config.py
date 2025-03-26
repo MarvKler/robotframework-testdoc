@@ -1,42 +1,27 @@
-# default
-DEFAULT_THEME = {
-    "background": "#f8f9fa",
-    "inner_color": "#f8f9fa",
-    "button_active_color": "#f8f9fa",
-    "button_hover_color": "#C2C2C2",
-    "border_color": "#353535",
-    "text_color": "#353535",
-    "title_color": "#343a40",
-    "robot_icon": "#00c0b5",
-}
+from ...helper.cliargs import CommandLineArguments
+from .themes import DEFAULT_THEME, ROBOT_THEME, DARK_THEME, BLUE_THEME
 
-ROBOT_THEME = {
-    "background": "#f8f9fa",
-    "accordion_background": "#00c0b5",  # Offizielles Türkis
-    "accordion_hover": "#e83e8c",  # Offizielles Pink
-    "border_color": "#353535",  # Dunkelgrau für Kontraste
-    "text_color": "white",
-    "table_text_color": "#000000",
-    "alert_background": "#d1ecf1",  # Helles Blau für Infoboxen
-}
+class ThemeConfig():
+    
+    def __init__(self):
+        self.args = CommandLineArguments().data
 
-DARK_THEME = {
-    "background": "#343a40",
-    "inner_color": "#495057",
-    "button_hover_color": "#6c757d",
-    "border_color": "white",
-    "text_color": "white",
-    "robot_icon": "#00c0b5"
-}
-
-CUSTOM_THEME_01 = {
-    "background": "#000028",
-    "inner_color": "#000028",
-    "button_active_color": "#193966",
-    "button_hover_color": "#193966",
-    # "border_color": "#f8f9fa",
-    "border_color": "#CCCCCC",
-    "text_color": "#CCCCCC",
-    "title_color": "#00ffb9",
-    "robot_icon": "#00ffb9",
-}
+    def theme(self):
+        _theme = self.args.colors
+        if _theme:
+            if "default" in _theme:
+                return self._get_predefined_theme(_theme.get("default"))    
+            return _theme
+        return DARK_THEME
+    
+    def _get_predefined_theme(self, theme: str):
+        theme = theme.strip()
+        if theme == "default" or theme == 0:
+            return DEFAULT_THEME
+        if theme == "dark" or theme == 1:
+            return DARK_THEME
+        if theme == "robot" or theme == 2:
+            return ROBOT_THEME
+        if theme == "blue" or theme == 3:
+            return BLUE_THEME
+        
