@@ -30,24 +30,24 @@ jobs:
         python -m pip install --upgrade pip
         pip install build ruff pytest
 
-    - name: Lint with ruff
+    - name: Lint with Ruff
       run: ruff check .
 
-    - name: Build package
+    - name: Build Package
       run: python -m build
 
-    - name: Test CLI command
+    - name: Test CLI Command
       run: |
         pip install .
         testdoc --help
 
-    - name: Run unit tests
+    - name: Run Unit Tests
       run: pytest atest/
 
-    - name: Publish to TestPyPI
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
-      run: |
-        pip install twine
-        twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+    # - name: Publish to TestPyPI
+    #   env:
+    #     TWINE_USERNAME: __token__
+    #     TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+    #   run: |
+    #     pip install twine
+    #     twine upload --repository-url https://test.pypi.org/legacy/ dist/*

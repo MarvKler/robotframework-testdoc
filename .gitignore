@@ -5,3 +5,7 @@ src/robotframework_testdoc.egg-info/**
 .vscode/
 dist/
 *.egg-info/
+output_doc.html
+output.html
+src/testdoc/html/templates/jinja_template_02.html
+image.png
