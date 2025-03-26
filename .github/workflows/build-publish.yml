@@ -2,6 +2,8 @@ name: Build Python Package
 
 on:
   push:
+    tags-ignore:
+      - 'v*.*.*'
     paths:
       - '**.py'
       - '**.html'
