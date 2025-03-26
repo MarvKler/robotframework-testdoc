@@ -54,17 +54,13 @@ def main(
     )
 
     args_instance = CommandLineArguments()
-
     if configfile:
         if os.path.exists(configfile):
             args_instance.load_from_config_file(configfile)
         else:
             click.echo(click.style(f"⚠️ Config File not found: {configfile}", fg="yellow"))
 
-    # Save args into singleton method
     args = args_instance.data
-
-    # Create dict for args given via CLI
     cli_params = {
         "title": title or None,
         "name": name or None,
