@@ -23,6 +23,6 @@ testdoc = "testdoc.cli:main"
 
 [tool.ruff]
 line-length = 150
-lint.select = ["E", "F"]  # z. B. nur Pyflakes & pycodestyle
+lint.select = ["E", "F"]  # Pyflakes & pycodestyle
 lint.ignore = ["E722"]
 exclude = ["build", "dist"]
