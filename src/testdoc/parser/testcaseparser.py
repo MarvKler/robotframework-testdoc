@@ -23,6 +23,7 @@ class TestCaseParser():
             suite_info["tests"].append(test_info)
         return suite_info
         
+    # Consider tags via officially provided robot api
     def consider_tags(self, suite: TestSuite) -> TestSuite:
         if len(self.args.include) > 0:
             suite.configure(include_tags=self.args.include) 

@@ -18,9 +18,6 @@ class SuiteFileModifier():
         self.suite = suite_object
         
         # Modify generic params / hide some params
-        self._modify_root_suite_name()
-        self._modify_root_suite_doc()
-        self._modify_root_suite_metadata()
         self._modify_tags()
         self._modify_test_doc()
         self._modify_suite_doc()
@@ -29,29 +26,16 @@ class SuiteFileModifier():
         return self.suite
     
     #############################################################################################################################
-    
-    def _modify_root_suite_name(self):
-        if not self.args.name:
-            return
-        Logger().LogKeyValue("Modified Name of Root Suite: ", self.args.name, "yellow") if self.args.verbose_mode else None
-        self.suite[0]["name"] = self.args.name
-    
-    #############################################################################################################################
-        
-    def _modify_root_suite_doc(self):
-        if not self.args.doc:
-            return
-        Logger().LogKeyValue("Modified Doc of Root Suite: ", self.args.name, "yellow") if self.args.verbose_mode else None
-        self.suite[0]["doc"] = self.args.doc
-    
-    #############################################################################################################################
-        
-    def _modify_root_suite_metadata(self):
-        if not self.args.metadata:
-            return
-        Logger().LogKeyValue("Modified Metadata of Root Suite: ", self.args.metadata, "yellow") if self.args.verbose_mode else None
-        formatted_metadata = "<br>".join([f"{k}: {v}" for k, v in self.args.metadata.items()])
-        self.suite[0]["metadata"] = formatted_metadata
+
+    # Modify name, doc & metadata via officially provided robot api
+    def _modify_root_suite_details(self, suite: TestSuite):
+        if self.args.name:
+            suite.configure(name=self.args.name)
+        if self.args.doc:
+            suite.configure(doc=self.args.doc)
+        if self.args.metadata:
+            suite.configure(metadata=self.args.metadata)
+        return suite
     
     #############################################################################################################################
     
