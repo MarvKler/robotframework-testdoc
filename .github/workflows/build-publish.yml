@@ -3,15 +3,18 @@ name: Build Python Package
 on:
   push:
     branches:
+      - main
       - '**'
     tags-ignore:
       - 'v*.*.*'
     paths:
+      - '**.yml'
       - '**.py'
       - '**.html'
       - pyproject.toml
   pull_request:
     paths:
+      - '**.yml'
       - '**.py'
       - '**.html'
       - pyproject.toml
