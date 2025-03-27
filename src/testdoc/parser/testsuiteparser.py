@@ -3,7 +3,6 @@ import os
 from robot.api import SuiteVisitor, TestSuite
 from .testcaseparser import TestCaseParser
 from .modifier.suitefilemodifier import SuiteFileModifier
-from ..helper.cliargs import CommandLineArguments
 
 class RobotSuiteParser(SuiteVisitor):
     def __init__(self):
