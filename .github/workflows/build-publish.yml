@@ -2,6 +2,8 @@ name: Build Python Package
 
 on:
   push:
+    branches:
+      - '**'
     tags-ignore:
       - 'v*.*.*'
     paths:
