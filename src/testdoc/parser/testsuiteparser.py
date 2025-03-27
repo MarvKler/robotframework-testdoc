@@ -2,6 +2,7 @@ import os
 
 from robot.api import SuiteVisitor, TestSuite
 from .testcaseparser import TestCaseParser
+from .modifier.suitefilemodifier import SuiteFileModifier
 
 class RobotSuiteParser(SuiteVisitor):
     def __init__(self):
@@ -23,7 +24,7 @@ class RobotSuiteParser(SuiteVisitor):
             "total_tests": 0,
             "tests": [],
             "sub_suites": [],
-            "metadata": None
+            "metadata": "<br>".join([f"{k}: {v}" for k, v in suite.metadata.items()]) if suite.metadata else None
         }
 
         # Parse Test Cases
@@ -39,6 +40,7 @@ class RobotSuiteParser(SuiteVisitor):
     def parse_suite(self, suite_path):
         suite = TestSuite.from_file_system(suite_path)
         suite = TestCaseParser().consider_tags(suite)
+        suite = SuiteFileModifier()._modify_root_suite_details(suite)
         suite.visit(self)
         return self.suites
     

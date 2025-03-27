@@ -1,23 +1,45 @@
 import os
+from abc import ABC, abstractmethod
 
 from robot.api import  TestSuite
 
 from ...helper.cliargs import CommandLineArguments
 from ...helper.logger import Logger
 
+available_implementations = "gitlab"
+
+########################################
+# Interface
+########################################
+class SourceModifier(ABC):
+    @abstractmethod
+    def apply(self, suite_dict, prefix):
+        pass
+
+########################################
+# Factory
+########################################
+class SourceModifierFactory:
+    @staticmethod
+    def get_modifier(prefix_type: str) -> SourceModifier:
+        if prefix_type.lower() == "gitlab":
+            return GitLabModifier()
+        # EXAMPLE Extension:
+        # elif prefix_type.lower() == "github":
+        #     return GitHubModifier()
+        raise ValueError(
+            f"No source modifier found for type '{prefix_type}' - actually available implementation are:\n{available_implementations}"
+        )
+
+########################################
+# Prefix Modifier - Implementation
+########################################
 class SourcePrefixModifier():
     
     GITLAB_CONNECTOR = "-/blob/main/"
     
     def __init__(self):
         self.args = CommandLineArguments().data
-    
-    def _modify(self, suite: TestSuite, prefix: str):
-        prefix_type, prefix = self._prefix_validation(prefix)
-        if "gitlab" in prefix_type:
-            SourcePrefixGitLab()._apply_gitlab_source_to_suite(suite, prefix)
-        else:
-            raise ValueError(f"No matching source-prefix modifier found for: {prefix_type} with prefix: {prefix}")
 
     def _prefix_validation(self, prefix: str) -> list:
         if "::" not in prefix:
@@ -27,11 +49,16 @@ class SourcePrefixModifier():
     
     def modify_source_prefix(self, suite_object: TestSuite) -> TestSuite:
         Logger().LogKeyValue("Using Prefix for Source: ", self.args.sourceprefix, "yellow") if self.args.verbose_mode else None
+        prefix_type, prefix = self._prefix_validation(self.args.sourceprefix)
+        modifier = SourceModifierFactory.get_modifier(prefix_type)
         for suite in suite_object:
-            self._modify(suite, self.args.sourceprefix)
+            modifier.apply(suite, prefix)
         return suite_object
     
-class SourcePrefixGitLab():
+########################################
+# Low-Level Implementation for GitLab
+########################################
+class GitLabModifier():
     """
     Source Prefix Modifier for "GitLab" Projects.
     Expected CMD Line Arg: "gitlab::prefix"
@@ -62,7 +89,7 @@ class SourcePrefixGitLab():
         rel_path = os.path.relpath(file_path, git_root).replace(os.sep, "/")
         return prefix.rstrip("/") + "/-/blob/" + git_branch + "/" + rel_path
 
-    def _apply_gitlab_source_to_suite(self, suite_dict, prefix):
+    def apply(self, suite_dict, prefix):
         try:
             suite_dict["source"] = self._convert_to_gitlab_url(suite_dict["source"], prefix)
         except:
@@ -75,4 +102,9 @@ class SourcePrefixGitLab():
                 test["source"] = "GitLink error"
 
         for sub_suite in suite_dict.get("sub_suites", []):
-            self._apply_gitlab_source_to_suite(sub_suite, prefix)
+            self.apply(sub_suite, prefix)
+
+########################################
+# Low-Level Implementation for ...
+# [FUTURE EXTENSIONS LIKE GITHUB]
+########################################

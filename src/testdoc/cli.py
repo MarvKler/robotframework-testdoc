@@ -19,6 +19,7 @@ from .helper.cliargs import CommandLineArguments
 @click.option("--hide-suite-doc",   is_flag=True, required=False, help="If given, suite documentation is hidden")
 @click.option("--hide-source",      is_flag=True, required=False, help="If given, test suite/ test case source is hidden")
 @click.option("--hide-keywords",    is_flag=True, required=False, help="If given, keyword calls in test cases are hidden")
+@click.option("-S", "--style", required=False, help="Choose a predefined default style theme - 'default', 'robot', 'dark' or 'blue' ")
 @click.option("-c", "--configfile", required=False, help="Optional .toml configuration file (includes all cmd-args)")
 @click.option("-v", "--verbose",    is_flag=True, required=False, help="More precise debugging into shell")
 @click.argument("PATH")
@@ -36,6 +37,7 @@ def main(
         hide_suite_doc,
         hide_source,
         hide_keywords,
+        style,
         configfile,
         verbose,
         path,
@@ -77,6 +79,7 @@ def main(
         "hide_source": hide_source or None,
         "hide_keywords": hide_keywords or None,
         "verbose_mode": verbose or None,
+        "style": style or None,
         "config_file": configfile or None,
     }
     args.suite_file = path

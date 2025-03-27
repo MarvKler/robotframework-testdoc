@@ -92,8 +92,8 @@ You can select between several themes (color configurations) for your HTML docum
 
 ### Default Themes
 
-There are a few predefined default themes available that you can choose via the toml-configuration file.   
-Therefore, please use the following syntax:
+There are a few predefined default themes available that you can choose via the toml-configuration file OR cli.   
+Therefore, please use the following syntax: for the toml file
 ```toml
 [colors]
 # Use the default theme
@@ -108,6 +108,15 @@ default = 2
 # Use the default theme
 default = "robot"
 default = 3
+```
+
+For setting it via CLI, please use the following:
+```shell
+# Applying dark theme
+testdoc ... -S dark PATH OUTPUT_FILE
+
+# Applying blue theme
+testdoc ... --style blue PATH OUTPUT_FILE
 ```
 
 > [!TIP]
@@ -131,3 +140,17 @@ robot_icon = "#00ffb9"
 
 > [!TIP]
 > Please make sure to configure all available color values from this example — missing values may cause layout or rendering issues in the generated HTML document!
+
+### Default Themes - Screenshot
+
+#### Dark
+
+![alt text](docs/style_dark.png)
+
+#### Blue
+
+![alt text](docs/style_blue.png)
+
+#### Robot / Default
+
+![alt text](docs/style_robot.png)
