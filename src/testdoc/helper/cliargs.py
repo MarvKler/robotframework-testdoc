@@ -19,6 +19,7 @@ class CommandLineArgumentsData:
     config_file: str = None
     verbose_mode: bool = False
     suite_file: str = None
+    style: str = None
     output_file: str = None
     colors: dict = None
 

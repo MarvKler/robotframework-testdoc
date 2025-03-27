@@ -13,13 +13,20 @@ class ThemeConfig():
         with open(self.default_config, "rb") as file:
             self.config = tomli.load(file)
 
+    #######################################################################################################
+
     def theme(self):
-        _theme = self.args.colors
-        if _theme:
-            if "default" in _theme:
-                return self._get_predefined_theme(_theme.get("default"))    
-            return _theme
+        _cli_style = self.args.style
+        if _cli_style:
+            return self._get_predefined_theme(_cli_style)
+        _toml_theme = self.args.colors
+        if _toml_theme:
+            if "default" in _toml_theme:
+                return self._get_predefined_theme(_toml_theme.get("default"))    
+            return _toml_theme
         return self._get_predefined_theme(self.config["default"]["theme"])
+    
+    #######################################################################################################
     
     def _get_predefined_theme(self, theme: str):
         theme = theme.strip()
