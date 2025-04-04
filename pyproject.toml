@@ -8,7 +8,7 @@ version = "0.1.5"
 description = "A CLI Tool to generate a Test Documentation for your RobotFramework Test Scripts."
 readme = "README.md"
 requires-python = ">=3.7"
-authors = [{ name = "Marvin Klerx", email = "marvinklerx1@gmail.com" }]
+authors = [{ name = "Marvin Klerx", email = "marvinklerx20@gmail.com" }]
 license = { text = "MIT" }
 
 dependencies = [
