@@ -1,4 +1,5 @@
 from robot.api import TestSuite
+from robot.errors import DataError
 from ..helper.cliargs import CommandLineArguments
 
 class TestCaseParser():
@@ -25,8 +26,11 @@ class TestCaseParser():
         
     # Consider tags via officially provided robot api
     def consider_tags(self, suite: TestSuite) -> TestSuite:
-        if len(self.args.include) > 0:
-            suite.configure(include_tags=self.args.include) 
-        if len(self.args.exclude) > 0:
-            suite.configure(exclude_tags=self.args.exclude)
-        return suite
+        try: 
+            if len(self.args.include) > 0:
+                suite.configure(include_tags=self.args.include) 
+            if len(self.args.exclude) > 0:
+                suite.configure(exclude_tags=self.args.exclude)
+            return suite
+        except DataError as e:
+            raise DataError(e.message)
