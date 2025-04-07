@@ -47,14 +47,15 @@ def main(
     Welcome to robotframework-testdoc - the new test documentation generator for your Robot Framework tests!
     """
     color = "green"
-    click.echo(click.style("""
+    entrypoint_msg = """
 ████████╗███████╗███████╗████████╗██████╗ ███████╗███████╗
 ╚══██╔══╝██╔════╝██╔════╝╚══██╔══╝██   ██╗██   ██║██╔════╝
    ██║   █████╗  ███████╗   ██║   ██   ██║██   ██║██║     
    ██║   ██╔══╝  ╚════██║   ██║   ██   ██║██   ██║██║       
    ██║   ███████╗███████║   ██║   ██████╔╝███████║███████╗
    ╚═╝   ╚══════╝╚══════╝   ╚═╝   ╚═════╝ ╚══════╝ ╚═════╝  
-      """, fg=color)
+      """
+    click.echo(click.style(entrypoint_msg, fg=color)
     )
 
     args_instance = CommandLineArguments()
