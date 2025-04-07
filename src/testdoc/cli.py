@@ -47,7 +47,7 @@ def main(
     Welcome to robotframework-testdoc - the new test documentation generator for your Robot Framework tests!
     """
     color = "green"
-    entrypoint_msg = f"""
+    entrypoint_msg = """
 ████████╗███████╗███████╗████████╗██████╗ ███████╗███████╗
 ╚══██╔══╝██╔════╝██╔════╝╚══██╔══╝██   ██╗██   ██║██╔════╝
    ██║   █████╗  ███████╗   ██║   ██   ██║██   ██║██║     
