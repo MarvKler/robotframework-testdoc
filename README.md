@@ -1,3 +1,5 @@
+[![Release Pipeline](https://github.com/MarvKler/robotframework-testdoc/actions/workflows/release.yml/badge.svg)](https://github.com/MarvKler/robotframework-testdoc/actions/workflows/release.yml)
+
 # Robot Framework TestDoc
 
 ## Installation
