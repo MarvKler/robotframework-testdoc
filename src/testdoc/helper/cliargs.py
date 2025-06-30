@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Any, List
-import tomli
+from .toml_reader import TOMLReader
 import os
 
 @dataclass
@@ -37,9 +37,7 @@ class CommandLineArguments:
     ### Load configuration file
     ###
     def load_from_config_file(self, file_path: str):
-        with open(file_path, "rb") as f:
-            config = tomli.load(f)
-
+        config = TOMLReader()._read_toml(file_path)
         _is_pyproject = self._is_pyproject_config(file_path)
         if _is_pyproject:
             self._handle_pyproject_config(config)

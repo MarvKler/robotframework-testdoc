@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from robot.api import SuiteVisitor, TestSuite
 from .testcaseparser import TestCaseParser
@@ -6,6 +7,7 @@ from .modifier.suitefilemodifier import SuiteFileModifier
 
 class RobotSuiteParser(SuiteVisitor):
     def __init__(self):
+        self.suite_counter = 0
         self.suites = []
         self.tests = []
 
@@ -16,6 +18,8 @@ class RobotSuiteParser(SuiteVisitor):
 
         # Test Suite Parser
         suite_info = {
+            "id": str(suite.longname).lower().replace(".", "_").replace(" ", "_"),
+            "filename": str(Path(suite.source).name),
             "name": suite.name,
             "doc": "<br>".join(line.replace("\\n","") for line in suite.doc.splitlines() if line.strip()) if suite.doc else None,
             "is_folder": self._is_directory(suite),
