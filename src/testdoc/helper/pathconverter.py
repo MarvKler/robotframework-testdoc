@@ -17,7 +17,7 @@ class PathConverter():
         # Convert path to suite file / directory
         suite_path = PathConverter().conv_generic_path(path=suite_path)
         if ".robot" in suite_path:
-            msg = f"Suite File: '{str(suite_path).split("/")[-1]}'"
+            msg = f'Suite File: "{str(suite_path).split("/")[-1]}"'
         else:
             msg = f"Suite Directory: '{suite_path}'"
 
