@@ -37,6 +37,7 @@ class TestCaseParser():
             raise DataError(e.message)
         
     def _keyword_parser(self, test_body: Body):
+        """ Parse keywords and their child-items """
         _keyword_object = []
         for kw in test_body:
             _keyword_object.extend(self._handle_keyword_types(kw))
@@ -46,13 +47,16 @@ class TestCaseParser():
             return "No Keyword Calls in Test"
         return _keyword_object
         
-    def _handle_keyword_types(self, kw: Keyword):
+    def _handle_keyword_types(self, kw: Keyword, indent: int = 0):
+        """ Handle different keyword types """
         result = []
         kw_type = getattr(kw, 'type', None)
 
         _sd = "    " # classic rfw delimiter with 4 spaces
+        _prev_indent = indent
+        _indent = _sd * indent
 
-        # Klassisches Keyword
+        # Classic keyword
         if kw_type == "KEYWORD" and getattr(kw, 'name', None):
             args = _sd.join(kw.args) if getattr(kw, 'args', None) else ""
             entry = kw.name
@@ -60,32 +64,32 @@ class TestCaseParser():
                 entry += _sd + args
             result.append(entry)
 
-        # Variablenzuweisung
+        # VAR syntax
         elif kw_type == "VAR" and getattr(kw, 'name', None):
             value = _sd.join(kw.value) if getattr(kw, 'value', None) else ""
-            result.append(f"VAR    {kw.name} =    {value}")
+            result.append(f"{_indent}VAR    {kw.name} =    {value}")
 
         # IF/ELSE/ELSE IF
-        elif kw_type and ("IF" in kw_type or "ELSE" in kw_type):
+        elif kw_type == "IF/ELSE ROOT":
             for branch in getattr(kw, 'body', []):
                 branch_type = getattr(branch, 'type', None)
                 if branch_type == "IF":
-                    header = f"IF {getattr(branch, 'condition', '')}".strip()
+                    header = f"{_indent}IF {getattr(branch, 'condition', '')}".rstrip()
                 elif branch_type == "ELSE IF":
-                    header = f"ELSE IF {getattr(branch, 'condition', '')}".strip()
+                    header = f"{_indent}ELSE IF {getattr(branch, 'condition', '')}".rstrip()
                 elif branch_type == "ELSE":
-                    header = "ELSE"
+                    header = f"{_indent}ELSE"
                 else:
-                    header = branch_type or ""
+                    header = f"{_indent}{branch_type or ''}"
                 if header:
                     result.append(header)
                 for subkw in getattr(branch, 'body', []):
-                    result.extend(self._handle_keyword_types(subkw))
-            result.append("END")
+                    result.extend(self._handle_keyword_types(subkw, indent=_indent+1))
+            result.append(f"{_indent}END")
 
-        # FOR-Schleife
+        # FOR loop
         elif kw_type == "FOR":
-            header = "FOR"
+            header = f"{_indent}FOR"
             if hasattr(kw, 'variables') and kw.variables:
                 header += f"    {'    '.join(kw.variables)}"
             if hasattr(kw, 'flavor') and kw.flavor:
@@ -96,22 +100,22 @@ class TestCaseParser():
             if hasattr(kw, 'body'):
                 for subkw in kw.body:
                     result.extend(self._handle_keyword_types(subkw))
-            result.append("END")
+            result.append(f"{_indent}END")
 
-        # WHILE-Schleife
+        # WHILE loop
         elif kw_type == "WHILE":
-            header = "WHILE"
+            header = f"{_indent}WHILE"
             if hasattr(kw, 'condition') and kw.condition:
                 header += f"    {kw.condition}"
             result.append(header)
             if hasattr(kw, 'body'):
                 for subkw in kw.body:
                     result.extend(self._handle_keyword_types(subkw))
-            result.append("END")
+            result.append(f"{_indent}END")
 
         # TRY/EXCEPT/FINALLY
         elif kw_type in ("TRY", "EXCEPT", "FINALLY"):
-            header = kw_type
+            header = f"{_indent}{kw_type}"
             if hasattr(kw, 'patterns') and kw.patterns:
                 header += f"    {'    '.join(kw.patterns)}"
             if hasattr(kw, 'condition') and kw.condition:
@@ -120,19 +124,20 @@ class TestCaseParser():
             if hasattr(kw, 'body'):
                 for subkw in kw.body:
                     result.extend(self._handle_keyword_types(subkw))
+            result.append(f"{_indent}END")
 
         # BREAK, CONTINUE, RETURN, ERROR
         elif kw_type in ("BREAK", "CONTINUE", "RETURN", "ERROR"):
-            entry = kw_type
+            entry = f"{_indent}{kw_type}"
             if hasattr(kw, 'values') and kw.values:
                 entry += f"    {'    '.join(kw.values)}"
             result.append(entry)
 
-        # Sonstige Typen (z.B. COMMENT, EMPTY)
+        # Other types
         elif kw_type in ("COMMENT", "EMPTY"):
-            pass  # Optional: ausgeben, wenn gewünscht
+            pass
 
-        # Unbekannter Typ mit Body (rekursiv)
+        # Unknown types
         elif hasattr(kw, 'body'):
             for subkw in kw.body:
                 result.extend(self._handle_keyword_types(subkw))
