@@ -9,12 +9,22 @@ from ..helper.logger import Logger
 
 class TestDocHtmlRendering():
 
-    HTML_TEMPLATE_VERSION = "2.0"
-    HTML_TEMPLATE_NAME = "jinja_template_03.html"
-    TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "html", "templates", HTML_TEMPLATE_VERSION)
-    
     def __init__(self):
         self.args = CommandLineArguments().data
+        self._html_templ_selection()
+
+    def _html_templ_selection(self):
+        """ Check which HTML template should selected - custom specific configuration """
+        if self.args.html_template == "1.0":
+            self.HTML_TEMPLATE_VERSION = self.args.html_template
+            self.HTML_TEMPLATE_NAME = "jinja_template_01.html"
+            self.TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "html", "templates", self.HTML_TEMPLATE_VERSION)
+        elif self.args.html_template == "2.0":
+            self.HTML_TEMPLATE_VERSION = self.args.html_template
+            self.HTML_TEMPLATE_NAME = "jinja_template_03.html"
+            self.TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "html", "templates", self.HTML_TEMPLATE_VERSION)
+        else:
+            raise ValueError(f"CLI Argument 'html_template' got value '{self.args.html_template}' - value not known!")         
 
     def render_testdoc(self,
             suites,

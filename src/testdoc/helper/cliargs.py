@@ -21,6 +21,7 @@ class CommandLineArgumentsData:
     verbose_mode: bool = False
     suite_file: str = None
     style: str = None
+    html_template: str = "2.0"
     output_file: str = None
     colors: dict = None
 

@@ -4,7 +4,8 @@ import os
 from .testdoc import TestDoc
 from .helper.cliargs import CommandLineArguments
 
-@click.command()
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+@click.command(context_settings=CONTEXT_SETTINGS)
 @click.option("-t","--title",       required=False, help="Modify the title of the test documentation page")
 @click.option("-n","--name",        required=False, help="Modify the name of the root suite element")
 @click.option("-d","--doc",         required=False, help="Modify the documentation of the root suite element")
@@ -20,8 +21,10 @@ from .helper.cliargs import CommandLineArguments
 @click.option("--hide-source",      is_flag=True, required=False, help="If given, test suite/ test case source is hidden")
 @click.option("--hide-keywords",    is_flag=True, required=False, help="If given, keyword calls in test cases are hidden")
 @click.option("-S", "--style", required=False, help="Choose a predefined default style theme - 'default', 'robot', 'dark' or 'blue' ")
+@click.option("-ht","--html-template", required=False, help="Select the HTML template - possible values: '1.0', '2.0'")
 @click.option("-c", "--configfile", required=False, help="Optional .toml configuration file (includes all cmd-args)")
 @click.option("-v", "--verbose",    is_flag=True, required=False, help="More precise debugging into shell")
+@click.version_option(package_name='robotframework-testdoc')
 @click.argument("PATH")
 @click.argument("OUTPUT")
 def main(
@@ -38,6 +41,7 @@ def main(
         hide_source,
         hide_keywords,
         style,
+        html_template,
         configfile,
         verbose,
         path,
@@ -81,6 +85,7 @@ def main(
         "hide_keywords": hide_keywords or None,
         "verbose_mode": verbose or None,
         "style": style or None,
+        "html_template": html_template or None,
         "config_file": configfile or None,
     }
     args.suite_file = path

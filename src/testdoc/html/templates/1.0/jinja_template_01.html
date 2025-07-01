@@ -121,7 +121,9 @@
                                                 <tr>
                                                     <td style="width: 10%; font-weight: bold;">🏷 Tags:</td>
                                                     <td style="text-align: left;">
-                                                        {% if test.tags %}
+                                                        {% if test.tags and test.tags is string %}
+                                                            {{ test.tags }}
+                                                        {% else %}
                                                             {{ test.tags | join(', ') }}
                                                         {% endif %}
                                                     </td>
@@ -132,7 +134,7 @@
                                                     <td style="width: 10%; font-weight: bold; vertical-align: top;">🔑 Keywords:</td>
                                                     <td style="text-align: left;">
                                                         {% if test.keywords %}
-                                                            - {{ test.keywords | join('<br>- ') }}
+                                                            <pre>- {{ test.keywords | join('\n- ') }}</pre>
                                                         {% endif %}
                                                     </td>
                                                 </tr>
