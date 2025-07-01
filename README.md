@@ -96,21 +96,21 @@ These template can be configured via ``cli arguments`` or within a ``.toml confi
 
 ### Default Design
 
-- 2.0
+- v2
 
 ### Available HTML Templates
 
 You can choose one of the following designs:
-- 1.0
-- 2.0
+- v1
+- v2
 
-### Version 1.0
+### Version 1
 
 #### Visit Tests
 
 ![alt text](docs/html_v1_common.png)
 
-### Version 2.0
+### Version 2
 
 #### Visit Tests on Root Suite Level
 

@@ -14,11 +14,11 @@ class TestDocHtmlRendering():
 
     def _html_templ_selection(self):
         """ Check which HTML template should selected - custom specific configuration """
-        if self.args.html_template == "1.0":
+        if self.args.html_template == "v1":
             self.HTML_TEMPLATE_VERSION = self.args.html_template
             self.HTML_TEMPLATE_NAME = "jinja_template_01.html"
             self.TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "html", "templates", self.HTML_TEMPLATE_VERSION)
-        elif self.args.html_template == "2.0":
+        elif self.args.html_template == "v2":
             self.HTML_TEMPLATE_VERSION = self.args.html_template
             self.HTML_TEMPLATE_NAME = "jinja_template_03.html"
             self.TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "html", "templates", self.HTML_TEMPLATE_VERSION)
