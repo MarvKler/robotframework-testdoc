@@ -17,9 +17,34 @@
     {% if suite.tests %}
         <div class="suite-header mb-3 p-3" data-suite-id="{{ suite.id }}" style="border: 1px solid {{ colors.border_color }}; border-radius: .375rem; background: {{ colors.inner_color }};">
             <div><strong>Generic Suite Details:</strong></div>
-            <div><strong>- File Name:</strong> {{ suite.filename }}</div>
-            <div><strong>- Suite Name:</strong> {{ suite.name }}</div>
-            <div><strong>- Count of Tests:</strong> {{ suite.num_tests }}</div>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="width: 10%; font-weight: bold;">📁 Suite Name:</td>
+                    <td style="text-align: left;">{{ suite.name }}</td>
+                </tr>
+                {% if not suite.is_folder %}
+                    <tr>
+                        <td style="width: 10%; font-weight: bold;">📄 File Name:</td>
+                        <td style="text-align: left;">{{ suite.filename }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td style="width: 10%; font-weight: bold;">📊 Number of Tests:</td>
+                    <td style="text-align: left;">{{ suite.num_tests }}</td>
+                </tr>
+                {% if suite.doc is not none %}
+                <tr>
+                    <td style="width: 10%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
+                    <td style="text-align: left;">{{ suite.doc }}</td>
+                </tr>
+                {% endif %}
+                {% if suite.metadata is not none %}
+                <tr>
+                    <td style="width: 10%; font-weight: bold; vertical-align: top;">⚙️ Metadata:</td>
+                    <td style="text-align: left;">{{ suite.metadata }}</td>
+                </tr>
+                {% endif %}
+            </table>
         </div>
         {% for test in suite.tests %}
             <div class="card mb-3 test-card" data-suite-id="{{ suite.id }}">
@@ -52,7 +77,9 @@
                                 <tr>
                                     <td style="width: 10%; font-weight: bold;">🏷 Tags:</td>
                                     <td style="text-align: left;">
-                                        {% if test.tags %}
+                                        {% if test.tags and test.tags is string %}
+                                            {{ test.tags }}
+                                        {% else %}
                                             {{ test.tags | join(', ') }}
                                         {% endif %}
                                     </td>
@@ -63,7 +90,7 @@
                                     <td style="width: 10%; font-weight: bold; vertical-align: top;">🔑 Keywords:</td>
                                     <td style="text-align: left;">
                                         {% if test.keywords %}
-                                            - {{ test.keywords | join('<br>- ') }}
+                                            <pre>- {{ test.keywords | join('\n- ') }}</pre>
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -71,7 +98,7 @@
                             {% if not has_info %}
                                 <tr>
                                     <td class="info-msg" style="width: 10%; vertical-align: top; text-align: center;">
-                                        No Details Available!
+                                        No Details Available / Enabled !
                                     </td>
                                 </tr>
                             {% endif %}
@@ -84,8 +111,28 @@
     {% if suite.sub_suites %}
         <div class="suite-header mb-3 p-3" data-suite-id="{{ suite.id }}" style="border: 1px solid {{ colors.border_color }}; border-radius: .375rem; background: {{ colors.inner_color }};">
             <div><strong>Generic Parent Suite Details:</strong></div>
-            <div><strong>- Suite Name:</strong> {{ suite.name }}</div>
-            <div><strong>- Count of Tests:</strong> {{ suite.total_tests }}</div>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="width: 10%; font-weight: bold;">📁 Suite Name:</td>
+                    <td style="text-align: left;">{{ suite.name }}</td>
+                </tr>
+                <tr>
+                    <td style="width: 10%; font-weight: bold;">📊 Number of Tests:</td>
+                    <td style="text-align: left;">{{ suite.total_tests }}</td>
+                </tr>
+                {% if suite.doc is not none %}
+                <tr>
+                    <td style="width: 10%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
+                    <td style="text-align: left;">{{ suite.doc }}</td>
+                </tr>
+                {% endif %}
+                {% if suite.metadata is not none %}
+                <tr>
+                    <td style="width: 10%; font-weight: bold; vertical-align: top;">⚙️ Metadata:</td>
+                    <td style="text-align: left;">{{ suite.metadata }}</td>
+                </tr>
+                {% endif %}
+            </table>
         </div>
         {% for sub_suite in suite.sub_suites %}
             {{ render_test_cases(sub_suite) }}
@@ -189,10 +236,8 @@
                 </div>
             </main>
         </div>
-        <p class="text-center generated_at py-1 border-top">
+        <p class="text-center generated_at py-1 border-top" style="color: {{ colors.text_color }};">
             This test case documentation was generated at: {{ generated_at }}
-            <br>
-            robotframework-testdoc - v{{ tool_version }}
             <br>
             <a href="mailto:{{ contact_mail }}?subject=Support Request - robotframework-testdoc" target="_blank">Contact the Developer</a> | 
             <a href="https://github.com/MarvKler/robotframework-testdoc?tab=readme-ov-file#robot-framework-testdoc" target="_blank">Visit Project on GitHub</a> | 
