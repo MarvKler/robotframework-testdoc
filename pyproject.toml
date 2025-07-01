@@ -27,7 +27,7 @@ testdoc = "testdoc.cli:main"
 include-package-data = true
 
 [tool.setuptools.package-data]
-"testdoc" = ["src/testdoc/html/templates/**/*.html"]
+"testdoc" = ["html/templates/**/*.html"]
 
 [tool.ruff]
 line-length = 150
