@@ -1,9 +1,8 @@
 from jinja2 import Environment, FileSystemLoader
-from pathlib import Path
 import os
 
 from ..html.themes.theme_config import ThemeConfig
-from ..helper.cliargs import CommandLineArguments, TOMLReader
+from ..helper.cliargs import CommandLineArguments
 from ..helper.datetimeconverter import DateTimeConverter
 from ..helper.logger import Logger
 
