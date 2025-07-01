@@ -4,11 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "robotframework-testdoc"
-version = "0.1.8"
+version = "0.2.0"
 description = "A CLI Tool to generate a Test Documentation for your RobotFramework Test Scripts."
 readme = "README.md"
 requires-python = ">=3.7"
-authors = [{ name = "Marvin Klerx", email = "marvinklerx20@gmail.com" }]
+authors = [
+    { name = "Marvin Klerx", email = "marvinklerx20@gmail.com" }
+]
 license = { text = "MIT" }
 
 dependencies = [
@@ -20,6 +22,16 @@ dependencies = [
 
 [project.scripts]
 testdoc = "testdoc.cli:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"testdoc" = [
+    "html/images/*.svg",
+    "html/templates/**/*.html",
+    "default.toml"
+]
 
 [tool.ruff]
 line-length = 150

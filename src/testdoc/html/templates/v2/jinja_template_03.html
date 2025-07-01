@@ -1,0 +1,316 @@
+<!-- Jinja Macro for recursive suite tree (sidebar) -->
+{% macro render_suite_tree(suite, parent_id='root') %}
+    <li>
+        <a href="#" class="suite-link" data-suite-id="{{ suite.id }}">{{ suite.filename }}</a>
+        {% if suite.sub_suites %}
+            <ul>
+                {% for sub_suite in suite.sub_suites %}
+                    {{ render_suite_tree(sub_suite, sub_suite.id) }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+{% endmacro %}
+
+<!-- Jinja Macro for test case cards (main area) -->
+{% macro render_test_cases(suite) %}
+    {% if suite.tests %}
+        <div class="suite-header mb-3 p-3" data-suite-id="{{ suite.id }}" style="border: 1px solid {{ colors.border_color }}; border-radius: .375rem; background: {{ colors.inner_color }};">
+            <div><strong>Generic Suite Details:</strong></div>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="width: 10%; font-weight: bold;">📁 Suite Name:</td>
+                    <td style="text-align: left;">{{ suite.name }}</td>
+                </tr>
+                {% if not suite.is_folder %}
+                    <tr>
+                        <td style="width: 10%; font-weight: bold;">📄 File Name:</td>
+                        <td style="text-align: left;">{{ suite.filename }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td style="width: 10%; font-weight: bold;">📊 Number of Tests:</td>
+                    <td style="text-align: left;">{{ suite.num_tests }}</td>
+                </tr>
+                {% if suite.doc is not none %}
+                <tr>
+                    <td style="width: 10%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
+                    <td style="text-align: left;">{{ suite.doc }}</td>
+                </tr>
+                {% endif %}
+                {% if suite.metadata is not none %}
+                <tr>
+                    <td style="width: 10%; font-weight: bold; vertical-align: top;">⚙️ Metadata:</td>
+                    <td style="text-align: left;">{{ suite.metadata }}</td>
+                </tr>
+                {% endif %}
+            </table>
+        </div>
+        {% for test in suite.tests %}
+            <div class="card mb-3 test-card" data-suite-id="{{ suite.id }}">
+                <div class="card-header" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#collapse-{{ suite.id }}-{{ loop.index }}" aria-expanded="false" aria-controls="collapse-{{ suite.id }}-{{ loop.index }}">
+                    <svg class="svg-icon" width="20" height="20" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <title>Robot Framework</title>
+                        <path d="M4.9565 10.2246c0-1.8766 1.5257-3.4023 3.4-3.4023 1.8766 0 3.4024 1.5257 3.4024 3.4023 0 .6838-.5526 1.2364-1.2341 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364 0-.513-.4185-.9296-.9338-.9296-.5129 0-.9317.4165-.9317.9296 0 .6838-.5523 1.2364-1.234 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364m14.0868 5.717c0 .6842-.5524 1.2363-1.2341 1.2363H6.3575c-.6818 0-1.2344-.552-1.2344-1.2363 0-.6837.5526-1.2363 1.2344-1.2363h11.4517c.6817 0 1.234 5526 1.234 1.2363m-5.351-5.0244c-.3814-.5657-.2323-1.3328.3334-1.7143l2.8628-1.9334c.5613-.3902 1.3329-.2324 1.7144.3289.3815.5654.2323 1.3329-.3334 1.7144l-2.8628 1.9333c-.5442.3831-1.3348.2379-1.7144-.3289zm7.8393 7.6018a.8815.8815 0 0 1-.258.6227l-2.1277 2.1277a.8822.8822 0 0 1-.623.258H5.4772a.8822.8822 0 0 1-.623-.258l-2.1277-2.1277a.8815.8815 0 0 1-.258-.6227V5.4818a.8797.8797 0 0 1 .258-.6228l2.1277-2.1282a.8816.8816 0 0 1 .623-.2578h13.0456a.8816.8816 0 0 1 .623.2578l2.1277 2.1282a.8797.8797 0 0 1 .258.6228V18.519zm1.811-15.0835L20.5644.6577A2.2454 2.2454 0 0 0 18.9775 0H5.0207A2.2445 2.2445 0 0 0 3.433.658L.657 3.4359A2.2449 2.2449 0 0 0 0 5.0228v13.9547c0 .5953.2366 1.1667.6575 1.5872l2.778 2.7779c.421.421.9918.6573 1.5871.6573h13.9548a2.2448 2.2448 0 0 0 1.5872-.6573l2.7779-2.7779A2.2436 2.2436 0 0 0 24 18.9775V5.023a2.2451 2.2451 0 0 0-.6575-1.5875z"/>
+                    </svg>
+                    &nbsp;Test Case: <strong>{{ test.name }}</strong>
+                </div>
+                <div id="collapse-{{ suite.id }}-{{ loop.index }}" class="collapse">
+                    <div class="card-body">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            {% set has_info = test.doc is not none or test.source is not none or test.tags is not none or test.keywords is not none %}
+                            {% if test.doc is not none %}
+                                <tr>
+                                    <td style="width: 10%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
+                                    <td style="text-align: left;">{{ test.doc }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if test.source is not none %}
+                                <tr>
+                                    <td style="width: 10%; font-weight: bold; vertical-align: top;">🔗 Source:</td>
+                                    <td style="text-align: left;">
+                                        <a href="{{ test.source }}" target="_blank">{{ test.source }}</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            {% if test.tags is not none %}
+                                <tr>
+                                    <td style="width: 10%; font-weight: bold;">🏷 Tags:</td>
+                                    <td style="text-align: left;">
+                                        {% if test.tags and test.tags is string %}
+                                            {{ test.tags }}
+                                        {% else %}
+                                            {{ test.tags | join(', ') }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            {% if test.keywords is not none %}
+                                <tr>
+                                    <td style="width: 10%; font-weight: bold; vertical-align: top;">🔑 Keywords:</td>
+                                    <td style="text-align: left;">
+                                        {% if test.keywords %}
+                                            <pre>- {{ test.keywords | join('\n- ') }}</pre>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            {% if not has_info %}
+                                <tr>
+                                    <td class="info-msg" style="width: 10%; vertical-align: top; text-align: center;">
+                                        No Details Available / Enabled !
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% if suite.sub_suites %}
+        <div class="suite-header mb-3 p-3" data-suite-id="{{ suite.id }}" style="border: 1px solid {{ colors.border_color }}; border-radius: .375rem; background: {{ colors.inner_color }};">
+            <div><strong>Generic Parent Suite Details:</strong></div>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="width: 10%; font-weight: bold;">📁 Suite Name:</td>
+                    <td style="text-align: left;">{{ suite.name }}</td>
+                </tr>
+                <tr>
+                    <td style="width: 10%; font-weight: bold;">📊 Number of Tests:</td>
+                    <td style="text-align: left;">{{ suite.total_tests }}</td>
+                </tr>
+                {% if suite.doc is not none %}
+                <tr>
+                    <td style="width: 10%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
+                    <td style="text-align: left;">{{ suite.doc }}</td>
+                </tr>
+                {% endif %}
+                {% if suite.metadata is not none %}
+                <tr>
+                    <td style="width: 10%; font-weight: bold; vertical-align: top;">⚙️ Metadata:</td>
+                    <td style="text-align: left;">{{ suite.metadata }}</td>
+                </tr>
+                {% endif %}
+            </table>
+        </div>
+        {% for sub_suite in suite.sub_suites %}
+            {{ render_test_cases(sub_suite) }}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Framework - Test Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        html, body, .container-fluid {
+            background-color: {{ colors.background }};
+            color: {{ colors.text_color }};
+            font-size: 14px;
+        }
+        a { color: {{ colors.text_color }}; }
+        a:hover { color: {{ colors.robot_icon }}; }
+        .svg-icon { fill: {{ colors.robot_icon }}; }
+        h1 { color: {{ colors.title_color }}; font-size: 30px; }
+        .info-msg { color: {{ colors.title_color }}; }
+        .generated_at { color: {{ colors.title_color }}; }
+        .sidebar {
+            background: {{ colors.inner_color }};
+            border-right: 1px solid {{ colors.border_color }};
+            min-width: 260px;
+            max-width: 320px;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 20px 10px 10px 10px;
+        }
+        .suite-tree ul {
+            list-style-type: none;
+            padding-left: 18px;
+        }
+        .suite-tree li {
+            margin-bottom: 4px;
+        }
+        .suite-link {
+            color: {{ colors.text_color }};
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .suite-link.active {
+            font-weight: bold;
+            color: {{ colors.robot_icon }};
+        }
+        .main-content {
+            padding: 30px 20px 20px 20px;
+            background: {{ colors.background }};
+            min-height: 100vh;
+        }
+        .test-card {
+            border: 1px solid {{ colors.border_color }};
+            background: {{ colors.inner_color }};
+        }
+        .test-card .card-header {
+            background: {{ colors.button_active_color }};
+            color: {{ colors.text_color }};
+            font-size: 16px;
+        }
+        .test-card .card-body {
+            font-size: 14px;
+        }
+        table {
+            font-size: 13px;
+            color: {{ colors.text_color }};
+        }
+        td {
+            padding: 1px 1px;
+        }
+        @media (max-width: 900px) {
+            .sidebar { min-width: 120px; max-width: 180px; }
+            .main-content { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1 class="text-center mt-4">{{ title }}</h1>
+        <hr style="border-top: 1px solid {{ colors.border_color }}; margin: 0 0 20px 0;">
+        <div class="row" style="min-height: 80vh;">
+            <nav class="col-md-3 sidebar suite-tree">
+                <h5 style="color: {{ colors.title_color }};">Directory Structure: </h5>
+                <ul>
+                    {% for suite in suites %}
+                        {{ render_suite_tree(suite) }}
+                    {% endfor %}
+                </ul>
+            </nav>
+            <main class="col-md-9 main-content">
+                <div id="test-cases-list">
+                    {% for suite in suites %}
+                        {{ render_test_cases(suite) }}
+                    {% endfor %}
+                </div>
+            </main>
+        </div>
+        <p class="text-center generated_at py-1 border-top" style="color: {{ colors.text_color }};">
+            This test case documentation was generated at: {{ generated_at }}
+            <br>
+            <a href="mailto:{{ contact_mail }}?subject=Support Request - robotframework-testdoc" target="_blank">Contact the Developer</a> | 
+            <a href="https://github.com/MarvKler/robotframework-testdoc?tab=readme-ov-file#robot-framework-testdoc" target="_blank">Visit Project on GitHub</a> | 
+            <a href="https://github.com/MarvKler/robotframework-testdoc/issues/new" target="_blank">Report Issue</a>
+        </p>
+    </div>
+    <script>
+        // Assign unique IDs to suites for filtering (should be done in Python, but fallback here)
+        document.querySelectorAll('.suite-link').forEach(function(link, idx) {
+            if (!link.dataset.suiteId) link.dataset.suiteId = 'suite-' + idx;
+        });
+        document.querySelectorAll('.test-card').forEach(function(card, idx) {
+            if (!card.dataset.suiteId) card.dataset.suiteId = 'suite-' + idx;
+        });
+
+        // Build suite hierarchy for filtering
+        function buildSuiteTree() {
+            const tree = {};
+            document.querySelectorAll('.suite-link').forEach(function(link) {
+                const suiteId = link.dataset.suiteId;
+                const parentLi = link.closest('li');
+                const subLinks = parentLi ? parentLi.querySelectorAll(':scope > ul > li > .suite-link') : [];
+                tree[suiteId] = Array.from(subLinks).map(l => l.dataset.suiteId);
+            });
+            return tree;
+        }
+
+        // Get all descendant suite ids (recursive)
+        function getAllDescendantSuites(tree, suiteId) {
+            let ids = [suiteId];
+            if (tree[suiteId]) {
+                tree[suiteId].forEach(function(childId) {
+                    ids = ids.concat(getAllDescendantSuites(tree, childId));
+                });
+            }
+            return ids;
+        }
+
+        const suiteTree = buildSuiteTree();
+
+        // Filtering logic: show test cases for selected suite and all its sub-suites
+        document.querySelectorAll('.suite-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var suiteId = this.dataset.suiteId;
+                document.querySelectorAll('.suite-link').forEach(function(l) { l.classList.remove('active'); });
+                this.classList.add('active');
+                // Get all descendant suite ids
+                var ids = getAllDescendantSuites(suiteTree, suiteId);
+
+                // Hide all test cards and suite headers
+                document.querySelectorAll('.test-card').forEach(function(card) {
+                    card.style.display = 'none';
+                });
+                document.querySelectorAll('.suite-header').forEach(function(header) {
+                    header.style.display = 'none';
+                });
+
+                // Show only test cards and suite headers for this suite and its descendants
+                ids.forEach(function(id) {
+                    document.querySelectorAll('.test-card[data-suite-id="' + id + '"]').forEach(function(card) {
+                        card.style.display = '';
+                    });
+                    document.querySelectorAll('.suite-header[data-suite-id="' + id + '"]').forEach(function(header) {
+                        header.style.display = '';
+                    });
+                });
+            });
+        });
+
+        // Show all test cases and suite headers by default
+        document.querySelectorAll('.test-card').forEach(function(card) { card.style.display = ''; });
+        document.querySelectorAll('.suite-header').forEach(function(header) { header.style.display = ''; });
+    </script>
+</body>
+</html>

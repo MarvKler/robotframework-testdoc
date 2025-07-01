@@ -89,6 +89,37 @@ For using this config file, just call the following command:
 testdoc -c path/to/config.toml tests/ TestDocumentation.html
 ```
 
+## HTML Template Selection
+
+You can choose between multiple HTML template for the design of your test documentation.    
+These template can be configured via ``cli arguments`` or within a ``.toml configuration file`` with the parameter ``html_template (-ht / --html-template)``.
+
+### Default Design
+
+- v2
+
+### Available HTML Templates
+
+You can choose one of the following designs:
+- v1
+- v2
+
+### Version 1
+
+#### Visit Tests
+
+![alt text](docs/html_v1_common.png)
+
+### Version 2
+
+#### Visit Tests on Root Suite Level
+
+![alt text](docs/html_v2_root.png)
+
+#### Visit Tests on Suite File Level
+
+![alt text](docs/html_v2_suitefile.png)
+
 ## Theme Selection / Color Configuration
 
 You can select between several themes (color configurations) for your HTML document to create!
