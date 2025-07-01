@@ -23,6 +23,10 @@ dependencies = [
 [project.scripts]
 testdoc = "testdoc.cli:main"
 
+[project.urls]
+Repository = "https://github.com/MarvKler/robotframework-testdoc"
+Issues = "https://github.com/MarvKler/robotframework-testdoc/issues"
+
 [tool.setuptools]
 include-package-data = true
 

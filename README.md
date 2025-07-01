@@ -1,5 +1,9 @@
 # Robot Framework TestDoc
 
+## GitHub Project
+
+Link to GitHub Project: [robotframework-testdoc](https://github.com/MarvKler/robotframework-testdoc)
+
 ## Statistics
 
 [![Release Pipeline](https://github.com/MarvKler/robotframework-testdoc/actions/workflows/release.yml/badge.svg)](https://github.com/MarvKler/robotframework-testdoc/actions/workflows/release.yml)
