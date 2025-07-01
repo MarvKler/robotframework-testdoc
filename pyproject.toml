@@ -23,6 +23,12 @@ dependencies = [
 [project.scripts]
 testdoc = "testdoc.cli:main"
 
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"testdoc" = ["src/testdoc/html/templates/**/*.html"]
+
 [tool.ruff]
 line-length = 150
 lint.select = ["E", "F"]  # Pyflakes & pycodestyle
