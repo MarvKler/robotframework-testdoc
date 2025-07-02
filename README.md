@@ -6,9 +6,11 @@ Link to GitHub Project: [robotframework-testdoc](https://github.com/MarvKler/rob
 
 ## Statistics
 
-[![Release Pipeline](https://github.com/MarvKler/robotframework-testdoc/actions/workflows/release.yml/badge.svg)](https://github.com/MarvKler/robotframework-testdoc/actions/workflows/release.yml)
-[![PyPI Downloads - Total](https://static.pepy.tech/badge/robotframework-testdoc)](https://pepy.tech/projects/robotframework-testdoc)
-[![PyPI Downloads - Monthly](https://static.pepy.tech/badge/robotframework-testdoc/month)](https://pepy.tech/projects/robotframework-testdoc)
+[![Release Pipeline](https://github.com/MarvKler/robotframework-testdoc/actions/workflows/release.yml/badge.svg)](https://github.com/MarvKler/robotframework-testdoc/actions/workflows/release.yml)  
+[![PyPI - Version](https://img.shields.io/pypi/v/robotframework-testdoc.svg)](https://pypi.org/project/robotframework-testdoc)   
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/robotframework-testdoc.svg)](https://pypi.org/project/robotframework-testdoc)    
+[![PyPI Downloads - Total](https://static.pepy.tech/badge/robotframework-testdoc)](https://pepy.tech/projects/robotframework-testdoc)   
+[![PyPI Downloads - Monthly](https://static.pepy.tech/badge/robotframework-testdoc/month)](https://pepy.tech/projects/robotframework-testdoc)   
 
 ## Installation
 
