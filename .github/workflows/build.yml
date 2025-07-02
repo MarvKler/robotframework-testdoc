@@ -1,10 +1,9 @@
-name: Build Python Package
+name: Build & Test Python Package
 
 on:
   push:
     branches:
       - main
-      - '**'
     tags-ignore:
       - 'v*.*.*'
     paths:
@@ -20,9 +19,8 @@ on:
       - pyproject.toml
 
 jobs:
-  build:
+  code-quality:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v3
@@ -40,9 +38,28 @@ jobs:
     - name: Lint with Ruff
       run: ruff check .
 
+  test-build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install Build Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build ruff pytest
+    
     - name: Build Package
       run: python -m build
-
+    
     - name: Test CLI Command
       run: |
         pip install .
@@ -50,11 +67,4 @@ jobs:
 
     - name: Run Unit Tests
       run: pytest atest/
-
-    # - name: Publish to TestPyPI
-    #   env:
-    #     TWINE_USERNAME: __token__
-    #     TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
-    #   run: |
-    #     pip install twine
-    #     twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+  
