@@ -1,4 +1,4 @@
-name: Build Python Package
+name: Build & Test Python Package
 
 on:
   push:
@@ -51,10 +51,33 @@ jobs:
     - name: Run Unit Tests
       run: pytest atest/
 
-    # - name: Publish to TestPyPI
-    #   env:
-    #     TWINE_USERNAME: __token__
-    #     TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
-    #   run: |
-    #     pip install twine
-    #     twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install Build Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build ruff pytest
+    
+    - name: Build Package
+      run: python -m build
+    
+    - name: Test CLI Command
+      run: |
+        pip install .
+        testdoc --help
+
+    - name: Run Unit Tests
+      run: pytest atest/
+  
