@@ -1,10 +1,10 @@
 from jinja2 import Environment, FileSystemLoader
 import os
 
-from ..html.themes.theme_config import ThemeConfig
-from ..helper.cliargs import CommandLineArguments
-from ..helper.datetimeconverter import DateTimeConverter
-from ..helper.logger import Logger
+from ...html.themes.theme_config import ThemeConfig
+from ...helper.cliargs import CommandLineArguments
+from ...helper.datetimeconverter import DateTimeConverter
+from ...helper.logger import Logger
 
 class TestDocHtmlRendering():
 

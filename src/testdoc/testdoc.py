@@ -1,6 +1,6 @@
 from .helper.pathconverter import PathConverter
 from .parser.testsuiteparser import RobotSuiteParser
-from .html_rendering.render import TestDocHtmlRendering
+from .html.rendering.render import TestDocHtmlRendering
 from .parser.modifier.suitefilemodifier import SuiteFileModifier
 
 class TestDoc():
