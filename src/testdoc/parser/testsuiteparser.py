@@ -96,11 +96,11 @@ class RobotSuiteParser(SuiteVisitor):
         _exclude = self.args.exclude
         _source = self.args.suite_file
         # Type Conversions
-        if not type(_include) == list:
+        if type(_include) is not list:
             _include = list(_include)
-        if not type(_exclude) == list:
+        if type(_exclude) is not list:
             _exclude = list(_exclude)
-        if not type(_source) == list:
+        if type(_source) is not list:
             _source = list(_source)
 
         # Format / Syntax Conversions

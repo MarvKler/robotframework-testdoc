@@ -15,7 +15,7 @@ class PathConverter():
         config_path = self.args.config_file
 
         # Convert path to suite file / directory
-        if type(suite_path) == tuple:
+        if type(suite_path) is tuple:
             suite_path = list(suite_path)
             for idx, item in enumerate(suite_path):
                 _mod = PathConverter().conv_generic_path(item)
@@ -33,7 +33,7 @@ class PathConverter():
         # Print to console
         if self.args.verbose_mode:
             msg = ""
-            if not type(suite_path) == list:
+            if type(suite_path) is not list:
                 suite_path = list(suite_path)
 
             for item in suite_path:
