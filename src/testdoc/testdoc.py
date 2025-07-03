@@ -10,7 +10,7 @@ class TestDoc():
         suite_path, output_path, config_path = PathConverter().path_convertion()
         
         # Parse suite object & return complete suite object with all information
-        suite_object = RobotSuiteParser().parse_suite(suite_path)
+        suite_object = RobotSuiteParser().parse_suite()
         
         # Run SuiteFileModifier to modify the test suite object
         suite_object = SuiteFileModifier().run(suite_object)

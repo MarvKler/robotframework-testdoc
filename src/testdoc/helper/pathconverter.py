@@ -15,11 +15,13 @@ class PathConverter():
         config_path = self.args.config_file
 
         # Convert path to suite file / directory
-        suite_path = PathConverter().conv_generic_path(path=suite_path)
-        if ".robot" in suite_path:
-            msg = f'Suite File: "{str(suite_path).split("/")[-1]}"'
+        if type(suite_path) == tuple:
+            suite_path = list(suite_path)
+            for idx, item in enumerate(suite_path):
+                _mod = PathConverter().conv_generic_path(item)
+                suite_path[idx] = _mod
         else:
-            msg = f"Suite Directory: '{suite_path}'"
+            suite_path = PathConverter().conv_generic_path(path=suite_path)
 
         # Convert path to output file
         output_path = PathConverter().conv_generic_path(path=output_path)
@@ -30,6 +32,16 @@ class PathConverter():
 
         # Print to console
         if self.args.verbose_mode:
+            msg = ""
+            if not type(suite_path) == list:
+                suite_path = list(suite_path)
+
+            for item in suite_path:
+                if ".robot" in suite_path:
+                    msg += f'Suite File: "{str(suite_path).split("/")[-1]}"\n'
+                else:
+                    msg += f"Suite Directory: '{suite_path}'\n"
+
             Logger().Log("=== TestDoc  ===")
             Logger().LogKeyValue("Generating Test Documentation for: ", msg)
             Logger().LogKeyValue("Saving to output file: ", output_path)
