@@ -17,11 +17,11 @@ class TestDocHtmlRendering():
         if self.args.html_template == "v1":
             self.HTML_TEMPLATE_VERSION = self.args.html_template
             self.HTML_TEMPLATE_NAME = "jinja_template_01.html"
-            self.TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "html", "templates", self.HTML_TEMPLATE_VERSION)
+            self.TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "templates", self.HTML_TEMPLATE_VERSION)
         elif self.args.html_template == "v2":
             self.HTML_TEMPLATE_VERSION = self.args.html_template
             self.HTML_TEMPLATE_NAME = "jinja_template_03.html"
-            self.TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "html", "templates", self.HTML_TEMPLATE_VERSION)
+            self.TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "templates", self.HTML_TEMPLATE_VERSION)
         else:
             raise ValueError(f"CLI Argument 'html_template' got value '{self.args.html_template}' - value not known!")         
 
