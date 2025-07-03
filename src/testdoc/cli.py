@@ -25,7 +25,7 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 @click.option("-c", "--configfile", required=False, help="Optional .toml configuration file (includes all cmd-args)")
 @click.option("-v", "--verbose",    is_flag=True, required=False, help="More precise debugging into shell")
 @click.version_option(package_name='robotframework-testdoc')
-@click.argument("PATH")
+@click.argument("PATH", nargs=-1, required=True)
 @click.argument("OUTPUT")
 def main(
         title,
