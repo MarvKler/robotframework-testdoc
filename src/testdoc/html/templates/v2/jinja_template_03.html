@@ -77,11 +77,7 @@
                                 <tr>
                                     <td style="width: 10%; font-weight: bold;">🏷 Tags:</td>
                                     <td style="text-align: left;">
-                                        {% if test.tags and test.tags is string %}
-                                            {{ test.tags }}
-                                        {% else %}
-                                            {{ test.tags | join(', ') }}
-                                        {% endif %}
+                                        {{ test.tags | join(', ') }}
                                     </td>
                                 </tr>
                             {% endif %}
