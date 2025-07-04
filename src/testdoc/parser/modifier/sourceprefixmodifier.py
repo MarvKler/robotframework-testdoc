@@ -85,7 +85,7 @@ class GitLabModifier():
         git_root = self._get_git_root(file_path)
         git_branch = self._get_git_branch(git_root)
         if not git_root:
-            return "GitLink error"
+            return "Unable to fetch GitLab URL!"
         rel_path = os.path.relpath(file_path, git_root).replace(os.sep, "/")
         return prefix.rstrip("/") + "/-/blob/" + git_branch + "/" + rel_path
 

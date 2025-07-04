@@ -19,7 +19,7 @@ class TestCaseParser():
                 "name": test.name,
                 "doc": "<br>".join(line.replace("\\n","") for line in test.doc.splitlines() 
                                    if line.strip()) if test.doc else "No Test Case Documentation Available", 
-                "tags": test.tags if test.tags else "No Tags Configured",
+                "tags": test.tags if test.tags else ["No Tags Configured"],
                 "source": str(test.source),
                 "keywords": self._keyword_parser(test.body)
             }
@@ -47,7 +47,7 @@ class TestCaseParser():
 
         # Fallback in case of no keywords
         if len(_keyword_object) == 0:
-            return "No Keyword Calls in Test"
+            return ["No Keyword Calls in Test"]
         return _keyword_object
         
     def _handle_keyword_types(self, kw: Keyword, indent: int = 0):
@@ -105,6 +105,19 @@ class TestCaseParser():
                     result.extend(self._handle_keyword_types(subkw, indent=indent+1))
             result.append(f"{_indent}END")
 
+        # GROUP loop
+        elif kw_type == "GROUP":
+            header = f"{_indent}GROUP"
+            if not kw.name == "":
+                header += f"{_sd}{kw.name}"
+            if hasattr(kw, 'condition') and kw.condition:
+                header += f"    {kw.condition}"
+            result.append(header)
+            if hasattr(kw, 'body'):
+                for subkw in kw.body:
+                    result.extend(self._handle_keyword_types(subkw, indent=indent+1))
+            result.append(f"{_indent}END")
+
         # WHILE loop
         elif kw_type == "WHILE":
             header = f"{_indent}WHILE"
@@ -134,12 +147,8 @@ class TestCaseParser():
         elif kw_type in ("BREAK", "CONTINUE", "RETURN", "ERROR"):
             entry = f"{_indent}{kw_type}"
             if hasattr(kw, 'values') and kw.values:
-                entry += f"    {'    '.join(kw.values)}"
+                entry += f"    {_sd.join(kw.values)}"
             result.append(entry)
-
-        # Other types
-        elif kw_type in ("COMMENT", "EMPTY"):
-            pass
 
         # Unknown types
         elif hasattr(kw, 'body'):
