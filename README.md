@@ -142,15 +142,21 @@ Therefore, please use the following syntax: for the toml file
 # Use the default theme
 default = "default"
 default = 0
-# Use the default theme
+# Use the dark theme
 default = "dark"
 default = 1
-# Use the default theme
+# Use the blue theme
 default = "blue"
 default = 2
-# Use the default theme
+# Use the robot theme
 default = "robot"
 default = 3
+# Use the dark robot theme
+default = "robot_dark"
+default = 4
+# Use the green theme
+default = "green"
+default = 5
 ```
 
 For setting it via CLI, please use the following:
