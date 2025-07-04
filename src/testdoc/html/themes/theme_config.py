@@ -1,5 +1,5 @@
 from ...helper.cliargs import CommandLineArguments
-from .themes import DEFAULT_THEME, ROBOT_THEME, DARK_THEME, BLUE_THEME
+from .themes import DEFAULT_THEME, ROBOT_THEME, DARK_THEME, BLUE_THEME, ROBOT_THEME_DARK, GREEN_THEME
 
 import os
 import tomli
@@ -38,4 +38,8 @@ class ThemeConfig():
             return ROBOT_THEME
         if theme == "blue" or theme == 3:
             return BLUE_THEME
+        if theme == "robot_dark" or theme == 4:
+            return ROBOT_THEME_DARK
+        if theme == "green" or theme == 5:
+            return GREEN_THEME
         
