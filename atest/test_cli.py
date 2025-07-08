@@ -30,5 +30,5 @@ def test_cli_cmd_verbose():
     assert result.exit_code == 0
     assert "Generated" in result.output
     assert "output.html" in result.output
-    assert "test_cli.robot" in result.output
+    assert "Saving" in result.output
     assert os.path.exists(output)

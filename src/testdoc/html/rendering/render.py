@@ -9,7 +9,7 @@ from ...helper.logger import Logger
 class TestDocHtmlRendering():
 
     def __init__(self):
-        self.args = CommandLineArguments().data
+        self.args = CommandLineArguments()
         self._html_templ_selection()
 
     def _html_templ_selection(self):

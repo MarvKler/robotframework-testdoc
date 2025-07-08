@@ -39,7 +39,7 @@ class SourcePrefixModifier():
     GITLAB_CONNECTOR = "-/blob/main/"
     
     def __init__(self):
-        self.args = CommandLineArguments().data
+        self.args = CommandLineArguments()
 
     def _prefix_validation(self, prefix: str) -> list:
         if "::" not in prefix:

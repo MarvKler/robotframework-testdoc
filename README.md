@@ -95,6 +95,51 @@ For using this config file, just call the following command:
 testdoc -c path/to/config.toml tests/ TestDocumentation.html
 ```
 
+### pyproject.toml vs. custom toml file
+
+Using the ``pyproject`` requires to define the ``testdoc`` sections with the prefix ``tool.``   
+Example section start: ``[tool.testdoc]``
+
+Using your own custom toml-file, does not require you to use the prefix. Here, you can just use ``[testdoc]`` as section header.
+
+
+### Example Configuration File
+```toml
+[tool.testdoc]
+title = "New title of HTML document"
+name = "New name of root suite element"
+doc = "New doc text of root suite element"
+sourceprefix = "gitlab::https://gitlab.com/myrepo/repo_path"
+include = ["TagA", "TagB"]
+exclude = ["TagC"]
+hide_tags = true
+hide_test_doc = true
+hide_suite_doc = true
+hide_source = true
+hide_keywords = true
+style = "blue"
+verbose_mode = false
+
+[tool.testdoc.metadata]
+Author = "Your-Name"
+Version = "1.0.0"
+Source = "AnySourceAsMetaData"
+
+[tool.testdoc.colors]
+# Use predefined theme:
+default = "blue"
+# OR
+# Use custom colors:
+background = "#000028"
+inner_color = "#000028"
+button_active_color = "#193966"
+button_hover_color = "#193966"
+border_color = "#CCCCCC"
+text_color = "#CCCCCC"
+title_color = "#00ffb9"
+robot_icon = "#00ffb9"
+```
+
 ## HTML Template Selection
 
 You can choose between multiple HTML template for the design of your test documentation.    

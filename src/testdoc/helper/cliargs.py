@@ -1,83 +1,100 @@
-from dataclasses import dataclass, field
-from typing import Any, List
-from .toml_reader import TOMLReader
-import os
-
-@dataclass
-class CommandLineArgumentsData:
-    title: str = "Robot Framework - Test Documentation"
-    name: str = None
-    doc: str = None
-    metadata: dict = None
-    sourceprefix: str = None
-    include: List[str] = field(default_factory=list)
-    exclude: List[str] = field(default_factory=list)
-    hide_tags: bool = False
-    hide_test_doc: bool = False
-    hide_suite_doc: bool = False
-    hide_source: bool = False
-    hide_keywords: bool = False
-    config_file: str = None
-    verbose_mode: bool = False
-    suite_file: str = None
-    style: str = None
-    html_template: str = "v2"
-    output_file: str = None
-    colors: dict = None
-
 class CommandLineArguments:
     _instance = None
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            
-            cls.data = CommandLineArgumentsData()
+            cls._instance._args = {}
         return cls._instance
+
+    def update_args_if_not_set(self, **kwargs):
+        for key, value in kwargs.items():
+            if key not in self._args:
+                self._args[key] = value
     
-    ###
-    ### Load configuration file
-    ###
-    def load_from_config_file(self, file_path: str):
-        config = TOMLReader()._read_toml(file_path)
-        _is_pyproject = self._is_pyproject_config(file_path)
-        if _is_pyproject:
-            self._handle_pyproject_config(config)
-        else:
-            self._handle_custom_config(config)
+    def set_args(self, **kwargs):
+        self._args = kwargs
 
-    ###
-    ### Read pyproject.toml
-    ###
-    def _handle_pyproject_config(self, config: dict[str, Any]):
-        testdoc_config = config.get("tool", {}).get("testdoc", {})
-
-        if "colors" in testdoc_config:
-            self.data.colors = testdoc_config["colors"]
-
-        if "metadata" in testdoc_config:
-            if hasattr(self.data, "metadata"):
-                setattr(self.data, "metadata", testdoc_config["metadata"])
-
-        for key, value in testdoc_config.items():
-            if key in ("colors", "metadata"):
-                continue
-            if hasattr(self.data, key):
-                setattr(self.data, key, value)
-
-    ###
-    ### Read custom.toml
-    ###
-    def _handle_custom_config(self, config: dict[str, Any]):
-        if "colors" in config:
-            self.data.colors = config["colors"]
-
-        for key, value in config.items():
-            if hasattr(self.data, key):
-                setattr(self.data, key, value)
-
-    #####################################################################################
-
-    def _is_pyproject_config(self, file_path) -> bool:
-        return os.path.basename(file_path) == "pyproject.toml"
+    def __getattr__(self, name):
+        if name in self._args:
+            return self._args[name]
+        raise AttributeError(f"'CommandLineArguments' object has no attribute '{name}'")
     
-    #####################################################################################
+    @property
+    def title(self):
+        return self._args.get("title", "Robot Framework - Test Documentation")
+    
+    @property
+    def name(self):
+        return self._args.get("name", None)
+    
+    @property
+    def doc(self):
+        return self._args.get("doc", None)
+    
+    @property
+    def metadata(self):
+        return self._args.get("metadata", None)
+    
+    @property
+    def sourceprefix(self):
+        return self._args.get("sourceprefix", None)
+    
+    @property
+    def include(self):
+        return self._args.get("include", [])
+    
+    @property
+    def exclude(self):
+        return self._args.get("exclude", [])
+    
+    @property
+    def hide_tags(self):
+        return self._args.get("hide_tags", False)
+    
+    @property
+    def hide_test_doc(self):
+        return self._args.get("hide_test_doc", False)
+    
+    @property
+    def hide_suite_doc(self):
+        return self._args.get("hide_suite_doc", False)
+    
+    @property
+    def hide_source(self):
+        return self._args.get("hide_source", False)
+    
+    @property
+    def hide_keywords(self):
+        return self._args.get("hide_keywords", False)
+    
+    @property
+    def config_file(self):
+        return self._args.get("config_file", None)
+    
+    @property
+    def verbose_mode(self):
+        return self._args.get("verbose_mode", False)
+    
+    @property
+    def suite_file(self):
+        return self._args.get("suite_file", None)
+    
+    @property
+    def style(self):
+        return self._args.get("style", None)
+    
+    @property
+    def html_template(self):
+        return self._args.get("html_template", "v2")
+    
+    @property
+    def output_file(self):
+        return self._args.get("output_file", None)
+    
+    @property
+    def colors(self):
+        return self._args.get("colors", None)
+    
+    @property
+    def all_as_dict(self):
+        return self._args
