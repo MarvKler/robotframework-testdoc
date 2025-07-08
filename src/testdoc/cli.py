@@ -46,8 +46,12 @@ def main(
         path,
         output,
     ):
-    """
-    Welcome to robotframework-testdoc - the new test documentation generator for your Robot Framework tests!
+    """Welcome to robotframework-testdoc - the new test documentation generator for your Robot Framework tests!
+
+# Basic Usage:
+$ testdoc tests/ TestDocumentation.html
+
+See more in the README.md of the GitHub Project: https://github.com/MarvKler/robotframework-testdoc/blob/main/README.md
     """
     color = "green"
     entrypoint_msg = """
