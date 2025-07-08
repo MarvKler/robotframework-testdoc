@@ -21,7 +21,7 @@ class RobotSuiteParser(SuiteVisitor):
         self.suite_counter = 0
         self.suites = []
         self.tests = []
-        self.args = CommandLineArguments().data
+        self.args = CommandLineArguments()
 
     def visit_suite(self, suite):
         
@@ -95,13 +95,6 @@ class RobotSuiteParser(SuiteVisitor):
         _include = self.args.include
         _exclude = self.args.exclude
         _source = self.args.suite_file
-        # Type Conversions
-        if type(_include) is not list:
-            _include = list(_include)
-        if type(_exclude) is not list:
-            _exclude = list(_exclude)
-        if type(_source) is not list:
-            _source = list(_source)
 
         # Format / Syntax Conversions
         robot_options = []

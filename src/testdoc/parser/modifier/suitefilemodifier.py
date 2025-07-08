@@ -7,7 +7,7 @@ from .sourceprefixmodifier import SourcePrefixModifier
 class SuiteFileModifier():
     
     def __init__(self):
-        self.args = CommandLineArguments().data
+        self.args = CommandLineArguments()
         self.suite = None
         
     #############################################################################################################################

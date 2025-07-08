@@ -9,7 +9,7 @@ class ThemeConfig():
     default_config = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "default.toml")
     
     def __init__(self):
-        self.args = CommandLineArguments().data
+        self.args = CommandLineArguments()
         with open(self.default_config, "rb") as file:
             self.config = tomli.load(file)
 

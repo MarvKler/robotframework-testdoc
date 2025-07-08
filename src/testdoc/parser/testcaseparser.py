@@ -7,7 +7,7 @@ import textwrap
 class TestCaseParser():
 
     def __init__(self):
-        self.args = CommandLineArguments().data
+        self.args = CommandLineArguments()
 
     def parse_test(self,
             suite: TestSuite,

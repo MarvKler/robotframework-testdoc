@@ -1,5 +1,4 @@
 import click
-import os
 
 from .testdoc import TestDoc
 from .helper.cliargs import CommandLineArguments
@@ -47,8 +46,12 @@ def main(
         path,
         output,
     ):
-    """
-    Welcome to robotframework-testdoc - the new test documentation generator for your Robot Framework tests!
+    """Welcome to robotframework-testdoc - the new test documentation generator for your Robot Framework tests!
+
+# Basic Usage:
+$ testdoc tests/ TestDocumentation.html
+
+See more in the README.md of the GitHub Project: https://github.com/MarvKler/robotframework-testdoc/blob/main/README.md
     """
     color = "green"
     entrypoint_msg = """
@@ -62,38 +65,36 @@ def main(
     click.echo(click.style(entrypoint_msg, fg=color)
     )
 
-    args_instance = CommandLineArguments()
+    args_to_set = dict(
+        title=title,
+        name=name,
+        doc=doc,
+        metadata=dict(item.split("=", 1) for item in metadata) if metadata else None,
+        sourceprefix=sourceprefix,
+        include=list(include),
+        exclude=list(exclude),
+        hide_tags=hide_tags,
+        hide_test_doc=hide_test_doc,
+        hide_suite_doc=hide_suite_doc,
+        hide_source=hide_source,
+        hide_keywords=hide_keywords,
+        style=style,
+        html_template=html_template,
+        config_file=configfile,
+        verbose_mode=verbose,
+        suite_file=list(path),
+        output_file=output,
+    )
+
+    # Expose CLI args
+    args_to_set = {k: v for k, v in args_to_set.items() if v is not None}
+    CommandLineArguments().set_args(**args_to_set)
+
+    # Read & expose TOML args
     if configfile:
-        if os.path.exists(configfile):
-            args_instance.load_from_config_file(configfile)
-        else:
-            click.echo(click.style(f"⚠️ Config File not found: {configfile}", fg="yellow"))
+        from .helper.toml_reader import TOMLReader
+        TOMLReader().load_from_config_file(configfile)
 
-    args = args_instance.data
-    cli_params = {
-        "title": title or None,
-        "name": name or None,
-        "doc": doc or None,
-        "metadata": dict(item.split("=", 1) for item in metadata) if metadata else None,
-        "sourceprefix": sourceprefix,
-        "include": list(include) if include else None,
-        "exclude": list(exclude) if exclude else None,
-        "hide_tags": hide_tags or None,
-        "hide_test_doc": hide_test_doc or None,
-        "hide_suite_doc": hide_suite_doc or None,
-        "hide_source": hide_source or None,
-        "hide_keywords": hide_keywords or None,
-        "verbose_mode": verbose or None,
-        "style": style or None,
-        "html_template": html_template or None,
-        "config_file": configfile or None,
-    }
-    args.suite_file = path
-    args.output_file = output
-
-    for key, value in cli_params.items():
-        if value is not None:
-            setattr(args, key, value)    
     TestDoc().main()
 
 if __name__ == "__main__":
