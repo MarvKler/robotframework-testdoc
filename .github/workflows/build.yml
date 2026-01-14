@@ -88,6 +88,9 @@ jobs:
     - name: Test import
       run: python -c "import testdoc"
 
+    - name: Check version
+      run: hatch version
+
     - name: Verify CLI usage
       run: testdoc --help | grep -q "Welcome to robotframework-testdoc" || exit 1
   
