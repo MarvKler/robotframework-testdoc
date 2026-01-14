@@ -4,19 +4,19 @@ on:
   push:
     branches:
       - main
-    tags-ignore:
-      - 'v*.*.*'
     paths:
       - '**.yml'
       - '**.py'
-      - '**.html'
       - pyproject.toml
+      - '**.sh'
+      - '**.html'
   pull_request:
     paths:
       - '**.yml'
       - '**.py'
-      - '**.html'
       - pyproject.toml
+      - '**.sh'
+      - '**.html'
 
 jobs:
   code-quality:
@@ -33,10 +33,11 @@ jobs:
     - name: Install Build Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install build ruff pytest
+        pip install uv
+        uv pip install build ruff pytest
 
     - name: Lint with Ruff
-      run: ruff check .
+      run: uv run ruff check .
 
   test-build:
     runs-on: ubuntu-latest
@@ -55,16 +56,17 @@ jobs:
     - name: Install Build Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install build ruff pytest
+        pip install uv
+        uv pip install build pytest
     
     - name: Build Package
       run: python -m build
     
     - name: Test CLI Command
       run: |
-        pip install .
-        testdoc --help
+        uv pip install .
+        uv run testdoc --help
 
     - name: Run Unit Tests
-      run: pytest atest/
+      run: uv run pytest atest/
   

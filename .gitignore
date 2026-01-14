@@ -11,3 +11,5 @@ src/testdoc/html/templates/jinja_template_02.html
 image.png
 output_doc_robot.html
 devel.html
+build/**
+uv.lock
