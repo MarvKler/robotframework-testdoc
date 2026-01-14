@@ -14,7 +14,7 @@ echo "🔧 Updating version to '${NEW_VERSION}' in '${FILE}'"
 
 # Example: __version__ = "0.0.6"  →  __version__ = "0.0.7"
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    sed -i '' -E "s/^(__version__ *= *\")[^\"]+/\1${NEW_VERSION}/" src/testdoc/__about__.py
+    sed -i '' -E "s/^(__version__ *= *\")[^\"]+/\1${NEW_VERSION}/" "$FILE"
 else
     sed -i.bak -E "s/^(__version__\s*=\s*\")[^\"]+\"/\1${NEW_VERSION}\"/" "$FILE"
 fi
