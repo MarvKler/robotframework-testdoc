@@ -66,5 +66,5 @@ jobs:
         testdoc --help
 
     - name: Run Unit Tests
-      run: run pytest atest/
+      run: pytest atest/
   
