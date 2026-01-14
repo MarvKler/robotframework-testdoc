@@ -38,10 +38,10 @@ jobs:
           python-version: '3.12'
 
       - name: Install Hatch
-        run: pip install twine build
+        run: pip install twine hatch
 
       - name: Build package
-        run: python -m build
+        run: hatch build
 
       - name: Publish to PyPI
         env:
