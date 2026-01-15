@@ -7,7 +7,7 @@ name = "robotframework-testdoc"
 dynamic = ["version"]
 description = "A CLI Tool to generate a Test Documentation for your RobotFramework Test Scripts."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 authors = [
     { name = "Marvin Klerx", email = "marvinklerx20@gmail.com" }
 ]
@@ -16,7 +16,6 @@ license = { text = "Apache-2.0" }
 classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12"
@@ -26,7 +25,8 @@ dependencies = [
     "click",
     "robotframework",
     "jinja2",
-    "tomli"
+    "tomli",
+    "pydantic"
 ]
 
 [project.optional-dependencies]

@@ -2,12 +2,13 @@ from .helper.pathconverter import PathConverter
 from .parser.testsuiteparser import RobotSuiteParser
 from .html.rendering.render import TestDocHtmlRendering
 from .parser.modifier.suitefilemodifier import SuiteFileModifier
+from .parser.models import SuiteInfoModel
 
 class TestDoc():
     
-    def main(self):        
+    def main(self):
         # Parse suite object & return complete suite object with all information
-        suite_object = RobotSuiteParser().parse_suite()
+        suite_object: list[SuiteInfoModel] = RobotSuiteParser().parse_suite()
         
         # Run SuiteFileModifier to modify the test suite object
         suite_object = SuiteFileModifier().run(suite_object)

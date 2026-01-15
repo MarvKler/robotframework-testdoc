@@ -2,6 +2,7 @@ from robot.api import TestSuite
 from robot.running.model import Keyword, Body
 from robot.errors import DataError
 from ..helper.cliargs import CommandLineArguments
+from .models import SuiteInfoModel,  TestInfoModel
 import textwrap
 
 class TestCaseParser():
@@ -11,19 +12,19 @@ class TestCaseParser():
 
     def parse_test(self,
             suite: TestSuite,
-            suite_info: dict
-        ) -> dict:
+            suite_info: SuiteInfoModel
+        ) -> SuiteInfoModel:
 
         for test in suite.tests:
-            test_info = {
-                "name": test.name,
-                "doc": "<br>".join(line.replace("\\n","") for line in test.doc.splitlines() 
+            test_info: TestInfoModel = TestInfoModel(
+                name=test.name,
+                doc="<br>".join(line.replace("\\n","") for line in test.doc.splitlines() 
                                    if line.strip()) if test.doc else "No Test Case Documentation Available", 
-                "tags": test.tags if test.tags else ["No Tags Configured"],
-                "source": str(test.source),
-                "keywords": self._keyword_parser(test.body)
-            }
-            suite_info["tests"].append(test_info)
+                tags=test.tags if test.tags else ["No Tags Configured"],
+                source=str(test.source),
+                keywords=self._keyword_parser(test.body)
+            )
+            suite_info.tests.append(test_info)
         return suite_info
         
     # Consider tags via officially provided robot api
@@ -88,7 +89,9 @@ class TestCaseParser():
                     result.append(header)
                 for subkw in getattr(branch, 'body', []):
                     result.extend(self._handle_keyword_types(subkw, indent=indent+1))
-            result.append(f"{_indent}END")
+            result.append(
+                f"{_indent}END\n" if indent == 0 else f"{_indent}END"
+            )
 
         # FOR loop
         elif kw_type == "FOR":
@@ -103,7 +106,9 @@ class TestCaseParser():
             if hasattr(kw, 'body'):
                 for subkw in kw.body:
                     result.extend(self._handle_keyword_types(subkw, indent=indent+1))
-            result.append(f"{_indent}END")
+            result.append(
+                f"{_indent}END\n" if indent == 0 else f"{_indent}END"
+            )
 
         # GROUP loop
         elif kw_type == "GROUP":
@@ -116,7 +121,9 @@ class TestCaseParser():
             if hasattr(kw, 'body'):
                 for subkw in kw.body:
                     result.extend(self._handle_keyword_types(subkw, indent=indent+1))
-            result.append(f"{_indent}END")
+            result.append(
+                f"{_indent}END\n" if indent == 0 else f"{_indent}END"
+            )
 
         # WHILE loop
         elif kw_type == "WHILE":
@@ -127,7 +134,9 @@ class TestCaseParser():
             if hasattr(kw, 'body'):
                 for subkw in kw.body:
                     result.extend(self._handle_keyword_types(subkw, indent=indent+1))
-            result.append(f"{_indent}END")
+            result.append(
+                f"{_indent}END\n" if indent == 0 else f"{_indent}END"
+            )
 
         # TRY/EXCEPT/FINALLY
         elif kw_type in ("TRY", "EXCEPT", "FINALLY"):
@@ -141,7 +150,9 @@ class TestCaseParser():
                 for subkw in kw.body:
                     result.extend(self._handle_keyword_types(subkw, indent=indent+1))
             if kw_type in ("EXCEPT", "FINALLY"):
-                result.append(f"{_indent}END")            
+                result.append(
+                    f"{_indent}END\n" if indent == 0 else f"{_indent}END"
+                )          
 
         # BREAK, CONTINUE, RETURN, ERROR
         elif kw_type in ("BREAK", "CONTINUE", "RETURN", "ERROR"):

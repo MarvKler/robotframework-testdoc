@@ -12,12 +12,23 @@ def test_cli_help():
 def test_cli_cmd():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     robot = os.path.join(current_dir, "test_cli.robot")
-    output = os.path.join(current_dir, "output.html")
+    output = os.path.join(current_dir, "output_classic.html")
     runner = CliRunner()
     result = runner.invoke(main, [robot, output])
     assert result.exit_code == 0
     assert "Generated" in result.output
-    assert "output.html" in result.output
+    assert "output_classic.html" in result.output
+    assert os.path.exists(output)
+
+def test_cli_cmd_big_suite():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    robot = os.path.join(current_dir)
+    output = os.path.join(current_dir, "output_big.html")
+    runner = CliRunner()
+    result = runner.invoke(main, [robot, output])
+    assert result.exit_code == 0
+    assert "Generated" in result.output
+    assert "output_big.html" in result.output
     assert os.path.exists(output)
 
 

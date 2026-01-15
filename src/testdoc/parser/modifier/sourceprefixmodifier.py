@@ -1,7 +1,10 @@
 import os
 from abc import ABC, abstractmethod
+from typing import cast
 
 from robot.api import  TestSuite
+
+from ...parser.models import SuiteInfoModel, TestInfoModel
 
 from ...helper.cliargs import CommandLineArguments
 from ...helper.logger import Logger
@@ -78,7 +81,7 @@ class GitLabModifier():
         with open(head_file, "r") as f:
             content = f.read().strip()
             if content.startswith("ref:"):
-                return content.split("/")[-1]
+                return content.replace("ref: refs/heads/", "")
         return "main"
 
     def _convert_to_gitlab_url(self, file_path, prefix):
@@ -89,19 +92,20 @@ class GitLabModifier():
         rel_path = os.path.relpath(file_path, git_root).replace(os.sep, "/")
         return prefix.rstrip("/") + "/-/blob/" + git_branch + "/" + rel_path
 
-    def apply(self, suite_dict, prefix):
+    def apply(self, suite_dict: SuiteInfoModel, prefix):
         try:
-            suite_dict["source"] = self._convert_to_gitlab_url(suite_dict["source"], prefix)
+            suite_dict.source = self._convert_to_gitlab_url(suite_dict.source, prefix)
         except:
-            suite_dict["source"] = "GitLink error"
+            suite_dict.source = "GitLink error"
 
-        for test in suite_dict.get("tests", []):
+        for test in suite_dict.tests:
+            test = cast(TestInfoModel, test)
             try:
-                test["source"] = self._convert_to_gitlab_url(test["source"], prefix)
+                test.source = self._convert_to_gitlab_url(test.source, prefix)
             except:
-                test["source"] = "GitLink error"
+                test.source = "GitLink error"
 
-        for sub_suite in suite_dict.get("sub_suites", []):
+        for sub_suite in suite_dict.sub_suites:
             self.apply(sub_suite, prefix)
 
 ########################################

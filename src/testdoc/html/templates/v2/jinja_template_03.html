@@ -16,35 +16,53 @@
 {% macro render_test_cases(suite) %}
     {% if suite.tests %}
         <div class="suite-header mb-3 p-3" data-suite-id="{{ suite.id }}" style="border: 1px solid {{ colors.border_color }}; border-radius: .375rem; background: {{ colors.inner_color }};">
-            <div><strong>Generic Suite Details:</strong></div>
+            <div><strong>Test Suite Details:</strong></div>
+            <hr>
             <table style="width: 100%; border-collapse: collapse;">
                 <tr>
-                    <td style="width: 10%; font-weight: bold;">📁 Suite Name:</td>
+                    <td style="width: 15%; font-weight: bold;">📁 Suite Name:</td>
                     <td style="text-align: left;">{{ suite.name }}</td>
                 </tr>
                 {% if not suite.is_folder %}
                     <tr>
-                        <td style="width: 10%; font-weight: bold;">📄 File Name:</td>
+                        <td style="width: 15%; font-weight: bold;">📄 File Name:</td>
                         <td style="text-align: left;">{{ suite.filename }}</td>
                     </tr>
                 {% endif %}
                 <tr>
-                    <td style="width: 10%; font-weight: bold;">📊 Number of Tests:</td>
+                    <td style="width: 15%; font-weight: bold;">📊 Number of Tests:</td>
                     <td style="text-align: left;">{{ suite.num_tests }}</td>
                 </tr>
                 {% if suite.doc is not none %}
                 <tr>
-                    <td style="width: 10%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
+                    <td style="width: 15%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
                     <td style="text-align: left;">{{ suite.doc }}</td>
                 </tr>
                 {% endif %}
+                {% if suite.source is not none %}
+                    <tr>
+                        <td style="width: 15%; font-weight: bold; vertical-align: top;">🔗 Source:</td>
+                        <td style="text-align: left;">
+                            <a href="{{ suite.source }}" target="_blank">{{ suite.source }}</a>
+                        </td>
+                    </tr>
+                {% endif %}
                 {% if suite.metadata is not none %}
                 <tr>
-                    <td style="width: 10%; font-weight: bold; vertical-align: top;">⚙️ Metadata:</td>
+                    <td style="width: 15%; font-weight: bold; vertical-align: top;">⚙️ Metadata:</td>
                     <td style="text-align: left;">{{ suite.metadata }}</td>
                 </tr>
                 {% endif %}
             </table>
+            {% if suite.user_keywords is not none %}
+                <br>
+                <div class="keywords-block keywords-block-div"><strong>🔑 Suite User Keywords:</strong></div>
+                {% if suite.user_keywords %}
+                    <pre class="keywords-block keywords-block-pre">
+*** Keywords ***
+    {{ suite.user_keywords | join('\n    ') }}</pre>
+                {% endif %}
+            {% endif %}
         </div>
         {% for test in suite.tests %}
             <div class="card mb-3 test-card" data-suite-id="{{ suite.id }}">
@@ -57,6 +75,8 @@
                 </div>
                 <div id="collapse-{{ suite.id }}-{{ loop.index }}" class="collapse">
                     <div class="card-body">
+                        <div class="keywords-block"><strong>Test Case Details:</strong></div>
+                        <hr class="keywords-block">
                         <table style="width: 100%; border-collapse: collapse;">
                             {% set has_info = test.doc is not none or test.source is not none or test.tags is not none or test.keywords is not none %}
                             {% if test.doc is not none %}
@@ -67,7 +87,7 @@
                             {% endif %}
                             {% if test.source is not none %}
                                 <tr>
-                                    <td style="width: 10%; font-weight: bold; vertical-align: top;">🔗 Source:</td>
+                                    <td style="width: 15%; font-weight: bold; vertical-align: top;">🔗 Source:</td>
                                     <td style="text-align: left;">
                                         <a href="{{ test.source }}" target="_blank">{{ test.source }}</a>
                                     </td>
@@ -75,30 +95,31 @@
                             {% endif %}
                             {% if test.tags is not none %}
                                 <tr>
-                                    <td style="width: 10%; font-weight: bold;">🏷 Tags:</td>
+                                    <td style="width: 15%; font-weight: bold;">🏷 Tags:</td>
                                     <td style="text-align: left;">
                                         {{ test.tags | join(', ') }}
                                     </td>
                                 </tr>
                             {% endif %}
-                            {% if test.keywords is not none %}
-                                <tr>
-                                    <td style="width: 10%; font-weight: bold; vertical-align: top;">🔑 Keywords:</td>
-                                    <td style="text-align: left;">
-                                        {% if test.keywords %}
-                                            <pre>- {{ test.keywords | join('\n- ') }}</pre>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endif %}
                             {% if not has_info %}
                                 <tr>
-                                    <td class="info-msg" style="width: 10%; vertical-align: top; text-align: center;">
+                                    <td class="info-msg" style="width: 15%; vertical-align: top; text-align: center;">
                                         No Details Available / Enabled !
                                     </td>
                                 </tr>
                             {% endif %}
                         </table>
+                        {% if test.keywords is not none %}
+                            <br>
+                            <div class="keywords-block keywords-block-div"><strong>🔑 Keywords / Test Case Body:</strong></div>
+                            {% if test.keywords %}
+                                <pre class="keywords-block keywords-block-pre">
+*** Test Cases ***
+{{ test.name }}
+    {{ test.keywords | join('\n    ') }}
+                                </pre>
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -106,25 +127,34 @@
     {% endif %}
     {% if suite.sub_suites %}
         <div class="suite-header mb-3 p-3" data-suite-id="{{ suite.id }}" style="border: 1px solid {{ colors.border_color }}; border-radius: .375rem; background: {{ colors.inner_color }};">
-            <div><strong>Generic Parent Suite Details:</strong></div>
+            <div><strong>Parent Test Suite Details:</strong></div>
+            <hr>
             <table style="width: 100%; border-collapse: collapse;">
                 <tr>
-                    <td style="width: 10%; font-weight: bold;">📁 Suite Name:</td>
+                    <td style="width: 15%; font-weight: bold;">📁 Suite Name:</td>
                     <td style="text-align: left;">{{ suite.name }}</td>
                 </tr>
                 <tr>
-                    <td style="width: 10%; font-weight: bold;">📊 Number of Tests:</td>
+                    <td style="width: 15%; font-weight: bold;">📊 Number of Tests:</td>
                     <td style="text-align: left;">{{ suite.total_tests }}</td>
                 </tr>
                 {% if suite.doc is not none %}
                 <tr>
-                    <td style="width: 10%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
+                    <td style="width: 15%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
                     <td style="text-align: left;">{{ suite.doc }}</td>
                 </tr>
                 {% endif %}
+                {% if suite.source is not none %}
+                    <tr>
+                        <td style="width: 15%; font-weight: bold; vertical-align: top;">🔗 Source:</td>
+                        <td style="text-align: left;">
+                            <a href="{{ suite.source }}" target="_blank">{{ suite.source }}</a>
+                        </td>
+                    </tr>
+                {% endif %}
                 {% if suite.metadata is not none %}
                 <tr>
-                    <td style="width: 10%; font-weight: bold; vertical-align: top;">⚙️ Metadata:</td>
+                    <td style="width: 15%; font-weight: bold; vertical-align: top;">⚙️ Metadata:</td>
                     <td style="text-align: left;">{{ suite.metadata }}</td>
                 </tr>
                 {% endif %}
@@ -209,6 +239,21 @@
         @media (max-width: 900px) {
             .sidebar { min-width: 120px; max-width: 180px; }
             .main-content { padding: 10px; }
+        }
+        .keywords-block,
+        .keywords-block pre {
+        color: {{ colors.text_color }};
+        }
+
+        .keywords-block-div {
+            margin-bottom: 8px;
+        }
+
+        .keywords-block-pre {
+            background-color: {{ colors.code_area_background }};
+            color: {{ colors.code_area_foreground }};
+            border-radius: 8px;
+            padding: 12px 14px;
         }
     </style>
 </head>
