@@ -4,7 +4,7 @@ class SuiteInfoModel(BaseModel):
     id: str
     filename: str
     name: str
-    doc: str | None
+    doc: list[str] | None
     is_folder: bool
     num_tests: int
     source: str
@@ -12,11 +12,11 @@ class SuiteInfoModel(BaseModel):
     tests: list = []
     user_keywords: list | None = None
     sub_suites: list = []
-    metadata: str | None
+    metadata: list[str] | None
 
 class TestInfoModel(BaseModel):
     name: str
-    doc: str
-    tags: list
+    doc: list[str] | None
+    tags: list | None
     source: str
     keywords: list[str] | list
