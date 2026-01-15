@@ -8,6 +8,8 @@ DEFAULT_THEME = {
     "text_color": "#353535",
     "title_color": "#343a40",
     "robot_icon": "#00c0b5",
+    "code_area_background": "#f8f9fa",
+    "code_area_foreground": "#353535"
 }
 
 ROBOT_THEME = {
@@ -19,6 +21,8 @@ ROBOT_THEME = {
     "text_color": "black",
     "title_color": "black",
     "robot_icon": "#00c0b5",
+    "code_area_background": "#dcdcdc",
+    "code_area_foreground": "#black"
 }
 
 ROBOT_THEME_DARK = {
@@ -30,6 +34,8 @@ ROBOT_THEME_DARK = {
     "text_color": "#e3e3e3",
     "title_color": "#e3e3e3",
     "robot_icon": "#00c0b5",
+    "code_area_background": "#272729",
+    "code_area_foreground": "#e3e3e3"
 }
 
 GREEN_THEME = {
@@ -41,6 +47,8 @@ GREEN_THEME = {
     "text_color": "#009770",
     "title_color": "#009770",
     "robot_icon": "#009770",
+    "code_area_background": "#272729",
+    "code_area_foreground": "#009770"
 }
 
 DARK_THEME = {    
@@ -52,6 +60,8 @@ DARK_THEME = {
     "text_color": "white",
     "title_color": "#00c0b5",
     "robot_icon": "#00c0b5",
+    "code_area_background": "#5F5F5F",
+    "code_area_foreground": "#f1f1f1"
 }
 
 BLUE_THEME = {
@@ -63,4 +73,6 @@ BLUE_THEME = {
     "text_color": "#CCCCCC",
     "title_color": "#00ffb9",
     "robot_icon": "#00ffb9",
+    "code_area_background": "#303030",
+    "code_area_foreground": "#f1f1f1"
 }

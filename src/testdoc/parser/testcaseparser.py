@@ -89,7 +89,9 @@ class TestCaseParser():
                     result.append(header)
                 for subkw in getattr(branch, 'body', []):
                     result.extend(self._handle_keyword_types(subkw, indent=indent+1))
-            result.append(f"{_indent}END")
+            result.append(
+                f"{_indent}END\n" if indent == 0 else f"{_indent}END"
+            )
 
         # FOR loop
         elif kw_type == "FOR":
@@ -104,7 +106,9 @@ class TestCaseParser():
             if hasattr(kw, 'body'):
                 for subkw in kw.body:
                     result.extend(self._handle_keyword_types(subkw, indent=indent+1))
-            result.append(f"{_indent}END")
+            result.append(
+                f"{_indent}END\n" if indent == 0 else f"{_indent}END"
+            )
 
         # GROUP loop
         elif kw_type == "GROUP":
@@ -117,7 +121,9 @@ class TestCaseParser():
             if hasattr(kw, 'body'):
                 for subkw in kw.body:
                     result.extend(self._handle_keyword_types(subkw, indent=indent+1))
-            result.append(f"{_indent}END")
+            result.append(
+                f"{_indent}END\n" if indent == 0 else f"{_indent}END"
+            )
 
         # WHILE loop
         elif kw_type == "WHILE":
@@ -128,7 +134,9 @@ class TestCaseParser():
             if hasattr(kw, 'body'):
                 for subkw in kw.body:
                     result.extend(self._handle_keyword_types(subkw, indent=indent+1))
-            result.append(f"{_indent}END")
+            result.append(
+                f"{_indent}END\n" if indent == 0 else f"{_indent}END"
+            )
 
         # TRY/EXCEPT/FINALLY
         elif kw_type in ("TRY", "EXCEPT", "FINALLY"):
@@ -142,7 +150,9 @@ class TestCaseParser():
                 for subkw in kw.body:
                     result.extend(self._handle_keyword_types(subkw, indent=indent+1))
             if kw_type in ("EXCEPT", "FINALLY"):
-                result.append(f"{_indent}END")            
+                result.append(
+                    f"{_indent}END\n" if indent == 0 else f"{_indent}END"
+                )          
 
         # BREAK, CONTINUE, RETURN, ERROR
         elif kw_type in ("BREAK", "CONTINUE", "RETURN", "ERROR"):

@@ -41,7 +41,7 @@ class RobotSuiteParser(SuiteVisitor):
             is_folder=self._is_directory(suite),
             num_tests=len(suite.tests),
             source=str(suite.source),
-            metadata="<br>".join([f"{k}: {v}" for k, v in suite.metadata.items()]) if suite.metadata else None,
+            metadata="<br>".join([f"{k} {v}" for k, v in suite.metadata.items()]) if suite.metadata else None,
             user_keywords=None
         )
 

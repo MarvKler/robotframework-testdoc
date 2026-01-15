@@ -81,6 +81,20 @@ testdoc --hide-source tests/ TestDocumentation.html
 testdoc --hide-keywords tests/ TestDocumentation.html
 ```
 
+## Visualization of Keywords
+
+Keywords are visualized in a specific design and to replicate the robot framework test case structure (model) as best as possible.
+
+### User / Library Keywords called in a Test Case Body
+
+This view does actually replicate the robot framework suite file with the ``*** Test Cases ***`` section, the ``Test Case Name`` and the ``Test Case Body``.
+
+![alt text](docs/test_keywords_visualization.png)
+
+### User Keyword defined in a Test Suite
+
+![alt text](docs/suite_keywords_visualization.png)
+
 ## Robot Framework Tags
 The commandline arguments ``include`` & ``exclude`` have more or less the same functionality like in the known ``robot ...`` command.     
 You can decide to weither include and / or exclude specific test cases into the test documentation.
@@ -138,6 +152,8 @@ border_color = "#CCCCCC"
 text_color = "#CCCCCC"
 title_color = "#00ffb9"
 robot_icon = "#00ffb9"
+code_area_background = "#303030"
+code_area_foreground = "#f1f1f1"
 ```
 
 ## HTML Template Selection
@@ -149,7 +165,7 @@ These template can be configured via ``cli arguments`` or within a ``.toml confi
 
 - v2
 
-### Available HTML Templates
+### Available HTML Templates - NOT RECOMMENDED
 
 You can choose one of the following designs:
 - v1
@@ -230,6 +246,8 @@ border_color = "#CCCCCC"
 text_color = "#CCCCCC"
 title_color = "#00ffb9"
 robot_icon = "#00ffb9"
+code_area_background = "#303030"
+code_area_foreground = "#f1f1f1"
 ```
 
 > [!TIP]
@@ -248,3 +266,7 @@ robot_icon = "#00ffb9"
 #### Robot / Default
 
 ![alt text](docs/style_robot.png)
+
+## Contribution & Development
+
+See [Development.md](./DEVELOPMENT.md) for more information about contributing & developing this library.
