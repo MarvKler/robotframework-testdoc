@@ -26,7 +26,8 @@ dependencies = [
     "click",
     "robotframework",
     "jinja2",
-    "tomli"
+    "tomli",
+    "pydantic"
 ]
 
 [project.optional-dependencies]

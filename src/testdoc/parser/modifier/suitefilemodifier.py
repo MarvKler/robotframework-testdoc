@@ -3,6 +3,7 @@ from robot.api import TestSuite
 from ...helper.cliargs import CommandLineArguments
 from ...helper.logger import Logger
 from .sourceprefixmodifier import SourcePrefixModifier
+from ..models import SuiteInfoModel
 
 class SuiteFileModifier():
     
@@ -12,7 +13,10 @@ class SuiteFileModifier():
         
     #############################################################################################################################
         
-    def run(self, suite_object: TestSuite = None):
+    def run(
+            self,
+            suite_object: list[SuiteInfoModel] | None = None
+        ) -> list[SuiteInfoModel]:
         if not suite_object:
             raise KeyError(f"[{self.__class__}] - Error - Suite Object must not be None!")
         self.suite = suite_object

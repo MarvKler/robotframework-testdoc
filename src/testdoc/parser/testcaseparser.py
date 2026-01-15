@@ -2,6 +2,7 @@ from robot.api import TestSuite
 from robot.running.model import Keyword, Body
 from robot.errors import DataError
 from ..helper.cliargs import CommandLineArguments
+from .models import SuiteInfoModel
 import textwrap
 
 class TestCaseParser():
@@ -11,8 +12,8 @@ class TestCaseParser():
 
     def parse_test(self,
             suite: TestSuite,
-            suite_info: dict
-        ) -> dict:
+            suite_info: SuiteInfoModel
+        ) -> SuiteInfoModel:
 
         for test in suite.tests:
             test_info = {
@@ -23,7 +24,7 @@ class TestCaseParser():
                 "source": str(test.source),
                 "keywords": self._keyword_parser(test.body)
             }
-            suite_info["tests"].append(test_info)
+            suite_info.tests.append(test_info)
         return suite_info
         
     # Consider tags via officially provided robot api

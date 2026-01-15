@@ -1,6 +1,8 @@
 from jinja2 import Environment, FileSystemLoader
 import os
 
+from ...parser.models import SuiteInfoModel
+
 from ...html.themes.theme_config import ThemeConfig
 from ...helper.cliargs import CommandLineArguments
 from ...helper.datetimeconverter import DateTimeConverter
@@ -26,7 +28,7 @@ class TestDocHtmlRendering():
             raise ValueError(f"CLI Argument 'html_template' got value '{self.args.html_template}' - value not known!")         
 
     def render_testdoc(self,
-            suites,
+            suites: list[SuiteInfoModel],
             output_file
         ):
         env = Environment(loader=FileSystemLoader(self.TEMPLATE_DIR))
