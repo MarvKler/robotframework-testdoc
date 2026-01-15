@@ -10,6 +10,13 @@ class SuiteInfoModel(BaseModel):
     source: str
     total_tests: int = 0
     tests: list = []
-    user_keywords: list = []
+    user_keywords: list | None = None
     sub_suites: list = []
     metadata: str | None
+
+class TestInfoModel(BaseModel):
+    name: str
+    doc: str
+    tags: list
+    source: str
+    keywords: list[str] | list

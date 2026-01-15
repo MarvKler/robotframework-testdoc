@@ -44,6 +44,16 @@
                     <td style="text-align: left;">{{ suite.metadata }}</td>
                 </tr>
                 {% endif %}
+                {% if suite.user_keywords is not none %}
+                    <tr>
+                        <td style="width: 10%; font-weight: bold; vertical-align: top;">🔑 User Keywords:</td>
+                        <td style="text-align: left;">
+                            {% if suite.user_keywords %}
+                                <pre>- {{ suite.user_keywords | join('\n- ') }}</pre>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
             </table>
         </div>
         {% for test in suite.tests %}

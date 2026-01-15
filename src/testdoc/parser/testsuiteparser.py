@@ -42,6 +42,7 @@ class RobotSuiteParser(SuiteVisitor):
             num_tests=len(suite.tests),
             source=str(suite.source),
             metadata="<br>".join([f"{k}: {v}" for k, v in suite.metadata.items()]) if suite.metadata else None,
+            user_keywords=None
         )
 
         # Test Suite Parser

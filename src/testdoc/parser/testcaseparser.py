@@ -2,7 +2,7 @@ from robot.api import TestSuite
 from robot.running.model import Keyword, Body
 from robot.errors import DataError
 from ..helper.cliargs import CommandLineArguments
-from .models import SuiteInfoModel
+from .models import SuiteInfoModel,  TestInfoModel
 import textwrap
 
 class TestCaseParser():
@@ -16,14 +16,14 @@ class TestCaseParser():
         ) -> SuiteInfoModel:
 
         for test in suite.tests:
-            test_info = {
-                "name": test.name,
-                "doc": "<br>".join(line.replace("\\n","") for line in test.doc.splitlines() 
+            test_info: TestInfoModel = TestInfoModel(
+                name=test.name,
+                doc="<br>".join(line.replace("\\n","") for line in test.doc.splitlines() 
                                    if line.strip()) if test.doc else "No Test Case Documentation Available", 
-                "tags": test.tags if test.tags else ["No Tags Configured"],
-                "source": str(test.source),
-                "keywords": self._keyword_parser(test.body)
-            }
+                tags=test.tags if test.tags else ["No Tags Configured"],
+                source=str(test.source),
+                keywords=self._keyword_parser(test.body)
+            )
             suite_info.tests.append(test_info)
         return suite_info
         

@@ -6,7 +6,7 @@ from .parser.models import SuiteInfoModel
 
 class TestDoc():
     
-    def main(self):        
+    def main(self):
         # Parse suite object & return complete suite object with all information
         suite_object: list[SuiteInfoModel] = RobotSuiteParser().parse_suite()
         
