@@ -1,0 +1,34 @@
+site_name: Report
+use_directory_urls: false
+
+theme:
+  name: material
+  features:
+    - navigation.expand
+    - navigation.sections
+    - navigation.instant
+    - toc.integrate
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+extra_css:
+  - stylesheets/layout.css
+  - stylesheets/custom.css
+
+plugins:
+  - search
+  - macros:
+      module_name: main
+
+exclude_docs: |
+  _partials/
+  generated/_resolve_suite.md

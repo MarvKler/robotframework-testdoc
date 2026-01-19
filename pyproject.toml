@@ -28,7 +28,10 @@ dependencies = [
     "robotframework",
     "jinja2",
     "tomli",
-    "pydantic"
+    "pydantic",
+    "mkdocs",
+    "mkdocs-macros-plugin",
+    "mkdocs-material"
 ]
 
 [project.optional-dependencies]
@@ -57,6 +60,7 @@ include = [
   "src/testdoc/html/images/*.svg",
   "src/testdoc/html/templates/**/*.html",
   "src/testdoc/default.toml",
+  "src/testdoc/html/rendering/mkdocs/*.py",
 ]
 
 [tool.hatch.build.targets.sdist]

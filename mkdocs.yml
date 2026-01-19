@@ -1,0 +1,5 @@
+site_name: Test Report
+theme:
+  name: mkdocs
+nav:
+  - Home: index.md

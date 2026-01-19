@@ -59,3 +59,13 @@ testdoc ... --custom-jinja-template /home/user/templates/mytemplate.html /path/t
 ### Using Mkdocs Integration
 
 TBD
+
+
+```
+user_template/
+  mkdocs.yml
+  docs/
+    index.md
+    stylesheets/extra.css   (optional)
+    overrides/              (optional, theme overrides)
+```

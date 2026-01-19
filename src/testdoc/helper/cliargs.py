@@ -44,6 +44,14 @@ class CommandLineArguments:
         return self._args.get("custom_jinja_template", None)
     
     @property
+    def mkdocs_usage(self):
+        return self._args.get("mkdocs_usage", None)
+    
+    @property
+    def mkdocs_template_dir(self):
+        return self._args.get("mkdocs_template_dir", None)
+    
+    @property
     def include(self):
         return self._args.get("include", [])
     

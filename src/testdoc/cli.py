@@ -13,6 +13,10 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
     "Set a prefix used for Test Suite / Test Suite Source Information, e.g. GitLab Prefix Path to navigate directly to your repository!"
 ))
 @click.option("--custom-jinja-template", required=False, help="Define your own Jinja2 HTML template for your own customized visualization")
+@click.option("--mkdocs",           is_flag=True, required=False, help=(
+    "If given, testdoc will render the test documentation as mkdocs object. <OUTPUT> argument must be a path object - not file!"
+))
+@click.option("--mkdocs-template-dir",  required=False, help="Path to your customized mkdocs template - mandatory if '--mkdocs' is set!")
 @click.option("-i","--include",     multiple=True, required=False, help="Include test cases with given tags")
 @click.option("-e","--exclude",     multiple=True, required=False, help="Exclude test cases with given tags")
 @click.option("--hide-tags",        is_flag=True, required=False, help="If given, test case tags are hidden")
@@ -34,6 +38,8 @@ def main(
         metadata,
         sourceprefix,
         custom_jinja_template,
+        mkdocs,
+        mkdocs_template_dir,
         include,
         exclude,
         hide_tags,
@@ -74,6 +80,8 @@ See more in the README.md of the GitHub Project: https://github.com/MarvKler/rob
         metadata=dict(item.split("=", 1) for item in metadata) if metadata else None,
         sourceprefix=sourceprefix,
         custom_jinja_template=custom_jinja_template,
+        mkdocs_usage=mkdocs,
+        mkdocs_template_dir=mkdocs_template_dir,
         include=list(include),
         exclude=list(exclude),
         hide_tags=hide_tags,

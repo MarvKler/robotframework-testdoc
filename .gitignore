@@ -17,3 +17,4 @@ atest/output_classic.html
 atest/output_big.html
 results/
 oc_output.html
+atest/testdoc_output/**
