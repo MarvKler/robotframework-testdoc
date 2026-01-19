@@ -64,8 +64,11 @@ testdoc ... --custom-jinja-template /home/user/templates/mytemplate.html /path/t
 ### Using Mkdocs Integration
 
 #### Usage
-Use the following CLI command to use mkdocs:
 ```shell
+# Run this generic command to use & test the internal mkdocs default template
+testdoc ... --mkdocs ./atest/ ./output
+
+# Run this command to use your custom mkdocs template
 testdoc ... --mkdocs --mkdocs-template-dir /home/user/templates/mytemplate.html /path/to/suites /path/to/output/directory
 ```
 
