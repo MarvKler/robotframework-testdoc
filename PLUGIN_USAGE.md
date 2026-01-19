@@ -74,6 +74,9 @@ testdoc ... --mkdocs --mkdocs-template-dir /home/user/templates/mytemplate.html 
 
 #### Mandatory Configuration Files
 
+> [!TIP]
+> Recommendation: Use ``material`` as theme for better visualization. That's just a tip, you can use everything else as well.
+
 Please create the following ``mandatory`` files for using the ``mkdocs`` integration in the given directory structure:
 ```
 mkdocs_template_dir/
