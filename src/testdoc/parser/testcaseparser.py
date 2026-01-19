@@ -3,6 +3,7 @@ from robot.running.model import Keyword, Body
 from robot.errors import DataError
 from ..helper.cliargs import CommandLineArguments
 from .models import SuiteInfoModel,  TestInfoModel
+from .parser import Parser
 import textwrap
 
 class TestCaseParser():
@@ -18,9 +19,8 @@ class TestCaseParser():
         for test in suite.tests:
             test_info: TestInfoModel = TestInfoModel(
                 name=test.name,
-                doc="<br>".join(line.replace("\\n","") for line in test.doc.splitlines() 
-                                   if line.strip()) if test.doc else "No Test Case Documentation Available", 
-                tags=test.tags if test.tags else ["No Tags Configured"],
+                doc=Parser().get_formatted_docs(test.doc), 
+                tags=test.tags if test.tags else None,
                 source=str(test.source),
                 keywords=self._keyword_parser(test.body)
             )

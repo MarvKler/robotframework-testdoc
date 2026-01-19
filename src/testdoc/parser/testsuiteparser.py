@@ -13,6 +13,7 @@ from .modifier.suitefilemodifier import SuiteFileModifier
 from ..helper.cliargs import CommandLineArguments
 from ..helper.pathconverter import PathConverter
 from .models import SuiteInfoModel
+from .parser import Parser
 
 from robot.conf import RobotSettings
 from robot.running import TestSuiteBuilder
@@ -37,29 +38,13 @@ class RobotSuiteParser(SuiteVisitor):
             id=str(suite.longname).lower().replace(".", "_").replace(" ", "_"),
             filename=str(Path(suite.source).name) if suite.source else suite.name,
             name=suite.name,
-            doc="<br>".join(line.replace("\\n","") for line in suite.doc.splitlines() if line.strip()) if suite.doc else None,
+            doc=Parser().get_formatted_docs(suite.doc),
             is_folder=self._is_directory(suite),
             num_tests=len(suite.tests),
             source=str(suite.source),
-            metadata="<br>".join([f"{k} {v}" for k, v in suite.metadata.items()]) if suite.metadata else None,
+            metadata=Parser().get_formatted_metadata(suite.metadata),
             user_keywords=None
         )
-
-        # Test Suite Parser
-        # suite_info = {
-        #     "id": str(suite.longname).lower().replace(".", "_").replace(" ", "_"),
-        #     "filename": str(Path(suite.source).name) if suite.source else suite.name,
-        #     "name": suite.name,
-        #     "doc": "<br>".join(line.replace("\\n","") for line in suite.doc.splitlines() if line.strip()) if suite.doc else None,
-        #     "is_folder": self._is_directory(suite),
-        #     "num_tests": len(suite.tests),
-        #     "source": str(suite.source),
-        #     "total_tests": 0,
-        #     "tests": [],
-        #     "user_keywords": [],
-        #     "sub_suites": [],
-        #     "metadata": "<br>".join([f"{k}: {v}" for k, v in suite.metadata.items()]) if suite.metadata else None
-        # }
 
         # Parse Test Cases
         suite_info = TestCaseParser().parse_test(suite, suite_info)

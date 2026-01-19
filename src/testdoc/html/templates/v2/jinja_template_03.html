@@ -36,7 +36,7 @@
                 {% if suite.doc is not none %}
                 <tr>
                     <td style="width: 15%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
-                    <td style="text-align: left;">{{ suite.doc }}</td>
+                    <td style="text-align: left;">{{ suite.doc | join('<br>') }}</td>
                 </tr>
                 {% endif %}
                 {% if suite.source is not none %}
@@ -50,7 +50,7 @@
                 {% if suite.metadata is not none %}
                 <tr>
                     <td style="width: 15%; font-weight: bold; vertical-align: top;">⚙️ Metadata:</td>
-                    <td style="text-align: left;">{{ suite.metadata }}</td>
+                    <td style="text-align: left;">{{ suite.metadata | join('<br>') }}</td>
                 </tr>
                 {% endif %}
             </table>
@@ -82,7 +82,7 @@
                             {% if test.doc is not none %}
                                 <tr>
                                     <td style="width: 10%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
-                                    <td style="text-align: left;">{{ test.doc }}</td>
+                                    <td style="text-align: left;">{{ test.doc | join('<br>') }}</td>
                                 </tr>
                             {% endif %}
                             {% if test.source is not none %}
@@ -141,7 +141,7 @@
                 {% if suite.doc is not none %}
                 <tr>
                     <td style="width: 15%; font-weight: bold; vertical-align: top;">📝 Docs:</td>
-                    <td style="text-align: left;">{{ suite.doc }}</td>
+                    <td style="text-align: left;">{{ suite.doc | join('<br>') }}</td>
                 </tr>
                 {% endif %}
                 {% if suite.source is not none %}
@@ -155,7 +155,7 @@
                 {% if suite.metadata is not none %}
                 <tr>
                     <td style="width: 15%; font-weight: bold; vertical-align: top;">⚙️ Metadata:</td>
-                    <td style="text-align: left;">{{ suite.metadata }}</td>
+                    <td style="text-align: left;">{{ suite.metadata | join('<br>') }}</td>
                 </tr>
                 {% endif %}
             </table>
