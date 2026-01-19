@@ -40,6 +40,10 @@ class CommandLineArguments:
         return self._args.get("sourceprefix", None)
     
     @property
+    def custom_jinja_template(self):
+        return self._args.get("custom_jinja_template", None)
+    
+    @property
     def include(self):
         return self._args.get("include", [])
     
