@@ -1,0 +1,42 @@
+site_name: Robot Framework Test Documentation
+use_directory_urls: false
+
+theme:
+  name: material
+  favicon: https://docs.robotframework.org/img/rf_favicon.png
+  logo: https://docs.robotframework.org/img/rf_favicon.png
+  custom_dir: overrides
+  features:
+    - navigation.collapse
+    - navigation.sections
+    - navigation.instant
+    - toc.integrate
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+extra_css:
+  - stylesheets/layout.css
+  - stylesheets/custom.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+
+plugins:
+  - search
+  - macros:
+      module_name: main
+
+exclude_docs: |
+  _partials/
+  generated/_resolve_suite.md

@@ -59,10 +59,12 @@ only-include = ["src/testdoc"]
 sources = ["src"]
 include = [
   "src/testdoc/html/images/*.svg",
-  "src/testdoc/html/templates/**/*.html",
   "src/testdoc/default.toml",
   "src/testdoc/html/rendering/mkdocs/*.py",
-  "examples/mkdocs/default/**"
+  "src/testdoc/html/templates/**/*.html",
+  "src/testdoc/html/templates/**/*.md",
+  "src/testdoc/html/templates/**/*.css",
+  "src/testdoc/html/templates/**/*.yml"
 ]
 
 [tool.hatch.build.targets.sdist]

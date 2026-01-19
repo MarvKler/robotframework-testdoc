@@ -24,7 +24,7 @@ class MkdocsIntegration:
 
     def render_mkdocs_page(self, suites: list[SuiteInfoModel]) -> Path:
         if not self.args.mkdocs_template_dir:
-            user_template_dir = Path(__file__).parent.parent.parent.parent.parent / "examples" / "mkdocs" / "default"
+            user_template_dir = Path(__file__).resolve().parent.parent / "templates" / "mkdocs_default"
         else:
             user_template_dir = Path(self.args.mkdocs_template_dir).expanduser().resolve()
         work_dir_prefix = Path(self.args.output_file).expanduser().resolve()

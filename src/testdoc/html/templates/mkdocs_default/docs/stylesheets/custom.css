@@ -1,0 +1,9 @@
+.md-typeset {
+  font-size: 16px !important;
+  line-height: 1.0;
+}
+
+/* Optional: Sidebar/Nav */
+.md-nav {
+  font-size: 16px !important;
+}
