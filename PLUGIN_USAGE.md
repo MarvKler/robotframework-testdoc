@@ -24,10 +24,10 @@ The ``SuiteInfoModel`` element has the following metadata:
     num_tests: int
     source: str
     total_tests: int = 0
-    tests: list = [TestInfoModel]
+    tests: list[TestInfoModel] = []
     user_keywords: list | None = None
     sub_suites: list[SuiteInfoModel] = []
-    metadata: list[str] | Non
+    metadata: list[str] | None
 ```
 
 As you know how Robot Framework works, you know that a suite can contain further sub suites and those are defined in the metadata element called ``sub_suites`` which is also a list of ``SuiteInfoModel`` elements. You can iterate over this element which replicates your directory suite structure of Robot Framework.
