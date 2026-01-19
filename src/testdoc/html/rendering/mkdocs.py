@@ -3,7 +3,7 @@ from pathlib import Path
 import shutil
 import subprocess
 
-import yaml  # pip install pyyaml
+import yaml
 
 from ...parser.models import SuiteInfoModel
 from ...helper.cliargs import CommandLineArguments
@@ -23,8 +23,15 @@ class MkdocsIntegration:
         self.args = CommandLineArguments()
 
     def render_mkdocs_page(self, suites: list[SuiteInfoModel]) -> Path:
-        user_template_dir = Path(self.args.mkdocs_template_dir).expanduser().resolve()
-        work_dir = user_template_dir.parent / "testdoc_output"
+        if not self.args.mkdocs_template_dir:
+            user_template_dir = Path(__file__).parent.parent.parent.parent.parent / "examples" / "mkdocs" / "default"
+        else:
+            user_template_dir = Path(self.args.mkdocs_template_dir).expanduser().resolve()
+        work_dir_prefix = Path(self.args.output_file).expanduser().resolve()
+        p = Path(work_dir_prefix)
+        if not p.is_dir():
+            raise ValueError("Output path must be path to directory - not path to file!")
+        work_dir = (work_dir_prefix / "testdoc_output")
 
         self._prepare_workdir(user_template_dir, work_dir)
 

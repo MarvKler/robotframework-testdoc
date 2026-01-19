@@ -16,7 +16,9 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 @click.option("--mkdocs",           is_flag=True, required=False, help=(
     "If given, testdoc will render the test documentation as mkdocs object. <OUTPUT> argument must be a path object - not file!"
 ))
-@click.option("--mkdocs-template-dir",  required=False, help="Path to your customized mkdocs template - mandatory if '--mkdocs' is set!")
+@click.option("--mkdocs-template-dir",  required=False, help=(
+    "Path to your customized mkdocs template - if not defined, internal default mkdocs template is used!"
+))
 @click.option("-i","--include",     multiple=True, required=False, help="Include test cases with given tags")
 @click.option("-e","--exclude",     multiple=True, required=False, help="Exclude test cases with given tags")
 @click.option("--hide-tags",        is_flag=True, required=False, help="If given, test case tags are hidden")
