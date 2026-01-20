@@ -167,7 +167,7 @@ class MkdocsIntegration:
         suites_nav = [self._build_nav_tree(s) for s in suites]
 
         # append under a single top-level entry, so user can still have their own structure
-        mk["nav"] = base_nav + [{"Suites": suites_nav}]
+        mk["nav"] = base_nav + [{"Test Documentation": suites_nav}]
 
         mkdocs_yml_path.write_text(
             yaml.safe_dump(mk, sort_keys=False, allow_unicode=True),

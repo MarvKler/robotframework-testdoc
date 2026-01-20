@@ -7,10 +7,8 @@ theme:
   logo: https://docs.robotframework.org/img/rf_favicon.png
   custom_dir: overrides
   features:
-    - navigation.collapse
-    - navigation.sections
-    - navigation.instant
-    - toc.integrate
+    - navigation.tabs
+    - navigation.top
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
