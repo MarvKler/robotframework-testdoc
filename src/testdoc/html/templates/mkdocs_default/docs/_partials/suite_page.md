@@ -55,7 +55,7 @@ Name    {{ suite.name }}
     {% endfor %}
 
 !!! tip "Tags"
-    {% if test.tags | length > 0 %}
+    {% if test.tags and ((test.tags | default([])) | length > 0) %}
     {{ (test.tags or []) | join(', ') }}
     {% endif %}
 
