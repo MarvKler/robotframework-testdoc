@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pydantic import BaseModel
 
 class SuiteInfoModel(BaseModel):
@@ -9,9 +10,9 @@ class SuiteInfoModel(BaseModel):
     num_tests: int
     source: str
     total_tests: int = 0
-    tests: list = []
+    tests: list[TestInfoModel] = []
     user_keywords: list | None = None
-    sub_suites: list = []
+    sub_suites: list[SuiteInfoModel] = []
     metadata: list[str] | None
 
 class TestInfoModel(BaseModel):

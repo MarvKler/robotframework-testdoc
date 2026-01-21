@@ -21,7 +21,7 @@ fi
 
 rm -f "${FILE}.bak"
 
-git checkout main
+# git checkout main  # removed, because tags should also be able to be created on feature branches 
 git add "$FILE"
 git commit -m "Bump version to ${NEW_VERSION}"
 git push origin HEAD

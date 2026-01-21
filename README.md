@@ -39,6 +39,15 @@ testdoc [OPTIONS] suite_directory output.html
 > [!TIP]
 > **Included Help:** Please execute ``testdoc --help`` for further details about the commandline arguments or see the examples below.
 
+### Plugin Usage
+
+You can use the testdoc tool also as plugin integration.  
+You have two option to use it this way:
+1. You can write your own HTML page as ``jinja2`` template, add this HTML template as CLI argument while generating the docs and you will get your own HTML style as documentation page.
+2. You can use the ``mkdocs`` integration to define your own mkdcs template as CLI argument and the testdoc tool will internally take care of the mkdocs page generation.
+
+For further details about the usage, please read the [plugin usage documentation](./PLUGIN_USAGE.md).
+
 ## Examples
 
 Below you can find some example of using the testdoc library.  

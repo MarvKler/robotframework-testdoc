@@ -1,0 +1,25 @@
+.md-typeset {
+  font-size: 16px !important;
+  line-height: 1.0;
+}
+
+/* Optional: Sidebar/Nav */
+.md-nav {
+  font-size: 16px !important;
+}
+
+:root {
+  --md-primary-fg-color: #000028;
+}
+
+/* Light mode (scheme: default) */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #000028;
+  --md-accent-fg-color: #000028;
+}
+
+/* Dark mode (scheme: slate) */
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #00c0b5;
+  --md-accent-fg-color: #00c0b5;
+}
