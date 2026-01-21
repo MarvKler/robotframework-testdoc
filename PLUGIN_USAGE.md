@@ -63,14 +63,33 @@ testdoc ... --custom-jinja-template /home/user/templates/mytemplate.html /path/t
 
 ### Using Mkdocs Integration
 
-#### Usage
+#### Basic Usage
+
+You have two options using the mkdocs integration:
+1. Activate ``--mkdocs`` as plugin and use the pre-configured, internal ``mkdocs-template`` provided by ``testdoc``
+2. Activate ``--mkdocs`` as plugin, define you local custom ``mkdocs-template`` via ``--mkdocs-template-dir <path-to-folder>`` - please read following section ``Mandatory Configuration Files``
 ```shell
-# Run this generic command to use & test the internal mkdocs default template
+# 1) Run this generic command to use & test the internal mkdocs default template
 testdoc ... --mkdocs ./atest/ ./output
 
-# Run this command to use your custom mkdocs template
-testdoc ... --mkdocs --mkdocs-template-dir /home/user/templates/mytemplate.html /path/to/suites /path/to/output/directory
+# OR
+
+# 2) Run this command to use your custom mkdocs template
+testdoc ... --mkdocs --mkdocs-template-dir /home/user/templates/mytemplate.html /path/to/suites ./output
 ```
+
+Opening the generated mkdocs page:
+```shell
+# Afterwards you need to navigate to './output' and run the command to serve the mkdocs website:
+cd ./output && mkdocs serve
+```
+
+> [!TIP]
+> You also can navigate to './output/site/' and open the index.html in your browser to see the webpage.
+
+#### Example
+
+I have prepared an advanced example for the mkdocs integration which can be found here: [mkodcs-example](https://github.com/MarvKler/robotframework-testdoc/tree/main/examples/mkdocs/default)
 
 #### Mandatory Configuration Files
 
@@ -92,7 +111,7 @@ mkdocs_template_dir/
 
 The ``mkdocs.yml`` must have at least the following config:
 ```yml
-site_name: Robot Framework Test Documentation
+site_name: Robot Framework Test Documentation    # you can also your own site name
 use_directory_urls: false
 
 plugins:
@@ -178,23 +197,57 @@ Count of Tests: {{ suite.total_tests }}
 
 Here's an additional example for the ``mkdocs.yml`` to use ``material`` design with ``dark / light mode toggle button``:
 ```yml
+site_name: Robot Framework Test Documentation
+use_directory_urls: false
+repo_url: https://github.com/MarvKler/robotframework-testdoc
+
 theme:
   name: material
+  logo: stylesheets/logo-white.png
+  favicon: stylesheets/logo.png
   custom_dir: overrides
   features:
-    - navigation.expand
-    - navigation.sections
-    - navigation.instant
-    - toc.integrate
+    - navigation.tabs
+    - navigation.top
+    - content.code.annotate
+    - content.code.copy
+    # - header.autohide
   palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      primary: custom
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
+      primary: custom
       scheme: default
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
+    # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
+      primary: custom
       scheme: slate
       toggle:
         icon: material/brightness-4
-        name: Switch to light mode
+        name: Switch to system preference
+
+extra_css:
+  - stylesheets/custom.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+
+plugins:
+  - search
+  - macros:
+      module_name: main
+
+exclude_docs: |
+  _partials/
+  generated/_resolve_suite.md
 ```
