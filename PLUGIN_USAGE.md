@@ -1,4 +1,4 @@
-# Using testdoc as a plugin
+# Using testdoc as Plugin / Using testdoc API
 
 ## Internal Suite / Test Objects
 
