@@ -18,3 +18,5 @@ atest/output_big.html
 results/
 oc_output.html
 atest/testdoc_output/**
+atest/mkdocs_test/**
+atest/mkdocs_test_custom/**

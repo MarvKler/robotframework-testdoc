@@ -5,6 +5,8 @@ import subprocess
 
 import yaml
 
+from ...helper.logger import Logger
+
 from ...parser.models import SuiteInfoModel
 from ...helper.cliargs import CommandLineArguments
 
@@ -78,6 +80,17 @@ class MkdocsIntegration:
 
     def _mkdocs_build(self, work_dir: Path) -> None:
         subprocess.check_call(["mkdocs", "build", "-f", str(work_dir / "mkdocs.yml")])
+        Logger().Log("---------------------------------------------------------------------------", "green")
+        Logger().Log("Generated mkdocs pages here:", "green")
+        Logger().Log(work_dir)
+        Logger().Log("---------------------------------------------------------------------------", "green")
+        Logger().Log("Run following command to open the page:", "green")
+        Logger().Log(f"cd {work_dir} && mkdocs serve")
+        Logger().Log("---------------------------------------------------------------------------", "green")
+        Logger().Log("Or open 'index.html' in directory:", "green")
+        Logger().Log(f"{work_dir}/site/")
+        Logger().Log("---------------------------------------------------------------------------", "green")
+        
 
     # -----------------------
     # nav + pages generation
