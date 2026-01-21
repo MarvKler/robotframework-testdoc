@@ -1,9 +1,9 @@
-# {{ suite.name }}
-
 {% if suite.is_folder %}
 
+# 📁 {{ suite.name }}
+
 !!! tip ""
-    **{{ suite.total_tests }} Test Cases in all Sub-Suites**
+    📊 **{{ suite.total_tests }} Test Cases in all Sub-Suites**
 
 **Available Sub-Suites:**
 ```
@@ -12,16 +12,18 @@
 
 {% else %}
 
-!!! tip ""
-    **{{ suite.num_tests }} Test Cases in Current Suite**
+# {{ suite.name }}
 
-!!! info "Suite Documentation"
+!!! tip ""
+    📊 **{{ suite.num_tests }} Test Cases in Current Suite**
+
+!!! info "📝 Suite Documentation"
     {% for doc_line in (suite.doc or ["No documentation available for this suite"]) %}
     {{ doc_line }}
     {% endfor %}
 
 {% if suite.user_keywords %}
-**Available Suite User Keyword:**
+🔑 **Available Suite User Keyword:**
 ```robotframework
 *** Keywords ***
 {{ suite.user_keywords | join('\n') }}
