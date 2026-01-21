@@ -251,3 +251,7 @@ exclude_docs: |
   _partials/
   generated/_resolve_suite.md
 ```
+
+#### Extend Existing Configuration
+
+If you have an already existing mkdocs template / configuration, you just need to add the mandatory files & configuration parameters to your existing one and the test documentation should just be added to your existing docs.
