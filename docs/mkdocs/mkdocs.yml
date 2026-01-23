@@ -32,6 +32,11 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.emoji
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 nav:
   - Home: index.md
@@ -41,8 +46,8 @@ nav:
     - api/api.md
   - Usage: 
     - usage/index.md
-    - Getting Started: usage/gettingstarted.md
     - Jinja2: usage/jinja2.md
     - Mkdocs: usage/mkdocs.md
   - Advanced Usage:
     - advanced_usage/index.md
+    - advanced_usage/mkdocs.md
