@@ -9,7 +9,7 @@ from ...parser.models import SuiteInfoModel, TestInfoModel
 from ...helper.cliargs import CommandLineArguments
 from ...helper.logger import Logger
 
-available_implementations = "gitlab"
+available_implementations = "gitlab, github"
 
 ########################################
 # Interface
@@ -27,6 +27,8 @@ class SourceModifierFactory:
     def get_modifier(prefix_type: str) -> SourceModifier:
         if prefix_type.lower() == "gitlab":
             return GitLabModifier()
+        elif prefix_type.lower() == "github":
+            return GitHubModifier()
         # EXAMPLE Extension:
         # elif prefix_type.lower() == "github":
         #     return GitHubModifier()
@@ -102,6 +104,57 @@ class GitLabModifier():
             test = cast(TestInfoModel, test)
             try:
                 test.source = self._convert_to_gitlab_url(test.source, prefix)
+            except:
+                test.source = "GitLink error"
+
+        for sub_suite in suite_dict.sub_suites:
+            self.apply(sub_suite, prefix)
+
+
+########################################
+# Low-Level Implementation for GitHub
+########################################
+class GitHubModifier():
+    """
+    Source Prefix Modifier for "GitHub" Projects.
+    Expected CMD Line Arg: "github::prefix"
+    """
+    def _get_git_root(self, path):
+        current = os.path.abspath(path)
+        while current != os.path.dirname(current):
+            if os.path.isdir(os.path.join(current, ".git")):
+                return current
+            current = os.path.dirname(current)
+        return None
+    
+    def _get_git_branch(self, git_root):
+        head_file = os.path.join(git_root, ".git", "HEAD")
+        if not os.path.isfile(head_file):
+            return "main"
+        with open(head_file, "r") as f:
+            content = f.read().strip()
+            if content.startswith("ref:"):
+                return content.replace("ref: refs/heads/", "")
+        return "main"
+
+    def _convert_to_github_url(self, file_path, prefix):
+        git_root = self._get_git_root(file_path)
+        git_branch = self._get_git_branch(git_root)
+        if not git_root:
+            return "Unable to fetch GitLab URL!"
+        rel_path = os.path.relpath(file_path, git_root).replace(os.sep, "/")
+        return prefix.rstrip("/") + "/blob/" + git_branch + "/" + rel_path
+
+    def apply(self, suite_dict: SuiteInfoModel, prefix):
+        try:
+            suite_dict.source = self._convert_to_github_url(suite_dict.source, prefix)
+        except:
+            suite_dict.source = "GitLink error"
+
+        for test in suite_dict.tests:
+            test = cast(TestInfoModel, test)
+            try:
+                test.source = self._convert_to_github_url(test.source, prefix)
             except:
                 test.source = "GitLink error"
 
