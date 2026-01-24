@@ -92,6 +92,14 @@ The ``index.md`` is your landing page & can have any content - for now, please u
 
 ## Configuration - suite_page.md
 
+!!! tip "Visit the Internal Template"
+    Take a look at the internal mkdocs template which is provided by testdoc - this template does always have the latest development state and may differ from this documentation page.
+
+    You can use the internal template as a starting point to create your own template.
+    
+    Here you can found the template: [Internal Mkdocs Template](https://github.com/MarvKler/robotframework-testdoc/blob/main/src/testdoc/html/templates/mkdocs_default/docs/_partials/suite_page.md?plain=1)
+
+
 The ``suite_page.md`` contains the template to visualize all the suite directory / suite file elements as mkdocs page - please use the following example:
 
 ??? example "suite_page.md"
