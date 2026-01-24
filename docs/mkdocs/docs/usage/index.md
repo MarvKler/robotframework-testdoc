@@ -7,6 +7,11 @@ The following site generators are currently supported:
 1. [Jinja2](jinja2.md) (Default)
 2. [Mkdocs](mkdocs.md)
 
+!!! warning "Plugin Usage is Mutual Exclusive"
+    The CLI arguments for the plugins are mutually exclusive - you cannot combine them or use them in the same command. 
+
+    Means: you can either use the argument to attach an external jinja2 template or the argument to use internal / external mkdocs templates!
+
 ## Examples
 
 See some examples how to use ``testdoc``:

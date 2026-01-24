@@ -1,8 +1,14 @@
-# Robot Framework TestDoc
+# robotframework-testdoc
+
+The new tool to generate test documentation pages for your Robot Framework project.
 
 ## GitHub Project
 
-Link to GitHub Project: [robotframework-testdoc](https://github.com/MarvKler/robotframework-testdoc)
+Visit the project at [GitHub - robotframework-testdoc](ttps://github.com/MarvKler/robotframework-testdoc)
+
+## Documentation
+
+Visit the official documentation for more details: [Documentation - robotframework-testdoc](https://marvkler.github.io/robotframework-testdoc/)
 
 ## Statistics
 
@@ -19,9 +25,6 @@ Install the tool using the following command:
 pip install robotframework-testdoc
 ```
 
-> [!IMPORTANT]
-> Preconditions: Python & Pip Installation.
-
 ## Usage
 
 ### Basic Usage
@@ -37,7 +40,7 @@ testdoc [OPTIONS] suite_directory output.html
 ```
 
 > [!TIP]
-> **Included Help:** Please execute ``testdoc --help`` for further details about the commandline arguments or see the examples below.
+> **Included Help:** Visit the [CLI Documentation](https://marvkler.github.io/robotframework-testdoc/cli/cli/) for further arguments & details.
 
 ### Plugin Usage
 
@@ -46,67 +49,11 @@ You have two option to use it this way:
 1. You can write your own HTML page as ``jinja2`` template, add this HTML template as CLI argument while generating the docs and you will get your own HTML style as documentation page.
 2. You can use the ``mkdocs`` integration to define your own mkdcs template as CLI argument and the testdoc tool will internally take care of the mkdocs page generation.
 
-For further details about the usage, please read the [plugin usage documentation](./PLUGIN_USAGE.md).
+For further details about the usage, please read the [official documentation](https://marvkler.github.io/robotframework-testdoc/usage).
 
 ## Examples
 
-Below you can find some example of using the testdoc library.  
-
-> [!TIP]
-> Of course, you can combine all of them!
-
-```shell
-# Generating docu without option
-testdoc tests/ TestDocumentation.html
-
-# Generating docu with new title, new root suite name, new root suite documentation text & new metadata
-testdoc -t "Robot Framework Test Automation" -n "System Tests" -d "Root Suite Documentation" -m "Root Suite Metadata" tests/ TestDocumentation.html
-
-# Generating docu with source prefix to navigate directly to its gitlab file path
-testdoc -s "https://gitlab.com/myrepository" tests/ TestDocumentation.html
-
-# Generating docu only with specific mentioned tags to include & exclude 
-testdoc -i ManagementUI -e LongTime tests/ TestDocumentation.html
-
-# Generating docu only with multiple specific mentioned tags to include
-testdoc -i ManagementUI -i MQTT tests/ TestDocumentation.html
-
-# Generating docu only with new metadata for root suite object
-testdoc -m Version=0.1.1-dev -m Tester=RobotExpert tests/ TestDocumentation.html
-
-# Generating docu - hide tags information
-testdoc --hide-tags tests/ TestDocumentation.html
-
-# Generating docu - hide test case documentation texts
-testdoc --hide-test-doc tests/ TestDocumentation.html
-
-# Generating docu - hide test suite documentation texts
-testdoc --hide-suite-doc tests/ TestDocumentation.html
-
-# Generating docu - hide source information
-testdoc --hide-source tests/ TestDocumentation.html
-
-# Generating docu - hide keyword information (keyword calls in tests)
-testdoc --hide-keywords tests/ TestDocumentation.html
-```
-
-## Visualization of Keywords
-
-Keywords are visualized in a specific design and to replicate the robot framework test case structure (model) as best as possible.
-
-### User / Library Keywords called in a Test Case Body
-
-This view does actually replicate the robot framework suite file with the ``*** Test Cases ***`` section, the ``Test Case Name`` and the ``Test Case Body``.
-
-![alt text](docs/test_keywords_visualization.png)
-
-### User Keyword defined in a Test Suite
-
-![alt text](docs/suite_keywords_visualization.png)
-
-## Robot Framework Tags
-The commandline arguments ``include`` & ``exclude`` have more or less the same functionality like in the known ``robot ...`` command.     
-You can decide to weither include and / or exclude specific test cases into the test documentation.
+Visit the official documentation to find some [Examples](https://marvkler.github.io/robotframework-testdoc/usage/#examples).
 
 ## External Configuration File
 The idea of the external configuration file is, having a central place for passing the known CMD arguments via file instead of CMD parameters.   
@@ -164,37 +111,6 @@ robot_icon = "#00ffb9"
 code_area_background = "#303030"
 code_area_foreground = "#f1f1f1"
 ```
-
-## HTML Template Selection
-
-You can choose between multiple HTML template for the design of your test documentation.    
-These template can be configured via ``cli arguments`` or within a ``.toml configuration file`` with the parameter ``html_template (-ht / --html-template)``.
-
-### Default Design
-
-- v2
-
-### Available HTML Templates - NOT RECOMMENDED
-
-You can choose one of the following designs:
-- v1
-- v2
-
-### Version 1
-
-#### Visit Tests
-
-![alt text](docs/html_v1_common.png)
-
-### Version 2
-
-#### Visit Tests on Root Suite Level
-
-![alt text](docs/html_v2_root.png)
-
-#### Visit Tests on Suite File Level
-
-![alt text](docs/html_v2_suitefile.png)
 
 ## Theme Selection / Color Configuration
 
