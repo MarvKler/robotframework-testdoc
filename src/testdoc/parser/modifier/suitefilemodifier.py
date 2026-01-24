@@ -3,7 +3,7 @@ from robot.api import TestSuite
 from ...helper.cliargs import CommandLineArguments
 from ...helper.logger import Logger
 from .sourceprefixmodifier import SourcePrefixModifier
-from ..models import SuiteInfoModel
+from ..models import SuiteInfoModel, TestInfoModel
 
 class SuiteFileModifier():
     
@@ -91,13 +91,15 @@ class SuiteFileModifier():
     
     def _remove_suite_object_parameter(self, suites: list, field: str, target: str = "test"):
         """Remove a specific key from the test suite or test case object"""
+        suite: SuiteInfoModel
         for suite in suites:
             if target in ("suite", "both"):
-                suite[field] = None
+                setattr(suite, field, None)
             if target in ("test", "both"):
-                for test in suite.get("tests", []):
-                    test[field] = None
-            if "sub_suites" in suite:
-                self._remove_suite_object_parameter(suite["sub_suites"], field, target)
+                test: TestInfoModel
+                for test in suite.tests:
+                    setattr(test, field, None)
+            if hasattr(suite, "sub_suites"):
+                self._remove_suite_object_parameter(suite.sub_suites, field, target)
                 
     #############################################################################################################################                
