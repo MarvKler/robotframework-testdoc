@@ -1,0 +1,5 @@
+/* Dark mode (scheme: slate) */
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #00936a;
+  --md-accent-fg-color: #00936a;
+}

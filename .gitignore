@@ -20,3 +20,4 @@ oc_output.html
 atest/testdoc_output/**
 atest/mkdocs_test/**
 atest/mkdocs_test_custom/**
+docs/mkdocs/site/**
