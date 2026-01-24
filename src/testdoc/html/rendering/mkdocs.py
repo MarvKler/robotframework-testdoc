@@ -176,7 +176,7 @@ class MkdocsIntegration:
         text = mkdocs_yml_path.read_text(encoding="utf-8")
 
         match = re.search(
-            r"(?ms)^nav:\s*\r?\n(?:(?:^[ \t].*(?:\r?\n|$))*)",
+            r"(?m)^nav:\s*\r?\n(?:^[ \t]+.*\r?\n)*\r?\n?",
             text,
         )
 
