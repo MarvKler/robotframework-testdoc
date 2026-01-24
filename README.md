@@ -4,7 +4,7 @@ The new tool to generate test documentation pages for your Robot Framework proje
 
 ## GitHub Project
 
-Visit the project at [GitHub - robotframework-testdoc](ttps://github.com/MarvKler/robotframework-testdoc)
+Visit the project at [GitHub - robotframework-testdoc](https://github.com/MarvKler/robotframework-testdoc)
 
 ## Documentation
 
