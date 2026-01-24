@@ -1,6 +1,6 @@
 {% if suite.is_folder %}
 
-# 📁 {{ suite.name }}
+# :material-folder: {{ suite.name }}
 
 !!! tip ""
     📊 **{{ suite.total_tests }} Test Cases in all Sub-Suites**
@@ -17,7 +17,7 @@
 
 {% else %}
 
-# {{ suite.name }}
+# :simple-robotframework: {{ suite.name }}
 
 !!! tip ""
     📊 **{{ suite.num_tests }} Test Cases in Current Suite**
