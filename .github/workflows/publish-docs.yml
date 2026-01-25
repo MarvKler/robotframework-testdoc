@@ -52,5 +52,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh_pages
+          publish_branch: gh-pages
           publish_dir: ./testdoc_output/site
