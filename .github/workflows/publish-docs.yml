@@ -14,8 +14,6 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
     steps:
       - uses: actions/checkout@v4
       - name: Configure Git Credentials
@@ -50,11 +48,9 @@ jobs:
           ls -la testdoc_output/site
           test -f testdoc_output/site/index.html
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to gh_pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: testdoc_output/site
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh_pages
+          publish_dir: ./testdoc_output/site
