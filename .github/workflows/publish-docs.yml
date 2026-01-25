@@ -1,6 +1,7 @@
 name: Publish Documentation
 
 on:
+  pull_request:
   push:
     tags:
       - 'v*.*.*'
@@ -28,4 +29,28 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material 
-      - run: mkdocs gh-deploy --force -f docs/mkdocs/mkdocs.yml
+      # - run: mkdocs gh-deploy --force -f docs/mkdocs/mkdocs.yml
+    
+      - name: Install testdoc
+        run: |
+          pip install hatch
+          hatch env create dev
+          hatch build
+          pip install dist/*.whl
+
+      - name: Build documentation via testdoc
+        run: testdoc --mkdocs --mkdocs-template-dir docs/mkdocs docs/demo_data/tests .
+
+      - name: Verify Pages root
+        run: |
+          ls -la testdoc_output/site
+          test -f testdoc_output/site/index.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: testdoc_output/site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
