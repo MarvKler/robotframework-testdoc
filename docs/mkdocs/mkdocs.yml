@@ -40,7 +40,9 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 nav:
-  - Home: index.md
+  - Home:
+    - index.md
+    - gettingstarted.md
   - CLI:
     - cli/cli.md
   - API:

@@ -5,6 +5,14 @@
 !!! tip ""
     📊 **{{ suite.total_tests }} Test Cases in all Sub-Suites**
 
+
+{% if suite.doc %}
+!!! abstract "📝 Suite Documentation"
+    {% for doc_line in (suite.doc or ["No documentation available for this suite"]) %}
+    {{ doc_line }}
+    {% endfor %}
+{% endif %}
+
 {% if suite.source != "" %}
 !!! note "GitHub Source Code"
     You can directly visit the suite directory: [Navigate to GitHub]({{ suite.source }})

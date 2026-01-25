@@ -1,7 +1,6 @@
 name: Publish Documentation
 
 on:
-  pull_request:
   push:
     tags:
       - 'v*.*.*'
