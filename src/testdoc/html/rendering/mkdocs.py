@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import re
 import shutil
 import subprocess
 
@@ -172,17 +173,33 @@ class MkdocsIntegration:
     def _patch_mkdocs_nav(self, mkdocs_yml_path: Path, suites: list[dict]) -> None:
         self._ensure_suite_ids(suites)
 
-        mk = yaml.safe_load(mkdocs_yml_path.read_text(encoding="utf-8")) or {}
+        text = mkdocs_yml_path.read_text(encoding="utf-8")
 
-        # Keep user's existing nav if present; otherwise give a minimal default
-        base_nav = mk.get("nav") or [{"Home": "index.md"}]
+        match = re.search(
+            r"(?m)^nav:\s*\r?\n(?:^[ \t]+.*\r?\n)*\r?\n?",
+            text,
+        )
 
         suites_nav = [self._build_nav_tree(s) for s in suites]
 
-        # append under a single top-level entry, so user can still have their own structure
-        mk["nav"] = base_nav + [{"Test Documentation": suites_nav}]
+        if match:
+            current_nav = yaml.safe_load(match.group(0)) or {"nav": []}
+            nav_items = current_nav["nav"] + [{"Test Documentation": suites_nav}]
+        else:
+            nav_items = [{"Home": "index.md"}, {"Test Documentation": suites_nav}]
+        new_nav = {"nav": nav_items}
 
-        mkdocs_yml_path.write_text(
-            yaml.safe_dump(mk, sort_keys=False, allow_unicode=True),
-            encoding="utf-8",
+        new_nav_block = yaml.safe_dump(
+            new_nav,
+            sort_keys=False,
+            allow_unicode=True,
         )
+
+        if match:
+            text = text[:match.start()] + new_nav_block + text[match.end():]
+        else:
+            if not text.endswith("\n"):
+                text += "\n"
+            text += "\n" + new_nav_block
+
+        mkdocs_yml_path.write_text(text, encoding="utf-8")

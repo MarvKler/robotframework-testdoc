@@ -16,6 +16,10 @@ Use the following command to install the tool:
 pip install robotframework-testdoc
 ```
 
+## :material-test-tube: Examples
+
+Visit the [Examples](gettingstarted.md) page for some demo use cases & insights of what the tool is capable of!
+
 ## :star: Key Features
 
 - Displays amount of test cases in all (sub-)suite directories / suite files

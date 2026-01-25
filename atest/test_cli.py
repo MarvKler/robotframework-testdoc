@@ -47,6 +47,30 @@ def test_cli_cmd_mkdocs():
     assert output in result.stdout
     assert os.path.exists(os.path.join(output, "testdoc_output"))
 
+def test_cli_cmd_github_prefix():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    robot = os.path.join(current_dir)
+    output = os.path.join(current_dir, "output_big.html")
+    runner = CliRunner()
+    result = runner.invoke(main, ["-s", "github::https://github.com/project-name", "--verbose", robot, output])
+    assert result.exit_code == 0
+    assert "Using Prefix for Source" in result.stdout
+    assert "github::" in result.stdout
+    assert output in result.stdout
+    assert os.path.exists(output)
+
+def test_cli_cmd_gitlab_prefix():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    robot = os.path.join(current_dir)
+    output = os.path.join(current_dir, "output_big.html")
+    runner = CliRunner()
+    result = runner.invoke(main, ["-s", "gitlab::https://gitlab.com/project-name", "--verbose", robot, output])
+    assert result.exit_code == 0
+    assert "Using Prefix for Source" in result.stdout
+    assert "gitlab::" in result.stdout
+    assert output in result.stdout
+    assert os.path.exists(output)
+
 def test_cli_cmd_mkdocs_custom_template():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     robot = os.path.join(current_dir)

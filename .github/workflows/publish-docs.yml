@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   deploy:
@@ -28,4 +30,26 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material 
-      - run: mkdocs gh-deploy --force -f docs/mkdocs/mkdocs.yml
+      # - run: mkdocs gh-deploy --force -f docs/mkdocs/mkdocs.yml
+    
+      - name: Install testdoc
+        run: |
+          pip install hatch
+          hatch env create dev
+          hatch build
+          pip install dist/*.whl
+
+      - name: Build documentation via testdoc
+        run: testdoc --mkdocs --mkdocs-template-dir docs/mkdocs docs/demo_data/tests .
+
+      - name: Verify Pages root
+        run: |
+          ls -la testdoc_output/site
+          test -f testdoc_output/site/index.html
+
+      - name: Deploy to gh_pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./testdoc_output/site

@@ -1,26 +1,37 @@
 {% if suite.is_folder %}
 
-# 📁 {{ suite.name }}
+# :material-folder: {{ suite.name }}
 
 !!! tip ""
     📊 **{{ suite.total_tests }} Test Cases in all Sub-Suites**
 
-**Available Sub-Suites:**
+{% if suite.source != "" %}
+!!! note "GitLab Source Code"
+    You can directly visit the suite directory: [Navigate to GitLab]({{ suite.source }})
+{% endif %}
+
+## **Available Sub-Suites**
 ```
 {{ suite.sub_suites | map(attribute='name') | join('\n') }}
 ```
 
 {% else %}
 
-# {{ suite.name }}
+# :simple-robotframework: {{ suite.name }}
 
 !!! tip ""
     📊 **{{ suite.num_tests }} Test Cases in Current Suite**
 
-!!! info "📝 Suite Documentation"
+!!! abstract "📝 Suite Documentation"
     {% for doc_line in (suite.doc or ["No documentation available for this suite"]) %}
     {{ doc_line }}
     {% endfor %}
+
+{% if suite.source != "" %}
+!!! note "GitLab Source Code"
+    You can directly visit the suite source code: [Navigate to GitLab]({{ suite.source }})
+{% endif %}
+
 
 {% if suite.user_keywords %}
 🔑 **Available Suite User Keyword:**
@@ -57,9 +68,15 @@ Name    {{ suite.name }}
     {% endfor %}
 
 !!! tip "Tags"
-    {% if test.tags and ((test.tags | default([])) | length > 0) %}
-    {{ (test.tags or []) | join(', ') }}
-    {% endif %}
+    {% for tag in (test.tags or ["No tags defined for this test"]) %}
+    ``{{ tag }}``
+    {% endfor %}
+
+{% if test.source != "" %}
+!!! note "GitLab Source Code"
+    You can directly visit the test source code: [Navigate to GitLab]({{ test.source }})
+{% endif %}
+
 
 {% if test.keywords %}
 **Test Case Body:**
