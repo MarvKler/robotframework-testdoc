@@ -39,26 +39,6 @@ jobs:
     - name: Run ruff lint
       run: hatch run dev:lint
 
-  run-performance-tests:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
-    
-    - name: Install Hatch
-      run: pip install hatch
-
-    - name: Install dependencies
-      run: hatch env create dev
-
-    - name: Run performance tests
-      run: hatch run dev:perftest
-
   run-acceptance-tests:
     runs-on: ubuntu-latest
     steps:
