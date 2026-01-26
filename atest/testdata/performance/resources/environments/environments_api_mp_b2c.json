@@ -1,0 +1,762 @@
+{
+   "environment":"api_mp_b2c",
+   "env":{
+      "glue_url":"http://glue.de.spryker.local",
+      "bapi_url":"http://glue-backend.de.spryker.local",
+      "sapi_url":"http://glue-storefront.de.spryker.local"
+   },
+   "dms_env":{
+      "glue_dms_url":"http://glue.eu.spryker.local",
+      "bapi_dms_url":"http://glue-backend.eu.spryker.local",
+      "sapi_dms_url":"http://glue-storefront.eu.spryker.local"
+   },
+   "database":{
+      "db_host":"127.0.0.1",
+      "db_port_env":"3306",
+      "db_port_postgres_env":"5432",
+      "db_user":"spryker",
+      "db_password":"secret",
+      "db_name":"eu-docker"
+   },
+   "dataType":{
+      "array":[
+
+      ]
+   },
+   "users":{
+      "yves_user":{
+         "email":"sonia@spryker.com",
+         "first_name":"Sonia",
+         "last_name":"Wagner",
+         "password":"change123",
+         "password_new":"qweRTY_123456",
+         "password_new_additional":"Change!23456",
+         "reference":"DE--21",
+         "salutation":"Ms"
+      },
+      "Yves_second_user":{
+         "email":"bill.martin@spryker.com",
+         "first_name":"Martin",
+         "last_name":"Bill",
+         "password":"change123",
+         "reference":"DE--4",
+         "salutation":"Mr"
+      },
+      "yves_third_user":{
+         "email":"maxmusterman@spryker.com",
+         "first_name":"Max",
+         "last_name":"Musterman",
+         "password":"change123",
+         "password_new":"Change!23456",
+         "salutation":"Mr"
+      },
+      "yves_eighth_user":{
+         "email":"maria.williams@spryker.com",
+         "password":"change123",
+         "password_new":"Change!23456",
+         "password_new_additional":"qweRTY_123456",
+         "reference":"DE--2"
+      },
+      "yves_ninth_user":{
+         "email":"maggie.may@spryker.com",
+         "first_name":"Maggie",
+         "last_name":"May",
+         "password":"Change!23456",
+         "password_new":"qweRTY_123456",
+         "reference":"DE--3",
+         "salutation":"Ms"
+      },
+      "zed_admin":{
+         "email":"admin@spryker.com",
+         "password":"change123"
+      },
+      "agent":{
+         "email":"admin@spryker.com",
+         "password":"change123"
+      },
+      "non_agent":{
+         "email":"admin_de@spryker.com",
+         "password":"change123"
+      },
+      "customer_reference":{
+         "de_1":"DE--1",
+         "de_10":"DE--10",
+         "de_15":"DE--15",
+         "de_34":"DE--34"
+      },
+      "grant_type":{
+         "password":"password",
+         "refresh_token":"refresh_token"
+      },
+      "email":{
+         "name":"sonia",
+         "domain":"@spryker.com"
+      },
+      "gender":{
+         "male":"Male",
+         "female":"Female"
+      },
+      "admin_not_warehouse_user":{
+         "email":"admin_de@spryker.com",
+         "password":"change123"
+      }
+   },
+   "address":{
+      "default":{
+         "address1":"Third, 33, 11",
+         "address2":"33-B",
+         "address3":"third. address. line",
+         "zipCode":"12312",
+         "city":"Berlin",
+         "country":"Germany",
+         "iso2Code":"DE",
+         "company":"Spryker",
+         "phone":"22111-3-4-5",
+         "shipping_status":"false",
+         "billing_status":"false"
+      },
+      "changed":{
+         "address1":"New Street 123",
+         "address2":"75d",
+         "address3":"third. address. line - changed",
+         "phone":"555-555-55"
+      }
+   },
+   "shop":{
+      "currency":{
+         "eur":{
+            "name":"Euro",
+            "code":"EUR",
+            "symbol":"€"
+         },
+         "dollar":{
+            "name":"US Dollar",
+            "code":"USD",
+            "symbol":"$"
+         },
+         "chf":{
+            "name":"Swiss Franc",
+            "code":"CHF",
+            "symbol":"CHF"
+         }
+      },
+      "mode":{
+         "gross":"GROSS_MODE",
+         "net":"NET_MODE"
+      },
+      "store":{
+         "us":"US",
+         "de":"DE"
+      },
+      "locale":{
+         "DE":{
+            "name":"de_DE",
+            "code":"de"
+         },
+         "EN":{
+            "name":"en_US",
+            "code":"en"
+         }
+      }
+   },
+   "search":{
+      "ipp":{
+         "middle":"24",
+         "biggest":"36",
+         "default":"12"
+      },
+      "default_qty":{
+         "ipp_pages":"18",
+         "categories":"14",
+         "colors":"10",
+         "weight":"10",
+         "labels":"4",
+         "materials":"10",
+         "storage_capacity":"5",
+         "touchscreen":"2",
+         "brands":"10",
+         "merchant":"4"
+      },
+      "default_rating":{
+         "min":"4",
+         "max":"5"
+      },
+      "default_price":{
+         "min":"1717",
+         "max":"345699"
+      },
+      "label":{
+         "new":{
+            "id":"4",
+            "name":"New"
+         },
+         "sale":{
+            "id":"5",
+            "name":"SALE %"
+         },
+         "discontinued":{
+            "id":"2",
+            "name":"Discontinued"
+         },
+         "alternatives":{
+            "id":"1",
+            "name":"Alternatives available"
+         },
+         "manual":"Top"
+      },
+      "category_lvl1":{
+         "id":"11",
+         "qty":"39"
+      },
+      "category_lvl2":{
+         "id":"12",
+         "qty":"38"
+      },
+      "category_lvl3":{
+         "id":"13",
+         "qty":"28"
+      },
+      "tree_branches_qty":"6",
+      "node_is_root_id":"1",
+      "node_has_only_parent_id":"6",
+      "node_has_children_id":"5",
+      "abstract_sku_highest_rating":"035",
+      "total_number_of_products_in_search":"212",
+      "total_number_of_products_in_search_1":"211",
+      "sorting_options_qty":"5"
+   },
+   "products":{
+      "bundle_product":{
+         "abstract":{
+            "product_1_sku":"211",
+            "product_2_sku":"150",
+            "product_3_sku":"127",
+            "product_4_sku":"121"
+         },
+         "concrete":{
+            "product_1_sku":"211_123",
+            "product_2_sku":"150_29554292",
+            "product_3_sku":"127_22828284",
+            "product_2_name":"HP Chromebook 11",
+            "product_3_name":"HP Z 620",
+            "product_4_sku":"121_29406823",
+            "product_4_name":"HP 200 280 G1"
+         },
+         "product_name":"HP Bundle"
+      },
+      "discount_concrete_product":{
+         "product_1":{
+            "total_sum_of_discounts":"5600",
+            "total_sum_of_discounts_1":"1400",
+            "with_discount_20_percentage_off_storage":"4000",
+            "with_discount_10_percentage_off_minimum_order":"1600",
+            "with_discount_20_percentage_off_storage_1":"525",
+            "with_discount_10_percentage_off_minimum_order_1":"210"
+         },
+         "product_2":{
+            "sku":"213216",
+            "name":"office akktiv base cabinet - HxWxD 942 x 913 x 420 mm - light gray, RAL 7035",
+            "total_sum_of_discounts":"8096",
+            "sku_1":"007_30691822",
+            "name_1":"Canon IXUS 285",
+            "total_sum_of_discounts_1":"3320",
+            "with_discount_20_percentage_off_storage":"5783",
+            "with_discount_10_percentage_off_minimum_order":"2313",
+            "with_discount_20_percentage_off_storage_1":"2588",
+            "with_discount_10_percentage_off_minimum_order_1":"1035"
+         },
+         "product_3":{
+            "sku":"401768",
+            "with_10_percentage_discount":"490"
+         },
+         "sku_with_voucher_code":"063_29231675"
+      },
+      "discount_1":{
+         "name":"10% off minimum order",
+         "description":"Get a 10% discount on all orders above 100 EUR or 115 CHF",
+         "total_sum_for_discounts_for_products_1_and_2":"1245"
+      },
+      "discount_2":{
+         "name":"20% off cameras",
+         "total_sum_for_discounts_for_products_1_2":"3113",
+         "description":"20% off all digital cameras in the store"
+      },
+      "discount_3":{
+         "name":"Free standard delivery",
+         "total_sum":"490",
+         "description":"Free standard delivery for all orders above certain value depending on the currency",
+         "total_sum_for_discounts_for_products_1_2":"490"
+      },
+      "discount_4":{
+         "name":"5% off white"
+      },
+      "product_options":{
+         "option_1":"OP_2_year_waranty",
+         "option_1_name":"Two (2) year limited warranty",
+         "option_2":"OP_insurance"
+      },
+      "special_product_abstract_sku":{
+         "with_measurement_unit":"M23723",
+         "with_packaging_unit":"M21766"
+      },
+      "product_with_relations":{
+         "has_related_products":{
+            "sku":"204"
+         },
+         "has_alternative_products":{
+            "sku":"M21100"
+         },
+         "has_upselling_products":{
+            "sku":"063",
+            "concrete_sku":"063_29231675"
+         }
+      },
+      "concrete_product_with_alternative":{
+         "sku":"030_30021698",
+         "name":"Canon PowerShot G9 X"
+      },
+      "abstract_product_with_alternative":{
+         "sku":"155",
+         "name":"Lenovo IdeaPad Yoga 500"
+      },
+      "concrete_product":{
+         "product_with_original_prices":{
+            "concrete_sku":"072_21927455",
+            "concrete_name":"Samsung Galaxy Note 3",
+            "abstract_sku":"072"
+         },
+         "product_one_image_set":{
+            "sku":"208_14678762",
+            "name":"Toshiba CAMILEO P20"
+         },
+         "product_multiple_image_set":{
+            "sku":"158_29885222",
+            "name":"Asus ZenPad Z170C"
+         },
+         "product_with_volume_prices":{
+            "concrete_sku":"193_32124735",
+            "abstract_sku":"193",
+            "abstract_name":"TomTom Golf"
+         },
+         "product_without_relations":"019_21081473"
+      },
+      "concrete_of_alternative_product_with_relations_upselling":{
+         "sku":"007_30691822"
+      },
+      "concrete_available_product":{
+         "sku":"183_21811723",
+         "meta_keywords":"Sony,Communication Electronics",
+         "meta_description":"Enjoy greater flexibility  ...than ever before with the Galaxy Tab S2. Remarkably slim and ultra-lightweight, use this device to take your e-books, photos,",
+         "with_label":"204_29851280",
+         "with_stock":"001_25904006",
+         "with_offer":"077_24584210",
+         "without_stock":""
+      },
+      "abstract_available_product_with_stock":{
+         "sku":"183",
+         "price_de":"38168",
+         "price_at":"26432",
+         "name":"Sony Xperia SGP512E1",
+         "description":"Enjoy greater flexibility  ...than ever before with the Galaxy Tab S2. Remarkably slim and ultra-lightweight, use this device to take your e-books, photos, videos and work-related files with you wherever you need to go. The Galaxy Tab S2’s 4:3 ratio display is optimised for magazine reading and web use. Switch to Reading Mode to adjust screen brightness and change wallpaper - create an ideal eBook reading environment designed to reduce the strain on your eyes. Get greater security with convenient and accurate fingerprint functionality. Activate fingerprint lock by pressing the home button. Use fingerprint verification to restrict / allow access to your web browser, screen lock mode and your Samsung account.        ",
+         "superattribute":"color",
+         "superAttributesDefinition":"color"
+      },
+      "product_availability":{
+         "concrete_available_with_stock_and_never_out_of_stock_sku":"004_30663302",
+         "concrete_available_with_stock_and_never_out_of_stock_name":"Canon IXUS 175",
+         "abstract_available_product_with_no_stock_and_never_out_of_stock":"154",
+         "abstract_available_with_stock_and_never_out_of_stock":"004",
+         "abstract_available_with_stock_and_never_out_of_stock2":"005",
+         "abstract_unavailable_product":"111"
+      },
+      "concrete_product_with_abstract_product_alternative":{
+         "sku":"138_30657838",
+         "name":"Acer TravelMate P258-M",
+         "name_lower_case":"acer travelmate p258-m"
+      },
+      "concrete_product_with_concrete_product_alternative":{
+         "sku":"155_30149933",
+         "name":"Lenovo IdeaPad Yoga 500",
+         "name_lower_case":"lenovo ideapad yoga 500"
+      },
+      "abstract_available_product_with":{
+         "concretes_3_sku":"127",
+         "concretes_name_3":"HP Z 620",
+         "concretes_superattribute_3":"total_storage_capacity"
+      },
+      "product_related_product_with_upselling_relation":{
+         "sku":"042",
+         "name":"Samsung Galaxy S7"
+      },
+      "product_related_product_with_related_relation":{
+         "sku":"016",
+         "name":"Sony Cyber-shot DSC-W800"
+      },
+      "alternative_abstract_product":{
+         "price_chf":"39675",
+         "sku":"134"
+      },
+      "abstract_product":{
+         "product_with_multiple_variants":{
+            "sku":"130",
+            "variant1_name":"Lenovo ThinkStation P300",
+            "variant1_sku":"130_29285281",
+            "variant2_sku":"130_24326086"
+         },
+         "product_with_label":{
+            "sku":"145",
+            "name":"DELL Chromebook 13"
+         },
+         "product_with_reviews":{
+            "sku":"035",
+            "name":"Canon PowerShot N",
+            "price_chf":"34209"
+         },
+         "product_with_options":{
+            "sku":"012",
+            "name":"Canon IXUS 165"
+         },
+         "product_in_different_locales":{
+            "sku":"001",
+            "name":"Canon IXUS 160",
+            "description_de":"Beeindruckende Aufnahmen",
+            "description_en":"Add a personal touch"
+         }
+      },
+      "products_in_bundle":{
+         "total_qty_of_products":"3",
+         "qty_of_each_product":"1"
+      },
+      "review":{
+         "title":"This is a review",
+         "text":"This is review text",
+         "default_rating":"5"
+      },
+      "configurable_product":{
+         "sku_1":"124_29866591",
+         "sku_2":"124_31623088",
+         "name":"HP ProDesk 400 G3"
+      }
+   },
+   "product_attributes":{
+      "brand_1":"Soennecken",
+      "brand_2":"edding",
+      "brand_3":"Mauser",
+      "brand_4":"Sony",
+      "brand_5":"Lenovo",
+      "material_1":"aluminum",
+      "material_2":"metal",
+      "material_3":"chipboard",
+      "material_4":"Steel sheets, stove-enameled",
+      "internal_memory":"3 GB",
+      "aspect_ratio":"16:10",
+      "storage_media":"flash",
+      "display_technology":"TFT",
+      "delivery_1":"assembled",
+      "price_unit_1":"piece",
+      "color_4":"black",
+      "color_3":"purple",
+      "color_1":"yellow",
+      "color_2":"blue",
+      "product_management_superattribute_id":"4g",
+      "product_management_attribute_free_input_id":"4g_standards",
+      "product_management_attribute_no_input_id":"bundled_product",
+      "return_reason":"Damaged"
+   },
+   "product_offers":{
+      "inactive_offer_with_volume_price":"offer5",
+      "waiting_for_approval_offer_with_volume_price":"offer10",
+      "denied_offer_with_volume_price":"offer404",
+      "active_offer":"offer2",
+      "offer_without_volume_price":"offer359",
+      "offer_without_original_price":"offer6",
+      "second_offer_with_volume_price":"offer348",
+      "offer_with_volume_price":"offer417",
+      "offer_with_volume_price_gross_net_prices":"offer48",
+      "merchant_sony_experts_id":"MER000006",
+      "merchant_video_king_id":"MER000002",
+      "active_offer_price":"10160"
+   },
+   "content":{
+      "abstract_list":{
+         "product_id":"apl-watches",
+         "product1_sku":"083",
+         "product1_name":"Samsung Gear 2 Classic",
+         "product2_sku":"087",
+         "product2_name":"Samsung Gear S2",
+         "size":"4"
+      },
+      "banner":{
+         "id_1":"br-smartwatches",
+         "name_1":"The freedom of cellular"
+      },
+      "cms_pages":{
+         "qty":"5",
+         "first_cms_page":{
+            "name":"Imprint",
+            "name_lower_case":"imprint",
+            "url_en":"/en/imprint"
+         },
+         "cms_page_with_product_lists":{
+            "id":"10014bd9-4bba-5a54-b84f-31b4b7efd064",
+            "name":"Demo Landing Page"
+         }
+      },
+      "category_collection_name":"Digital Cameras",
+      "category_collection_url":"/en/cameras-&-camcorders/digital-cameras",
+      "category_nodes_storage_name":"Cameras & Camcorders",
+      "category_nodes_storage_url":"/en/cameras-&-camcorders",
+      "subcategory_nodes_storage_name":"Digital Cameras",
+      "subcategory_nodes_storage_url":"/en/cameras-&-camcorders/digital-cameras",
+      "brand_name":"canon",
+      "cms_page_collection_name":"GTC",
+      "cms_page_collection_url":"/en/gtc"
+   },
+   "cart":{
+      "x_anonymous_prefix":"anonymous"
+   },
+   "availability":{
+      "stock_is_0":"0.0000000000",
+      "stock_is_20":"20.0000000000",
+      "stock_is_10":"10.0000000000",
+      "stock_is_5":"5.0000000000"
+   },
+   "misc":{
+      "default_header_content_type":"application/vnd.api+json",
+      "urlencoded_header_content_type":"application/x-www-form-urlencoded",
+      "test_cart_name":"Test-cart",
+      "qty_of_categories_in_category_trees":"6",
+      "discount_voucher_type_id":"3",
+      "qty_of_subcategories_in_category_trees":"2",
+      "color_name":"black",
+      "payment":{
+         "provider_name":"DummyPayment",
+         "method_name":"Credit Card",
+         "selection_name":"dummyMarketplacePaymentInvoice"
+      },
+      "shipment":{
+         "carrier_name":"DHL",
+         "method_name":"Standard",
+         "method_name_2":"Express",
+         "delivery_date":"2030-12-31"
+      }
+   },
+   "url_resolver":{
+      "url_resolver":{
+         "abstract_product":"/en/canon-ixus-160-1",
+         "product_entity":"abstract-products",
+         "product_id":"001",
+         "category_nodes_url":"/en/computers",
+         "category_nodes_entity":"category-nodes",
+         "category_nodes_id":"5",
+         "cms_url":"/en/privacy",
+         "cms_entity":"cms-pages",
+         "cms_id":"1e9fb640-9073-55f4-a2d2-535090c92025"
+      }
+   },
+   "merchants":{
+      "merchant":{
+         "spryker":{
+            "merchant_id":"MER000001",
+            "merchant_name":"Spryker",
+            "concrete_product_with_offer_sku":"112_312526191",
+            "merchant_url":"/en/merchant/spryker",
+            "contact_person_role":"E-Commerce Manager",
+            "contact_person_title":"Mr",
+            "contact_person_first_name":"Harald",
+            "contact_person_last_name":"Schmidt",
+            "contact_person_phone":"+49 30 208498350",
+            "public_email":"info@spryker.com",
+            "public_phone":"+49 30 234567891",
+            "description":"Spryker is the main merchant on the B2B Demo Marketplace."
+         },
+         "sony_experts":{
+            "merchant_id":"MER000006",
+            "merchant_name":"Sony Experts",
+            "merchant_url":"/en/merchant/sony-experts",
+            "contact_person_role":"Brand Manager",
+            "contact_person_title":"Ms",
+            "contact_person_first_name":"Michele",
+            "contact_person_last_name":"Nemeth",
+            "contact_person_phone":"030/123456789",
+            "public_email":"support@sony-experts.com",
+            "public_phone":"+49 30 234567691",
+            "description":"Capture your moment with the best cameras from Sony. From pocket-size to professional-style, they all pack features to deliver the best quality pictures. Discover the range of Sony cameras, lenses and accessories, and capture your favorite moments with precision and style with the best cameras can offer.",
+            "addresses":{
+               "city_munchen":"München",
+               "address1":"Matthias-Pschorr-Straße"
+            }
+         },
+         "budget_cameras":{
+            "id":"MER000005",
+            "name":"Budget Cameras",
+            "url":"/en/merchant/budget-cameras",
+            "contact_person":{
+               "title":"Mr",
+               "first_name":"Jason",
+               "last_name":"Weidmann",
+               "phone":"030/123456789",
+               "role":"Merchandise Manager"
+            },
+            "public":{
+               "email":"support@budgetcamerasonline.com",
+               "phone":"+49 30 234567591"
+            },
+            "logo_url":"https://d2s0ynfc62ej12.cloudfront.net/merchant/budgetcameras-logo.png"
+         }
+      }
+   },
+   "return_reason":{
+      "return_reasons_qty":"3"
+   },
+   "wishlists":{
+      "wishlist_name":"HS"
+   },
+   "productConfigurationInstance":{
+      "productConfigurationInstance":{
+         "displayData":"{\"Preferred time of the day\": \"Afternoon\", \"Date\": \"9.09.2050\"}",
+         "configuration":"{\"time_of_day\": \"3\"}",
+         "configuratorKey":"DATE_TIME_CONFIGURATOR",
+         "isComplete":true
+      }
+   },
+   "dummy_api_key":"eba8110c9f9bf5685e8b5f4eba9b17c2",
+   "dummy_key_hash":"f683f48de788d57cd396fc212ef33fd146e1ff0b51cde37ecb4ddd77eeed1706",
+   "servicePoints":{
+      "default_service_points":{
+      "sp1":{
+         "key":"sp1",
+         "name":"Spryker Main Store"
+      },
+      "sp2":{
+         "key":"sp2",
+         "name":"Spryker Berlin Store"
+      }
+      },
+      "dynamic_service":{
+         "service_point_name":"robot",
+         "service_point_key":"robot",
+         "service_point_address_line_1":"Park Avenue",
+         "service_point_address_line_2":"Building 22",
+         "service_point_address_city":"robot",
+         "service_point_address_zip_code":"12345",
+         "service_point_address_country":"DE",
+         "service_type_name":"robot",
+         "service_type_key":"robot",
+         "service_key":"robot"
+      },
+      "servicePoints":[
+         {
+            "uuid":"test-service-point",
+            "name":"TSP",
+            "key":"tsp"
+         },
+         {
+            "uuid":"test-service-point-2",
+            "name":"TSP2",
+            "key":"tsp2"
+         }
+      ],
+      "servicePointAddresses":[
+         {
+            "uuid":"test-service-point-address",
+            "address1":"Test address",
+            "address2":"Test address 2",
+            "address3":"Test address 3",
+            "city":"City",
+            "zipCode":"10115"
+         }
+      ],
+      "services":[
+         {
+            "uuid":"test-service",
+            "key":"ts"
+         }
+      ],
+      "serviceTypes":[
+         {
+            "uuid":"test-service-type",
+            "name":"Test service type",
+            "key":"tst"
+         }
+      ]
+   },
+   "warehouses":{
+      "warehouses":[
+         {
+            "uuid":"test-warehouse",
+            "is_active":true,
+            "name":"Test warehouse"
+         }
+      ]
+   },
+   "push_notifications":{
+      "push_notification_subscriptions":[
+         {
+            "providerName":"web-push-php",
+            "group":{
+               "name":"warehouse",
+               "identifier":""
+            },
+            "payload":{
+               "endpoint":"endpoint",
+               "publicKey":"publicKey",
+               "authToken":"authToken"
+            },
+            "localeName":""
+         }
+      ]
+   },
+   "push_notification_providers":{
+      "push_notification_provider_uuid":"2a304ddf-d51b-514f-bd11-6e818a27fe23"
+   },
+   "shipment_type":{
+      "shipment_type_uuid":"174d9dc0-55ae-5c4b-a2f2-a419027029ef",
+      "shipment_type_name":"Pickup"
+   },
+   "warehouse_user_assignment":{
+      "warehouse_user":[
+         {
+            "user_uuid":"48a6c610-693e-5d88-bdce-3c6018b3abd2",
+            "admin_user_uuid":"c0e244d4-03e8-556f-aa8d-174be9d236e5",
+            "de_admin_user_uuid":"92cd431f-96e3-5259-91cb-ab9f6d14829f",
+            "user_uuid_2":"84b8f847-d755-5763-b128-8e138e6571fc",
+            "user_uuid_3":"8565d483-70cd-5c73-bc6a-96d2e70ddee1",
+            "user_name":"martha@video-king.nl",
+            "user_first_name":"Martha",
+            "user_last_name":"Farmer",
+            "admin_user_name":"admin@spryker.com",
+            "admin_user_first_name":"Admin",
+            "admin_user_last_name":"Spryker"
+         }
+      ],
+      "warehouse":[
+         {
+            "warehouse_uuid":"e84b3cb8-a94a-5a7e-9adb-cc5353f7a73f",
+            "warehouse_uuid_budjet_cameras":"86496ec7-0d44-518c-81e4-f472b9e8547d",
+            "warehouse_name":"Spryker MER000001 Warehouse 1",
+            "warehouse_name_budjet_cameras":"Budget Cameras MER000005 Warehouse 1",
+            "video_king_warehouse_uuid":"62372576-6a2b-5a71-9e9c-737bc47b0bf1",
+            "video_king_warehouse_name":"Video King MER000002 Warehouse 1",
+            "fk_warehouse_spryker":"9"
+         }
+      ]
+   },
+   "demo_service_point":{
+      "spryker_main_store":{
+         "uuid":"262feb9d-33a7-5c55-9b04-45b1fd22067e",
+         "uuid2":"7e3b03e0-c53c-5298-9ece-968f4628b4f8",
+         "name":"Spryker Main Store",
+         "key":"sp1"
+      },
+      "service_point_address":{
+         "uuid":"74768ee9-e7dd-5e3c-bafd-b654e7946c54",
+         "uuid2":"7a711afc-02ce-5f54-a08c-fadfaf5713c6",
+         "address1":"Julie-Wolfthorn-Straße",
+         "address2":"1",
+         "address3":"None",
+         "city":"Berlin",
+         "zip":"10115"
+      }
+   }
+}

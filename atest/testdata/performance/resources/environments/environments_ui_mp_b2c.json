@@ -1,0 +1,239 @@
+{
+    "environment":"ui_mp_b2c",
+    "env":{
+       "yves_url":"http://yves.de.spryker.local/",
+       "yves_at_url":"http://yves.at.spryker.local/",
+       "zed_url":"http://backoffice.de.spryker.local/",
+       "mp_url":"http://mp.de.spryker.local/security-merchant-portal-gui/login/",
+       "mp_root_url":"http://mp.de.spryker.local/",
+       "glue_url":"http://glue.de.spryker.local",
+       "bapi_url":"http://glue-backend.de.spryker.local",
+       "sapi_url":"http://glue-storefront.de.spryker.local"
+   },
+   "dms_env":{
+       "yves_dms_url":"http://yves.eu.spryker.local/",
+       "zed_dms_url":"http://backoffice.eu.spryker.local/",
+       "yves_at_dms_url":"http://yves.eu.spryker.local/AT/",
+       "mp_dms_url":"http://mp.eu.spryker.local/security-merchant-portal-gui/login/",
+       "mp_root_dms_url":"http://mp.eu.spryker.local/",
+       "glue_dms_url":"http://glue.eu.spryker.local",
+       "bapi_dms_url":"http://glue-backend.eu.spryker.local",
+       "sapi_dms_url":"http://glue-storefront.eu.spryker.local"
+ },
+    "database":{
+       "db_host":"127.0.0.1",
+       "db_port_env":"3306",
+       "db_port_postgres_env": "5432",
+       "db_user":"spryker",
+       "db_password":"secret",
+       "db_name":"eu-docker"
+    },
+    "users":{
+       "yves_user_email":"george.freeman@spryker.com",
+       "yves_user_first_name":"George",
+       "yves_user_salutation":"Mr",
+       "yves_user_last_name":"Freeman",
+       "yves_user_password":"change123",
+       "yves_user_reference":"DE--5",
+       "yves_user_address":"Mr George Freeman, Kirncher Str. 7, 10247 Berlin",
+       "yves_second_user_email":"bill.martin@spryker.com",
+       "yves_second_user_first_name":"Bill",
+       "yves_second_user_last_name":"Martin",
+       "yves_second_user_password":"change123",
+       "zed_admin_email":"admin@spryker.com",
+       "zed_admin_password":"change123",
+       "zed_admin_email_de":"admin_de@spryker.com",
+       "zed_main_merchant_email":"richard@spryker.com",
+       "merchant_budget_cameras_email":"jason.weidmann@budgetcamerasonline.com",
+       "merchant_budget_cameras_reference":"MER000005",
+       "merchant_video_king_email":"martha@video-king.nl",
+       "merchant_spryker_email":"harald@spryker.com",
+       "merchant_spryker_reference":"MER000001"
+    },
+    "user_role":{
+       "bundle_access":"product-attribute-gui",
+       "controller_access":"attribute",
+       "action_access":"create",
+       "permission_allow":"allow",
+       "permission_deny":"deny",
+       "full_access":"*"
+    },
+    "glossary":{
+       "glossary_name":"customer.account.overview",
+       "original_EN_text":"Overview",
+       "original_DE_text":"Übersicht"
+    },
+    "products":{
+       "one_variant_product_abstract_sku":"009",
+       "one_variant_product_abstract_name":"EUROKRAFT trolley - with open shovel",
+       "one_variant_product_default_price":"€99.99",
+       "one_variant_product_concrete_sku":"009_30692991",
+       "one_variant_product_of_main_merchant_abstract_sku":"064",
+       "one_variant_product_of_main_merchant_abstract_name":"Samsung Galaxy S4 Mini",
+       "one_variant_product_of_main_merchant_abstract_price":"€54.48",
+       "one_variant_product_of_main_merchant_concrete_sku":"064_18404924",
+       "product_with_multiple_offers_abstract_sku":"041",
+       "product_with_multiple_offers_abstract_name":"Canon PowerShot SX610",
+       "product_with_multiple_offers_concrete_sku":"041_25904691",
+       "product_with_multiple_offers_budget_cameras_price":"€93.42",
+       "product_with_multiple_offers_video_king_price":"€98.61",
+       "second_product_with_multiple_offers_abstract_sku":"023",
+       "second_product_with_multiple_offers_abstract_name":"Sony Cyber-shot DSC-WX220",
+       "second_product_with_multiple_offers_concrete_sku":"023_21758366",
+       "second_product_with_multiple_offers_budget_cameras_price":"€240.51",
+       "second_product_with_multiple_offers_video_king_price":"€253.87",
+       "second_product_with_multiple_offers_sony_experts_price":"€227.15",
+       "bundle_product_abstract_sku":"211",
+       "bundle_product_product_name":"HP Bundle",
+       "bundled_product_1_abstract_sku":"121",
+       "bundled_product_1_abstract_name":"HP 200 280 G1",
+       "bundled_product_2_abstract_sku":"127",
+       "bundled_product_2_abstract_name":"HP Z 620",
+       "bundled_product_3_abstract_sku":"150",
+       "bundled_product_3_abstract_name":"HP Chromebook 11",
+       "bundled_product_1_concrete_sku":"121_29406823",
+       "bundled_product_1_concrete_name":"HP 200 280 G1",
+       "bundled_product_2_concrete_sku":"127_22828284",
+       "bundled_product_2_concrete_name":"HP Z 620",
+       "bundled_product_3_concrete_sku":"150_29554292",
+       "bundled_product_3_concrete_name":"HP Chromebook 11",
+       "multi_variant_product_abstract_sku":"051",
+       "measurement_unit_product_abstract_sku":"215",
+       "packaging_unit_product_abstract_sku":"218",
+       "product_with_relations_related_products_sku":"149",
+       "product_with_relations_alternative_products_sku":"145",
+       "product_with_relations_upselling_sku":"018",
+       "stock_product_abstract_sku": "208",
+       "stock_product_concrete_sku": "208_14678762",
+       "discontinued_product_abstract_sku": "172",
+       "discontinued_product_concrete_sku": "172_29801891",
+       "configurable_product_abstract_sku": "124",
+       "configurable_product_concrete_one_sku": "124_31623088",
+       "configurable_product_concrete_one_attribute": "128 GB",
+       "configurable_product_concrete_two_sku": "124_29866591",
+       "configurable_product_concrete_two_attribute": "500 GB",
+       "configurable_product_name": "HP ProDesk 400 G3",
+       "configurable_product_concrete_one_price": "25.00",
+       "configurable_product_concrete_two_price": "310.19",
+       "product_with_never_out_of_stock_offer_abstract_sku": "040",
+       "product_with_never_out_of_stock_offer_concrete_sku": "040_25904665"
+    },
+    "misc":{
+      "grant_type":{
+         "password":"password",
+         "refresh_token":"refresh_token"
+      },
+      "default_address":{
+         "salutation":"Mr",
+         "first_name":"RobotF",
+         "last_name":"RobotL",
+         "street":"Kirncher Str.",
+         "house_number":"7",
+         "post_code":"10247",
+         "city":"Berlin",
+         "country":"Germany",
+         "full_address":"Mr RobotF RobotL, Kirncher Str. 7, 10247 Berlin"
+      }
+   },
+   "address":{
+      "street_name":"st",
+      "city":"Berlin",
+      "country":"Germany",
+      "additional_address":"additional street",
+      "company":"spryker"
+   },
+  "address_api":{
+     "default":{
+        "address1":"Third, 33, 11",
+        "address2":"33-B",
+        "address3":"third. address. line",
+        "zipCode":"12312",
+        "city":"Berlin",
+        "country":"Germany",
+        "iso2Code":"DE",
+        "company":"Spryker",
+        "phone":"22111-3-4-5",
+        "shipping_status":"False",
+        "billing_status":"False"
+     },
+     "changed":{
+        "address1":"New Street 123",
+        "address2":"75d",
+        "address3":"third. address. line - changed",
+        "phone":"555-555-55"
+     }
+  },
+  "shop":{
+     "currency":{
+        "eur":{
+           "name":"Euro",
+           "code":"EUR",
+           "symbol":"€"
+        },
+        "chf":{
+           "name":"Swiss Franc",
+           "code":"CHF",
+           "symbol":"CHF"
+        },
+        "dollar":{
+           "name":"US Dollar",
+           "code":"USD",
+           "symbol":"$"
+        }
+     },
+     "locale":{
+        "DE":{
+           "name":"de_DE",
+           "code":"de"
+        },
+        "EN":{
+           "name":"en_US",
+           "code":"en"
+        }
+     },
+     "mode":{
+        "gross":"GROSS_MODE",
+        "net":"NET_MODE"
+     },
+     "store":{
+        "us":"US",
+        "de":"DE"
+     }
+  },
+   "guest_user":{
+      "salutation":"Mr.",
+      "guest_user_first_name":"Guest",
+      "guest_user_last_name":"martin"
+   },
+   "other":{
+      "order_state":"New",
+      "default_header_content_type":"application/vnd.api+json",
+      "urlencoded_header_content_type":"application/x-www-form-urlencoded"
+  },
+  "payment":{
+     "payment_provider_name":"dummyMarketplacePayment",
+     "payment_method_name":"Invoice",
+     "payment_selection_name":"dummyMarketplacePaymentInvoice",
+     "payment_provider_name_1":"DummyPayment",
+     "payment_method_name_1":"Credit Card"
+  },
+  "warehouse_user_assignment":{
+     "warehouse_user":[
+       { 
+           "admin_user_uuid":"c0e244d4-03e8-556f-aa8d-174be9d236e5",
+           "de_admin_user_uuid":"92cd431f-96e3-5259-91cb-ab9f6d14829f"
+        }],
+     "warehouse":[
+       { 
+           "warehouse_uuid":"e84b3cb8-a94a-5a7e-9adb-cc5353f7a73f",
+           "warehouse_uuid_budjet_cameras":"5bf5cc56-a50b-5029-9011-feeed83af180",
+           "warehouse_name":"Spryker MER000001 Warehouse 1",
+           "warehouse_uuid_warehouse1":"834b3731-02d4-5d6f-9a61-d63ae5e70517",
+           "warehouse_name_budjet_cameras":"Budget Cameras MER000005 Warehouse 1",
+           "video_king_warehouse_uuid":"86496ec7-0d44-518c-81e4-f472b9e8547d",
+           "video_king_warehouse_name":"Video King MER000002 Warehouse 1",
+           "fk_warehouse_spryker":"4"
+        }]
+}
+}
+
