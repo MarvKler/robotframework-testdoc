@@ -1,4 +1,4 @@
-name: Build & Test Python Package
+name: Run Performance Tests
 
 on:
   push:
