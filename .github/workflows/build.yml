@@ -56,7 +56,7 @@ jobs:
     - name: Install dependencies
       run: hatch env create dev
 
-    - name: Run ruff lint
+    - name: Run performance tests
       run: hatch run dev:perftest
 
   run-acceptance-tests:
