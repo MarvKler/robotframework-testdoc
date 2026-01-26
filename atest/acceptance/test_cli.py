@@ -64,7 +64,7 @@ def test_cli_cmd_mkdocs_custom_template():
     parent_dir = Path(__file__).parent.parent
     robot = os.path.join(parent_dir, "testdata", "acceptance")
     output = os.path.join(parent_dir, "mkdocs_test_custom")
-    templ_dir = Path(__file__).parent.parent.parent / "examples" / "mkdocs" / "default"
+    templ_dir = Path(__file__).parent.parent.parent / "src" / "testdoc" / "html" / "templates" / "mkdocs_default"
     if Path(output).exists():
         shutil.rmtree(output)
     os.mkdir(output)

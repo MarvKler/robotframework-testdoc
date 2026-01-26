@@ -31,7 +31,8 @@ testdoc --mkdocs --mkdocs-template-dir <path/to/local/mkdocs/template> <path/to/
     Please read the [API Documentation](../api/api.md) before creating your custom template - you must know which metadata gets provided by ``testdoc`` to be used in the mkdocs template!
   
 !!! tip "Example"
-    You can find an example mkdocs template which you can use as a starting point if you want to create your own template. You can find this example here: [Mkdocs Example Configuration](https://github.com/MarvKler/robotframework-testdoc/tree/main/examples/mkdocs/default)
+    You can visit the internal mkdocs template as example & if required, you can use this template as a starting point to create your own customized templete.
+    The template can be found here: [Internal Mkdocs Template](https://github.com/MarvKler/robotframework-testdoc/blob/main/src/testdoc/html/templates/mkdocs_default/docs/_partials/suite_page.md?plain=1)
 
 ### Mandatory Files
 
