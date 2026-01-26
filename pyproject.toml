@@ -96,7 +96,9 @@ dependencies = [
 ]
 [tool.hatch.envs.dev.scripts]
 lint = "ruff check ."
-atest = "pytest atest/"
+atest = "pytest atest/acceptance"
+perftest = "pytest atest/performance"
+alltest = "pytest atest"
 
 [tool.ruff]
 line-length = 150

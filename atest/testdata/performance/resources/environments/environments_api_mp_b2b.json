@@ -1,0 +1,844 @@
+{
+    "environment":"api_mp_b2b",
+    "env":{
+        "glue_url":"http://glue.de.spryker.local",
+        "bapi_url":"http://glue-backend.de.spryker.local",
+        "sapi_url":"http://glue-storefront.de.spryker.local"
+    },
+    "dms_env":{
+        "glue_dms_url":"http://glue.eu.spryker.local",
+        "bapi_dms_url":"http://glue-backend.eu.spryker.local",
+        "sapi_dms_url":"http://glue-storefront.eu.spryker.local"
+    },
+    "dataType": {
+        "array": []
+    },
+    "database":{
+        "db_host":"127.0.0.1",
+        "db_port_env":"3306",
+        "db_port_postgres_env": "5432",
+        "db_user":"spryker",
+        "db_password":"secret",
+        "db_name":"eu-docker"
+    },
+    "users":{
+        "yves_user":{
+            "email":"sonia@spryker.com",
+            "first_name":"Sonia",
+            "last_name":"Wagner",
+            "password":"change123",
+            "password_new":"qweRTY_123456",
+            "password_new_additional":"Change!23456",
+            "reference":"DE--21",
+            "salutation":"Ms"
+        },
+        "yves_second_user":{
+            "email":"bill.martin@spryker.com",
+            "first_name":"Martin",
+            "last_name":"Bill",
+            "password":"change123",
+            "reference":"DE--4",
+            "salutation":"Mr"
+        },
+        "yves_third_user":{
+            "email":"maxmusterman@spryker.com",
+            "first_name":"Max",
+            "last_name":"Musterman",
+            "password":"change123",
+            "password_new":"Change!23456",
+            "salutation":"Mr"
+        },
+        "yves_fourth_user":{
+            "email":"Lilu@ottom.de",
+            "first_name":"Lilu",
+            "last_name":"Dallas",
+            "password":"change123",
+            "reference":"DE-30",
+            "salutation":"Ms"
+        },
+        "yves_eighth_user":{
+            "email":"maria.williams@spryker.com",
+            "password":"change123",
+            "password_new":"Change!23456",
+            "password_new_additional":"qweRTY_123456",
+            "reference":"DE--2"
+        },
+        "yves_ninth_user":{
+            "email":"maggie.may@spryker.com",
+            "first_name":"Maggie",
+            "last_name":"May",
+            "password":"Change!23456",
+            "password_new":"qweRTY_123456",
+            "reference":"DE--3",
+            "salutation":"Ms"
+        },
+        "yves_ottom_admin_user":{
+            "email":"andrew@ottom.de",
+            "first_name":"Andrew",
+            "last_name":"Wedner",
+            "password":"change123",
+            "reference":"DE-8",
+            "salutation":"Mr"
+        },
+        "yves_shared_shopping_list_user":{
+            "email":"Trever.m@spryker.com",
+            "first_name":"Trever",
+            "last_name":"Meier",
+            "password":"change123",
+            "salutation":"Mr"
+        },
+        "yves_shared_shopping_cart_user":{
+            "email":"Solomon@spryker.com",
+            "first_name":"Solomon",
+            "last_name":"Wesner",
+            "password":"change123",
+            "salutation":"Mr"
+        },
+        "gender":{
+            "female":"Female",
+            "male":"Male"
+        },
+        "email":{
+            "name":"sonia",
+            "domain":"@spryker.com"
+        },
+        "zed_admin":{
+            "email":"admin@spryker.com",
+            "password":"change123"
+        },
+        "agent":{
+            "email":"admin@spryker.com",
+            "password":"change123"
+        },
+        "non_agent":{
+            "email":"admin_de@spryker.com",
+            "password":"change123"
+        },
+        "customer_reference":{
+            "de_1":"DE--1",
+            "de_10":"DE--10",
+            "de_15":"DE--15",
+            "de_34":"DE--34",
+            "de_44":"DE--44"
+        },
+        "grant_type":{
+            "password":"password",
+            "refresh_token":"refresh_token"
+        }
+    },
+    "address":{
+        "default":{
+            "address1":"Third, 33, 11",
+            "address2":"33-B",
+            "address3":"third. address. line",
+            "zipCode":"12312",
+            "city":"Berlin",
+            "country":"Germany",
+            "iso2Code":"DE",
+            "company":"Spryker",
+            "phone":"22111-3-4-5",
+            "shipping_status":"false",
+            "billing_status":"false"
+        },
+        "changed":{
+            "address1":"New Street 123",
+            "address2":"75d",
+            "address3":"third. address. line - changed",
+            "phone":"555-555-55"
+        }
+    },
+    "shop":{
+        "currency":{
+            "eur":{
+                "name":"Euro",
+                "code":"EUR",
+                "symbol":"€"
+            },
+            "dollar":{
+                "name":"US Dollar",
+                "code":"USD",
+                "symbol":"$"
+            },
+            "chf":{
+                "name":"Swiss Franc",
+                "code":"CHF",
+                "symbol":"CHF"
+            }
+        },
+        "store":{
+            "de":"DE",
+            "us":"US"
+        },
+        "mode":{
+            "gross":"GROSS_MODE",
+            "net":"NET_MODE"
+        },
+        "locale":{
+            "DE":{
+                "name":"de_DE",
+                "code":"de"
+            },
+            "EN":{
+                "name":"en_US",
+                "code":"en"
+            }
+        }
+    },
+    "shopping-list":{
+        "shopping_list_name":"My Shopping List",
+        "1st_shopping_list":{
+            "id":"cf032865-d1ad-5e27-803a-423bd15ced66",
+            "name":"Newcomers"
+        },
+        "2nd_shopping_list":{
+            "name":"Weekly office"
+        },
+        "3rd_shopping_list":{
+            "name":"Monthly office"
+        }
+    },
+    "search":{
+        "total_number_of_products_in_search":"414",
+        "ipp":{
+            "default":"12",
+            "middle":"24",
+            "biggest":"36"
+        },
+        "default_qty":{
+            "ipp_pages":"35",
+            "categories":"33",
+            "colors":"10",
+            "labels":"5",
+            "materials":"10",
+            "brands":"10",
+            "sorting_options":"5",
+            "product_classes":"0"
+        },
+        "default_rating":{
+            "min":"4",
+            "max":"5"
+        },
+        "label":{
+            "new":"New",
+            "sale":"SALE %",
+            "manual":"Top",
+            "discontinued":"Discontinued",
+            "alternatives":"Alternatives available"
+        },
+        "category_lvl1":{
+            "id":"11",
+            "qty":"172"
+        },
+        "category_lvl2":{
+            "id":"12",
+            "qty":"56"
+        },
+        "category_lvl3":{
+            "id":"13",
+            "qty":"28"
+        },
+        "category_tree_branches_qty":"6",
+        "abstract_sku_highest_rating":"M1016129"
+    },
+    "products":{
+        "bundle_product":{
+            "abstract":{
+                "sku":"M90851",
+                "name":"IDEAL document shredder - Power 1300 watts, 165 l volume",
+                "product_1_sku":"M23457",
+                "product_2_sku":"C2235",
+                "product_3_sku":"M11542"
+            },
+            "concrete":{
+                "sku":"000201",
+                "name":"IDEAL document shredder - Power 1300 watts, 165 l volume - 23 – 25 sheets, safety level P-4, particle",
+                "product_1_sku":"424453",
+                "product_1_name":"Schneider ballpoint pen HAPTIFY 135323 M 0.5 mm, dark blue/light blue",
+                "product_2_sku":"1001454",
+                "product_2_name":"Schomburg standing desk - HxWxD 1094 x 600 x 500 mm, beech",
+                "product_3_sku":"104517",
+                "product_3_name":"Wood stackable chair - 4-foot substructure, upholstered seat - Cover anthracite, substructure coated"
+            },
+            "products_in_bundle":{
+                "total_qty_of_products":"3",
+                "qty_of_each_product":"1"
+            }
+        },
+        "special_product_abstract_sku":{
+            "with_multivariant":"M58035",
+            "with_measurement_unit":"M23723",
+            "with_packaging_unit":"M21766"
+        },
+        "product_with_relations":{
+            "has_related_products":{
+                "abstract_sku":"M29529",
+                "concrete_sku":"419872"
+            },
+            "has_alternative_products":{
+                "abstract_sku":"M21100"
+            },
+            "has_upselling_products":{
+                "abstract_sku":"M29502",
+                "concrete_sku":"419880"
+            }
+        },
+        "product_with_related_relations":{
+            "has_upselling_products":{
+                "sku":"M29499",
+                "name":"Safescan counterfeit test device - SAFESCAN 45 UV"
+            },
+            "has_related_products":{
+                "sku":"M29501",
+                "name":"Safescan automatic banknote counter - UV counterfeit recognition"
+            }
+        },
+        "discount":{
+            "id_3":{
+                "name":"5% off white",
+                "description":"Get a 5% discount on all white products with voucher code"
+            },
+            "id_4":{
+                "name":"10% off Safescan",
+                "description":"Get a 10% discount on all Safescan brand products with voucher code"
+            },
+            "concrete_products_with_discounts":{
+                "concrete_product_with_brand_safescan":"419872",
+                "concrete_product_with_brand_safescan_and_white_color":"419901"
+            },
+            "products_cost_with_discounts":{
+                "voucher_concrete_product_1_with_brand_safescan_2_items":"782",
+                "voucher_concrete_product_with_brand_safescan_and_white_color_2_items":"3201"
+            },
+            "cart_rule_name_10_off_minimum_order":"10% off minimum order"
+        },
+        "concrete_of_product_with_relations_upselling":{
+            "product_options":{
+                "OP_1":{
+                    "id":"OP_1_year_waranty",
+                    "option_group_name":"Three (3) year limited warranty",
+                    "sku":"OP_1_year_waranty",
+                    "option_name":"One (1) year limited warranty"
+                },
+                "OP_2":{
+                    "id":"OP_2_year_waranty",
+                    "option_group_name":"Three (3) year limited warranty",
+                    "sku":"OP_2_year_waranty",
+                    "option_name":"Two (2) year limited warranty"
+                },
+                "OP_3":{
+                    "id":"OP_3_year_waranty",
+                    "option_group_name":"Three (3) year limited warranty",
+                    "sku":"OP_3_year_waranty",
+                    "option_name":"Three (3) year limited warranty"
+                },
+                "OP_insurance":{
+                    "id":"OP_insurance",
+                    "option_group_name":"Two (2) year insurance coverage",
+                    "sku":"OP_insurance",
+                    "option_name":"Two (2) year insurance coverage"
+                }
+            },
+            "product_reviews":{
+                "review_1":{
+                    "id":"1",
+                    "rating":"1",
+                    "nickname":"Spencor",
+                    "summary":"To heavy, uncomfortable",
+                    "description":"YOu really feel there is tech on your wrist with this watch, it felt like a weight on my wrist and strap was very uncomfortable. Battery dies really fast."
+                },
+                "review_2":{
+                    "id":"2",
+                    "rating":"4",
+                    "nickname":"Bill",
+                    "summary":"My boss loved it",
+                    "description":"Snazzy design and exactly what my kid wanted."
+                },
+                "review_3":{
+                    "id":"3",
+                    "rating":"4",
+                    "nickname":"Maggie",
+                    "summary":"Great product.",
+                    "description":"I absolutely love it but why doesnt it have a built in speaker? Had it for 2 months now, worn it every day and it's been very durable and responsive."
+                },
+                "review_4":{
+                    "id":"4",
+                    "rating":"5",
+                    "nickname":"Maria",
+                    "summary":"Easy to set up and use! ",
+                    "description":"Received this as a Birthday present. I love my GearS2!!"
+                },
+                "review_5":{
+                    "id":"5",
+                    "rating":"5",
+                    "nickname":"Spencor",
+                    "summary":"Five Stars",
+                    "description":"Daughter is very happy with her new phone!"
+                },
+                "review_6":{
+                    "id":"6",
+                    "rating":"3",
+                    "nickname":"Maria",
+                    "summary":"Good for the price",
+                    "description":"I bought the phone a year ago, I could complain but what would be the point in that."
+                },
+                "review_7":{
+                    "id":"7",
+                    "rating":"4",
+                    "nickname":"Maggie",
+                    "summary":"Great but not amazing",
+                    "description":"I guess this is waht you get when you compromise. I wanted something I could use with one hand and mount on my belt. But the performance is crappyer than my old phone and so it the call clarity and speed. I was going to go for the Samsung A3 2017 but the specs are not much better and it is way bigger."
+                },
+                "review_8":{
+                    "id":"8",
+                    "rating":"4",
+                    "nickname":"Bill",
+                    "summary":"Works ok",
+                    "description":"We used to have an S3 mini. We were expecting a phone about the same size or maybe a little bigger than thre S3 mini, however,to our surprise it is almost as big as an S4. Whats the deal with that?"
+                },
+                "review_9":{
+                    "id":"9",
+                    "rating":"4",
+                    "nickname":"Spensor",
+                    "summary":"Like it",
+                    "description":"Accidently dropped it in the toilet and it worked fine afterwards."
+                }
+            },
+            "category_nodes":{
+                "category_node_23":{
+                    "id":"23",
+                    "name":"Office equipment"
+                },
+                "category_node_25":{
+                    "id":"25",
+                    "name":"Money Counters and Validators"
+                }
+            }
+        },
+        "product_related_product_with_upselling_relation":{
+            "sku":"M29499",
+            "merchant_reference":"MER000008",
+            "name":"Safescan counterfeit test device - SAFESCAN 45 UV",
+            "description":" Counterfeit test device, SAFESCAN 45 UV, doubled UV lamp. Strong, doubled UV lamp (2 x 6 W). Monitors the UV features of banknotes. Suitable for all currencies. Suitable for all driver’s licenses and documents. Suitable for identity cards and credit cards. CE-certified.  ",
+            "concrete_available_product":{
+                "sku":"419869",
+                "name":"Safescan Counterfeit test device, SAFESCAN 45 UV, doubled UV lamp",
+                "description":"Counterfeit test device, SAFESCAN 45 UV, doubled UV lamp. Strong, doubled UV lamp (2 x 6 W). Monitors the UV features of banknotes. Suitable for all currencies. Suitable for all driver’s licenses and documents. Suitable for identity cards and credit cards. CE-certified.",
+                "meta_title":"",
+                "meta_keywords":"Geldscheinprüfer,Geldprüfer",
+                "meta_description":" Falschgeld-Prüfgerät, SAFESCAN 45 UV, doppelte UV Lampe. Starke, doppelte UV Lampe (2 x 6 W). Kontrolliert die UV-Merkmale von Geldscheinen. Eignet sich für alle Währungen. Eignet sich für alle Führerscheine und Dokumente. Eignet sich für Identitätskarten und Kreditkarten. CE-zertifiziert.  "
+            }
+        },
+        "concrete_product_with_alternative":{
+            "sku":"420566",
+            "name":"Verbatim USB stick Store n Go V3 49173 32GB USB3.0 gray",
+            "name_lower_case":"verbatim usb stick store n go v3 49173 32gb usb3.0 gray",
+            "abstract_sku":"M90810"
+        },
+        "concrete_product_with_discontinued":{
+            "sku":"421540"
+        },
+        "abstract_product_with_alternative":{
+            "sku":"M21100",
+            "name":"Verbatim USB stick Store n Go V3 49173 32GB USB3.0 gray"
+        },
+        "alternative_abstract_product":{
+            "sku":"M21099",
+            "price_chf":"1130"
+        },
+        "abstract_available_product_with_stock":{
+            "sku":"M61125",
+            "price_de":"21759",
+            "price_at":"21859",
+            "merchant_reference":"MER000008",
+            "name":"Prosedia vertebral disc swivel chair with synchronous mechanics and contoured seat - backrest height 660 mm",
+            "description":" Easy-to-care-for fabric cover. Substructure in graphite black RAL 9011.<br/>Standard rolling for soft floors.<br/>The backrest has height-adjustable lumbar support.  ",
+            "superattribute":"bezugsfarbe",
+            "meta_title":"Prosedia vertebral disc swivel chair with synchronous mechanics and contoured seat - backrest height 660 mm",
+            "meta_keywords":"Arbeitsdrehstuhl,Bandscheibendrehstuhl,Bandschreibendrehstuhl,Bürodrehstuhl,Bürostuhl,Drehstuhl,Schreibtischstuhl,Universalstuhl",
+            "meta_description":" Pflegeleichter Stoffbezug. Gestell in Graphitschwarz RAL 9011.<br/>Standardmäßig Rollen für weiche Böden.<br/>Die Rückenlehne verfügt über eine höhenverstellbare Lendenwirbelstütze.  ",
+            "concrete_available_product":{
+                "sku":"102712",
+                "name":"Prosedia vertebral disc swivel chair with synchronous mechanics and contoured seat - backrest height 660 mm - cover color orange",
+                "description":"Easy-to-care-for fabric cover. Substructure in graphite black RAL 9011.<br/>Standard rolling for soft floors.<br/>The backrest has height-adjustable lumbar support.",
+                "meta_title":"Prosedia vertebral disc swivel chair with synchronous mechanics and contoured seat - backrest height 660 mm",
+                "meta_keywords":"Arbeitsdrehstuhl,Bandscheibendrehstuhl,Bandschreibendrehstuhl,Bürodrehstuhl,Bürostuhl,Drehstuhl,Schreibtischstuhl,Universalstuhl",
+                "meta_description":" Pflegeleichter Stoffbezug. Gestell in Graphitschwarz RAL 9011.<br/>Standardmäßig Rollen für weiche Böden.<br/>Die Rückenlehne verfügt über eine höhenverstellbare Lendenwirbelstütze.  "
+            },
+            "category_nodes":{
+                "category_node_14":{
+                    "id":"14",
+                    "name":"Swivel Chairs"
+                },
+                "category_node_11":{
+                    "id":"11",
+                    "name":"Office furniture"
+                },
+                "category_node_12":{
+                    "id":"12",
+                    "name":"Chairs"
+                }
+            },
+            "product_options":{
+                "OP_1":{
+                    "id":"OP_1_year_waranty",
+                    "option_group_name":"Three (3) year limited warranty",
+                    "sku":"OP_1_year_waranty",
+                    "option_name":"One (1) year limited warranty"
+                },
+                "OP_2":{
+                    "id":"OP_2_year_waranty",
+                    "option_group_name":"Three (3) year limited warranty",
+                    "sku":"OP_2_year_waranty",
+                    "option_name":"Two (2) year limited warranty"
+                },
+                "OP_3":{
+                    "id":"OP_3_year_waranty",
+                    "option_group_name":"Three (3) year limited warranty",
+                    "sku":"OP_3_year_waranty",
+                    "option_name":"Three (3) year limited warranty"
+                },
+                "OP_insurance":{
+                    "id":"OP_insurance",
+                    "option_group_name":"Two (2) year insurance coverage",
+                    "sku":"OP_insurance",
+                    "option_name":"Two (2) year insurance coverage"
+                }
+            }
+        },
+        "abstract_product":{
+            "product_with_volume_prices":{
+                "abstract_sku":"M21189",
+                "abstract_name":"Post-it stick note Super Sticky Meeting Notes 6445-4SS 4 pieces/pack",
+                "concrete_sku":"420685"
+            },
+            "product_with_original_prices":{
+                "abstract_sku":"M74972",
+                "concrete_sku":"101863",
+                "concrete_name":"HSM SECURIO document shredder - for multi-person office, 34 l - stripes, 19 – 21 sheets"
+            },
+            "abstract_product_with_label":{
+                "sku":"M21691",
+                "name":"Clairefontaine Collegeblock 8272C DIN A5, 90 sheets"
+            },
+            "product_with_reviews":{
+                "sku":"M719",
+                "name":"Rectangular table, rectangular tubing - 1600 x 800 mm",
+                "qty":"4"
+            },
+            "product_with_options":{
+                "abstract_sku":"M29501",
+                "abstract_ame":"Safescan automatic banknote counter - UV counterfeit recognition",
+                "concrete_sku":"419871",
+                "concrete_name":"Safescan automatic banknote counter, UV Counterfeit recognition, SAFESCAN 2210"
+            },
+            "product_availability":{
+                "abstract_available_with_stock_and_never_out_of_stock":"M87",
+                "concrete_available_with_stock_and_never_out_of_stock":"657716",
+                "concrete_available_with_stock_and_never_out_of_stock_name":"FRIWA stackable chair - with closed back",
+                "abstract_available_product_with_no_stock_and_never_out_of_stock":"M90851",
+                "abstract_unavailable_product":"M22432",
+                "concrete_unavailable_product":"212447",
+                "product_2":{
+                    "abstract_available_with_stock_and_never_out_of_stock":"M24632",
+                    "concrete_available_with_stock_and_never_out_of_stock":"426615"
+                },
+                "product_3":{
+                    "abstract_available_with_stock_and_never_out_of_stock":"M87416"
+                }
+            },
+            "abstract_product_with_variants":{
+                "concretes_3":"M29456",
+                "concretes_name_3":"Gmöhling aluminum data removal container - Exterior - LxWxH 435 x 385 x 650 mm",
+                "concretes_superattribute_3":"material"
+            },
+            "product_in_different_locales":{
+                "sku":"M29455",
+                "description_de":"Alu-Datenentsorgungsbehälter",
+                "description_en":"Aluminum data disposal container"
+            }
+        },
+        "concrete_available_product_with_stock":"420566",
+        "concrete_available_product_without_stock":"422780",
+        "concrete_product_with_promotions":"212427",
+        "concrete_product_with_threshold_limit":"424273",
+        "concrete_product":{
+            "image_set":{
+                "one":{
+                    "sku":"401768",
+                    "name":"EUROKRAFT aluminum hand truck - Load capacity 200 kg, with skids - load capacity 200 kg"
+                },
+                "multiple":{
+                    "sku":"212427",
+                    "name":"Wood stackable chair, upholstered - VE 4 pieces, substructure chromed - upholstery black"
+                }
+            }
+        },
+        "packaging_unit":{
+            "m":"METR",
+            "i":"ITEM",
+            "cm":"CMET",
+            "m_name":"Meter"
+        },
+        "concrete_product_random_weight":{
+            "qty_of_units":"1",
+            "amount":"5.0000000000",
+            "conversion":"1",
+            "precision":"100",
+            "packaging_unit":"19",
+            "sku":"421519_3",
+            "name":"Box Papermate Kugelschreiber InkJoy 700 RT S0957340 M Druckmechanik schwarz",
+            "measurement_unit":"19"
+        },
+        "measurement_unit_m":"METR",
+        "product_options":{
+            "option_1":"OP_2_year_waranty",
+            "option_1_name":"Two (2) year limited warranty",
+            "option_2":"OP_insurance"
+        },
+        "discount_concrete_product":{
+            "discount_concrete_product_sku":"103117",
+            "product_1":{
+                "sku":"108298",
+                "name":"Mauser hinged door cabinet - sideboard, 4 compartments, center separating wall - HxWxD 1225 x 1600 x 420 mm - light gray / ultramarine blue",
+                "discount_amount_with_20_percentage_off_storage":"10600",
+                "discount_amount_with_10_percentage_off_minimum_order":"4240",
+                "discount_amount_total_sum_of_discounts":"14840"
+            },
+            "product_2":{
+                "sku":"213216",
+                "name":"office akktiv base cabinet - HxWxD 942 x 913 x 420 mm - light gray, RAL 7035",
+                "discount_amount_with_20_percentage_off_storage":"5783",
+                "discount_amount_with_10_percentage_off_minimum_order":"2313",
+                "discount_amount_total_sum_of_discounts":"8096"
+            },
+            "product_3":{
+                "sku":"401768",
+                "name":"EUROKRAFT aluminum hand truck - Load capacity 200 kg, with skids - load capacity 200 kg",
+                "discount_amount_with_20_percentage_off_storage":"16383",
+                "discount_amount_with_10_percentage_off_minimum_order":"1882"
+            }
+        },
+        "configurable_product": {
+            "sku": "574601",
+            "name":"CP steel cabinet, fire-resistant - 3 adjustable shelves - 1 locker - black gray / light gray"
+        }
+    },
+    "product_offers":{
+        "inactive_offer_with_volume_price":"offer3",
+        "waiting_for_approval_offer_with_volume_price":"offer4",
+        "denied_offer_with_volume_price":"offer404",
+        "active_offer":"offer2",
+        "active_offer_with_merchant_sku":"offer1",
+        "offer_without_volume_price":"offer359",
+        "offer_without_original_price":"offer6",
+        "second_offer_with_volume_price":"offer9",
+        "offer_with_volume_price":"offer10",
+        "offer_with_volume_price_gross_net_prices":"offer48",
+        "active_offer_price":"10160"
+    },
+    "product_attributes":{
+        "brand_1":"Soennecken",
+        "brand_2":"edding",
+        "brand_3":"Mauser",
+        "material_1":"aluminum",
+        "material_2":"metal",
+        "material_3":"chipboard",
+        "material_4":"Steel sheets, stove-enameled",
+        "delivery_1":"assembled",
+        "price_unit_1":"piece",
+        "color_1":"yellow",
+        "color_2":"blue",
+        "color_3":"purple",
+        "color_4":"orange",
+        "product_management_superattribute_id":"farbe",
+        "product_management_attribute_free_input_id":"verschlussart",
+        "product_management_attribute_no_input_id":"bundled_product"
+    },
+    "content":{
+        "abstract_list":{
+            "product_id":"apl-1",
+            "product1_sku":"M21692",
+            "product1_name":"Clairefontaine Collegeblock 8272C DIN A5, 90 sheets",
+            "product2_sku":"M23723",
+            "product2_name":"Brennenstuhl extension cable 3 m",
+            "size":"7"
+        },
+        "banner_1":{
+            "id":"br-1",
+            "name":"Furniture - Upgrade Your Office"
+        },
+        "cms_pages":{
+            "qty":"5",
+            "first_cms_page":{
+                "name":"Imprint",
+                "name_in_lower_case":"imprint",
+                "url_en":"/en/imprint"
+            },
+            "cms_page_with_product_lists":{
+                "id":"10014bd9-4bba-5a54-b84f-31b4b7efd064",
+                "name":"Demo Landing Page"
+            }
+        },
+        "category_collection_name":"Sticky Notes",
+        "category_collection_url":"/en/stationery/paper/sticky-notes",
+        "category_node_is_root_id":"1",
+        "category_node_has_only_parent_id":"37",
+        "category_node_has_children_id":"11",
+        "category_nodes_storage_name":"Foods",
+        "category_nodes_storage_url":"/en/foods",
+        "subcategory_nodes_storage_name":"Vegetables",
+        "subcategory_nodes_storage_url":"/en/foods/vegetables",
+        "cms_page_collection_name":"GTC",
+        "cms_page_collection_url":"/en/gtc",
+        "brand_name":"verbatim",
+        "cart_permission_group_id":"1",
+        "cart_permission_group_type":"cart-permission-groups",
+        "subcategory_nodes_storage_name1":"Fish",
+        "subcategory_nodes_storage_url1":"/en/foods/fish"
+    },
+    "availability":{
+        "stock_is_0":"0.0000000000",
+        "stock_is_20":"20.0000000000"
+    },
+    "misc":{
+        "default_header_content_type":"application/vnd.api+json",
+        "urlencoded_header_content_type":"application/x-www-form-urlencoded",
+        "test_cart_name":"Test-cart",
+        "restricted_content_qty":"5",
+        "qty_of_categories_in_category_trees":"6",
+        "qty_of_subcategories_in_category_trees":"2",
+        "color_name":"black",
+        "payment":{
+            "provider_name":"dummyMarketplacePayment",
+            "method_name":"invoice",
+            "selection_name":"dummyMarketplacePaymentInvoice"
+        },
+        "shipment":{
+            "carrier_name":"DHL",
+            "carrier_name_1":"Hermes",
+            "method_name_1":"Standard",
+            "method_name_2":"Express",
+            "method_name_3":"Same Day",
+            "delivery_date":"2030-12-31"
+        },
+        "review":{
+            "title":"This is a review",
+            "text":"This is review text",
+            "default_rating":"5"
+        },
+        "discount_1":{
+            "name":"20% off storage",
+            "description":"Storage sale: 20% off all office storage products",
+            "total_sum_for_discounts_for_products_1_and_2":"16383"
+        },
+        "discount_2":{
+            "name":"10% off minimum order",
+            "description":"Get a 10% discount on all orders above a certain value depending on currency and gross/net price mode",
+            "total_sum_for_discounts_for_products_1_2_and_3":"8435"
+        },
+        "discount_3":{
+            "name":"Free standard delivery",
+            "description":"Get a 10% discount on all orders above a certain value depending on currency and gross/net price mode",
+            "total_sum":"490"
+        },
+        "url_resolver":{
+            "example":"/en/clairefontaine-collegeblock-8272c-din-a5-90blatt-kariert-M21692",
+            "entity_type":"abstract-products",
+            "entity_id":"M21692",
+            "category_nodes":"/en/stationery",
+            "category_nodes_entity":"category-nodes",
+            "category_nodes_id":"2",
+            "cms":"/en/privacy",
+            "cms_entity":"cms-pages",
+            "cms_id":"1e9fb640-9073-55f4-a2d2-535090c92025",
+            "merchant":"/en/merchant/spryker",
+            "merchant_entity":"merchants",
+            "merchant_id":"MER000008"
+        }
+    },
+    "companies":{
+        "company_name":"Spryker Systems GmbH",
+        "user_with_multiple_companies":"anne.boleyn@spryker.com",
+        "company_id":"62de4ab6-b768-5c21-8835-455d9f341625",
+        "company_user_id":"2816dcbd-855e-567e-b26f-4d57f3310bb8",
+        "business_unit":{
+            "address_id":"2175cddd-f8af-5885-b161-227b5c93e72f",
+            "name":"Spryker Systems HR department"
+        }
+    },
+    "labels":{
+        "label_manual":{
+            "id":"3",
+            "name":"Top"
+        },
+        "label_sale":{
+            "id":"5",
+            "name":"SALE %"
+        },
+        "label_new":{
+            "id":"4",
+            "name":"New"
+        },
+        "label_discontinued":{
+            "id":"2",
+            "name":"Discontinued"
+        },
+        "label_alternative":{
+            "id":"1",
+            "name":"Alternatives available"
+        }
+    },
+    "merchants":{
+        "merchants":{
+            "computer_experts":{
+                "merchant_id":"MER000011",
+                "merchant_offer_id":"offer394",
+                "merchant_offer_price":"1234",
+                "concrete_product_with_offer_sku":"425159",
+                "merchant_name":"Computer Experts",
+                "merchant_url":"/en/merchant/computer-experts",
+                "contact_person_role":"Brand Manager",
+                "contact_person_title":"Ms",
+                "contact_person_first_name":"Michele",
+                "contact_person_last_name":"Nemeth",
+                "contact_person_phone":"030/123456789",
+                "public_email":"support@computer-experts.com",
+                "public_phone":"+49 30 234567691",
+                "description":"Computer Experts offer products that enhance your work environment with computer accessories that improve how you work, communicate, and interact. Computer Experts founded in 2013 and continuously growing, acquiring deep industry experience.",
+                "addresses":{
+                    "city_munchen":"München",
+                    "address1":"Matthias-Pschorr-Straße"
+                }
+            },
+            "merchant_spryker_id":"MER000008",
+            "merchant_office_king_id":"MER000009",
+            "merchant_budget_stationery_id":"MER000010",
+            "merchant_spryker_name":"Spryker",
+            "merchant_spryker_url":"/en/merchant/spryker",
+            "contact_spryker_person_role":"E-Commerce Manager",
+            "contact_spryker_person_title":"Mr",
+            "contact_spryker_person_first_name":"Harald",
+            "contact_spryker_person_last_name":"Schmidt",
+            "contact_spryker_person_phone":"+49 30 208498350",
+            "spryker_public_email":"info@spryker.com",
+            "spryker_public_phone":"+49 30 234567891",
+            "description_spryker":"Spryker is the main merchant on the B2B Demo Marketplace."
+        }
+    },
+    "return_reasons":{
+        "return_reason_damaged":"Damaged",
+        "return_reason_wrong_item":"Wrong Item",
+        "return_reason_no_longer_needed":"No longer needed",
+        "return_reasons_qty":"3"
+    },
+    "productConfigurationInstance": {
+        "productConfigurationInstance":{
+            "displayData": "{\"Preferred time of the day\": \"Afternoon\", \"Date\": \"9.09.2050\"}",
+            "configuration": "{\"time_of_day\": \"3\"}",
+            "configuratorKey": "DATE_TIME_CONFIGURATOR",
+            "isComplete": true
+        },
+        "dummy_api_key":"eba8110c9f9bf5685e8b5f4eba9b17c2",
+        "dummy_key_hash":"f683f48de788d57cd396fc212ef33fd146e1ff0b51cde37ecb4ddd77eeed1706"
+    }
+}
