@@ -34,6 +34,8 @@ testdoc suite_directory output.html
 testdoc suite_file output.html
 ```
 
+![General Usage](./docs/gifs/general_usage.gif)
+
 ### Extended Usage
 ```shell
 testdoc [OPTIONS] suite_directory output.html
@@ -50,6 +52,12 @@ You have two option to use it this way:
 2. You can use the ``mkdocs`` integration to define your own mkdcs template as CLI argument and the testdoc tool will internally take care of the mkdocs page generation.
 
 For further details about the usage, please read the [official documentation](https://marvkler.github.io/robotframework-testdoc/usage).
+
+![Custom Jinja Template](./docs/gifs/customjinja.gif)
+
+![Internal Mkdocs Template](./docs/gifs/mkdocs_internal_template.gif)
+
+![Custom Mkdocs Template](./docs/gifs/mkdocs_custom_template.gif)
 
 ## Examples
 

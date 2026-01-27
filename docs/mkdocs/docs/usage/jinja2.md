@@ -35,6 +35,8 @@ testdoc --custom-jinja-template <path>/my_jinja2_template.html suite_directory o
 !!! tip "Example"
     Please take a look at the [Internal Jinja2 Template](https://github.com/MarvKler/robotframework-testdoc/blob/main/src/testdoc/html/templates/v2/jinja_template_03.html) to get an idea about using the provided metadata by ``testdoc``!
 
+![Jinja Usage](../stylesheets/customjinja.gif)
+
 ## Open Jinja2 Webpages
 
 You can simply open the defined output HTML file in any browser on your local system. Jinja2 generates a static HTML pages without any dependecies.

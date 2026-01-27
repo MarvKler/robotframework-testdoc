@@ -80,7 +80,10 @@ class MkdocsIntegration:
         shutil.copyfile(src, dst)
 
     def _mkdocs_build(self, work_dir: Path) -> None:
-        subprocess.check_call(["mkdocs", "build", "-f", str(work_dir / "mkdocs.yml")])
+        cmd = ["mkdocs", "build", "-f", str(work_dir / "mkdocs.yml")]
+        if not self.args.verbose_mode:
+            cmd.append("--quiet")
+        subprocess.check_call(cmd)
         Logger().Log("---------------------------------------------------------------------------", "green")
         Logger().Log("Generated mkdocs pages here:", "green")
         Logger().Log(work_dir)

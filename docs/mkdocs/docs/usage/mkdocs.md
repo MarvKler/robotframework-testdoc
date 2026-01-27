@@ -18,6 +18,8 @@ testdoc --mkdocs <path/to/test/directory> <path/to/output/dir>
 
     You can take a look at the internal mkdocs template provided by ``robotframework-testdoc`` - here you can find it: [Internal Mkdocs Template](https://github.com/MarvKler/robotframework-testdoc/tree/main/src/testdoc/html/templates/mkdocs_default)
 
+![Mkdocs Internal Usage](../stylesheets/mkdocs_internal_template.gif)
+
 ## External Mkdocs Template
 
 You can also created your own ``mkdocs`` template locally which will be used by ``robotframework-testdoc`` as base template & gets extended with the given test suite directory.
@@ -33,6 +35,8 @@ testdoc --mkdocs --mkdocs-template-dir <path/to/local/mkdocs/template> <path/to/
 !!! tip "Example"
     You can visit the internal mkdocs template as example & if required, you can use this template as a starting point to create your own customized templete.
     The template can be found here: [Internal Mkdocs Template](https://github.com/MarvKler/robotframework-testdoc/blob/main/src/testdoc/html/templates/mkdocs_default/docs/_partials/suite_page.md?plain=1)
+
+![Mkdocs Custom Usage](../stylesheets/mkdocs_custom_template.gif)
 
 ### Mandatory Files
 
