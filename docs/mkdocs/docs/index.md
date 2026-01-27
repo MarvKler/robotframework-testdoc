@@ -16,6 +16,14 @@ Use the following command to install the tool:
 pip install robotframework-testdoc
 ```
 
+## :material-test-tube: Simple Usage
+
+```shell
+testdoc atest/testdata/acceptance output.html
+```
+
+![General Usage](./stylesheets/general_usage.gif)
+
 ## :material-test-tube: Examples
 
 Visit the [Examples](gettingstarted.md) page for some demo use cases & insights of what the tool is capable of!
