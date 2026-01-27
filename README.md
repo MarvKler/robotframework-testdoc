@@ -53,9 +53,15 @@ You have two option to use it this way:
 
 For further details about the usage, please read the [official documentation](https://marvkler.github.io/robotframework-testdoc/usage).
 
+#### Use customized Jinja2 Template
+
 ![Custom Jinja Template](./docs/gifs/customjinja.gif)
 
+#### Use internal Mkdocs Template
+
 ![Internal Mkdocs Template](./docs/gifs/mkdocs_internal_template.gif)
+
+#### Use customized Mkdocs Template
 
 ![Custom Mkdocs Template](./docs/gifs/mkdocs_custom_template.gif)
 
