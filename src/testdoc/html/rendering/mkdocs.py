@@ -62,10 +62,10 @@ class MkdocsIntegration:
         shutil.copytree(user_template_dir, work_dir)
 
     def _dump_suites_to_json(self, work_dir: Path, suites: list[SuiteInfoModel]) -> list[dict]:
-        # IMPORTANT: ensure pydantic dumps nested sub_suites recursively
+        # convert pydantic object into normal dict
         suites_dict = [s.model_dump(mode="python") for s in suites]
 
-        # make output readable + keep umlauts etc.
+        # write suites object into json file
         json_path = work_dir / "suites.json"
         json_path.write_text(
             json.dumps(suites_dict, ensure_ascii=False, indent=2),
@@ -74,7 +74,7 @@ class MkdocsIntegration:
         return suites_dict
 
     def _install_main_py(self, work_dir: Path) -> None:
-        # Your existing approach: copy a minimal main.py
+        # using main.py to register suites object into mkdocs workflow
         src = Path(__file__).parent / "mkdocs" / "example_main.py"
         dst = work_dir / "main.py"
         shutil.copyfile(src, dst)
