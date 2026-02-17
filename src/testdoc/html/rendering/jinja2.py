@@ -21,6 +21,8 @@ class JinjaIntegration:
             return Path(__file__).resolve().parent / ".." / "templates" / self.args.html_template / "jinja_template_01.html"
         elif self.args.html_template == "v2":
             return Path(__file__).resolve().parent / ".." / "templates" / self.args.html_template / "jinja_template_03.html"
+        elif self.args.html_template == "v3":
+            return Path(__file__).resolve().parent / ".." / "templates" / self.args.html_template / "jinja_template_04.html"
         else:
             raise ValueError(f"CLI Argument 'html_template' got value '{self.args.html_template}' - value not known!")
 

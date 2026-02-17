@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>{{ title }}</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' role='img' viewBox='0 0 24 24'><title>Robot Framework</title><path d='M4.9565 10.2246c0-1.8766 1.5257-3.4023 3.4-3.4023 1.8766 0 3.4024 1.5257 3.4024 3.4023 0 .6838-.5526 1.2364-1.2341 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364 0-.513-.4185-.9296-.9338-.9296-.5129 0-.9317.4165-.9317.9296 0 .6838-.5523 1.2364-1.234 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364m14.0868 5.717c0 .6842-.5524 1.2363-1.2341 1.2363H6.3575c-.6818 0-1.2344-.552-1.2344-1.2363 0-.6837.5526-1.2363 1.2344-1.2363h11.4517c.6817 0 1.234.5526 1.234 1.2363m-5.351-5.0244c-.3814-.5657-.2323-1.3328.3334-1.7143l2.8628-1.9334c.5613-.3902 1.3329-.2324 1.7144.3289.3815.5654.2323 1.3329-.3334 1.7144l-2.8628 1.9333c-.5442.3831-1.3348.2379-1.7144-.3289zm7.8393 7.6018a.8815.8815 0 0 1-.258.6227l-2.1277 2.1277a.8822.8822 0 0 1-.623.258H5.4772a.8822.8822 0 0 1-.623-.258l-2.1277-2.1277a.8815.8815 0 0 1-.258-.6227V5.4818a.8797.8797 0 0 1 .258-.6228l2.1277-2.1282a.8816.8816 0 0 1 .623-.2578h13.0456a.8816.8816 0 0 1 .623.2578l2.1277 2.1282a.8797.8797 0 0 1 .258.6228V18.519zm1.811-15.0835L20.5644.6577A2.2454 2.2454 0 0 0 18.9775 0H5.0207A2.2445 2.2445 0 0 0 3.433.658L.657 3.4359A2.2449 2.2449 0 0 0 0 5.0228v13.9547c0 .5953.2366 1.1667.6575 1.5872l2.778 2.7779c.421.421.9918.6573 1.5871.6573h13.9548a2.2448 2.2448 0 0 0 1.5872-.6573l2.7779-2.7779A2.2436 2.2436 0 0 0 24 18.9775V5.023a2.2451 2.2451 0 0 0-.6575-1.5875z'/></svg>">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --bg-softer: #020617;
+            --accent: #38bdf8;
+            --accent-soft: rgba(56, 189, 248, 0.12);
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --border: #1f2937;
+            --danger: #f97373;
+            --tag-bg: rgba(56, 189, 248, 0.12);
+            --tag-text: #e0f2fe;
+            --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.9);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #1d283a 0, #020617 55%, #000 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 300px minmax(0, 1fr);
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            gap: 18px;
+            padding: 12px 18px 18px;
+        }
+
+        /* LEFT NAV */
+        .nav {
+            background: radial-gradient(circle at top, #020617 0, #020617 45%, #020617 100%);
+            border-radius: 14px;
+            padding: 12px 10px 10px;
+            border: 1px solid rgba(148, 163, 184, 0.12);
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            position: sticky;
+            top: 12px;
+            align-self: flex-start;
+            max-height: calc(100vh - 24px);
+        }
+
+        .nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            margin-bottom: 4px;
+        }
+
+        .nav-title {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .nav-title-main {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            color: #e5e7eb;
+        }
+
+        .nav-title-sub {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .suite-count {
+            font-size: 10px;
+            padding: 2px 7px;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
+        .nav-tree {
+            margin-top: 4px;
+            padding: 4px 0 0;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.98));
+            border: 1px solid rgba(31, 41, 55, 0.9);
+            box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.9);
+            overflow: auto;
+            flex: 1;
+        }
+
+        .tree-list {
+            list-style: none;
+            font-size: 13px;
+            padding-left: 2px;
+        }
+
+        .tree-item {
+            margin: 0;
+        }
+
+        .tree-suite,
+        .tree-test {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 9px 4px 11px;
+            border-radius: 999px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #d1d5db;
+            border: 1px solid transparent;
+        }
+
+        .tree-suite {
+            font-weight: 500;
+        }
+
+        .tree-suite:hover,
+        .tree-test:hover {
+            background: radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.12), rgba(15, 23, 42, 0.98));
+            border-color: rgba(56, 189, 248, 0.35);
+            color: #e5e7eb;
+        }
+
+        .tree-suite.active,
+        .tree-test.active {
+            background: radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.22), rgba(15, 23, 42, 1));
+            border-color: rgba(56, 189, 248, 0.65);
+            box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.9);
+            color: #f9fafb;
+        }
+
+        .tree-icon {
+            width: 15px;
+            height: 15px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .tree-icon svg { width: 13px; height: 13px; display: block; }
+        .tree-icon svg path { fill: currentColor; }
+
+        .tree-icon.suite-folder {
+            background: rgba(56, 189, 248, 0.08);
+            color: #38bdf8;
+            box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.45);
+        }
+
+        .tree-icon.suite-file {
+            background: rgba(129, 140, 248, 0.13);
+            color: #a5b4fc;
+            box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.5);
+        }
+
+        .tree-icon.test {
+            background: rgba(34, 197, 94, 0.16);
+            color: #bbf7d0;
+            box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.55);
+        }
+
+        .tree-main-label {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 12px;
+        }
+
+        .tree-meta {
+            margin-left: 26px;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            font-size: 10px;
+            color: var(--muted);
+        }
+
+        .tree-tag {
+            border-radius: 999px;
+            padding: 1px 6px;
+            border: 1px solid rgba(55, 65, 81, 0.85);
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        .tree-tests-count {
+            border-radius: 999px;
+            padding: 1px 6px;
+            background: rgba(21, 128, 61, 0.14);
+            color: #bbf7d0;
+            border: 1px solid rgba(22, 163, 74, 0.6);
+        }
+
+        .tree-children {
+            list-style: none;
+            padding-left: 18px;
+            margin-top: 2px;
+            border-left: 1px dashed rgba(55, 65, 81, 0.7);
+            display: none; /* collapsed by default */
+        }
+
+        /* Expanded state shows nested children */
+        .tree-item.expanded > .tree-children {
+            display: block;
+        }
+
+        /* MAIN CONTENT */
+        .content {
+            background: radial-gradient(circle at top, #020617 0, #020617 55%, #020617 100%);
+            border-radius: 18px;
+            padding: 16px 18px;
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+        }
+
+        .content-title {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .badge {
+            font-size: 11px;
+            border-radius: 999px;
+            padding: 3px 9px;
+            border: 1px solid rgba(55, 65, 81, 0.9);
+            background: rgba(15, 23, 42, 0.96);
+            color: var(--muted);
+        }
+
+        .badge.accent {
+            border-color: rgba(56, 189, 248, 0.7);
+            background: rgba(8, 47, 73, 0.7);
+            color: #e0f2fe;
+        }
+
+        .badge.tests {
+            border-color: rgba(22, 163, 74, 0.8);
+            background: rgba(5, 46, 22, 0.7);
+            color: #bbf7d0;
+        }
+
+        .content-title-main {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .content-title-sub {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .content-meta {
+            text-align: right;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .content-body {
+            margin-top: 12px;
+            padding-top: 4px;
+            overflow: auto;
+            overflow-x: hidden;
+        }
+
+        .section {
+            margin-bottom: 14px;
+            padding: 10px 12px 11px;
+            border-radius: 14px;
+            background: radial-gradient(circle at top left, rgba(15, 118, 110, 0.14), rgba(15, 23, 42, 0.98));
+            border: 1px solid rgba(15, 23, 42, 0.9);
+        }
+
+        .section + .section {
+            margin-top: 10px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #c4d4ff;
+        }
+
+        .section-subtitle {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .key-value-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
+            gap: 4px 16px;
+            font-size: 13px;
+        }
+
+        .kv-label {
+            color: var(--muted);
+        }
+
+        .kv-value {
+            color: var(--text);
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        /* Modern inline link style for values */
+        .kv-value a {
+            color: var(--text);
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(148, 163, 184, 0.35);
+            padding: 0 2px;
+            border-radius: 4px;
+            transition: color .15s ease, border-color .15s ease, background-color .15s ease;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+        .kv-value a:hover {
+            color: var(--accent);
+            border-bottom-color: rgba(96, 165, 250, 0.6);
+            background: rgba(96, 165, 250, 0.08);
+        }
+        .kv-value a[target="_blank"]::after {
+            content: '↗';
+            font-size: 10px;
+            margin-left: 6px;
+            color: var(--muted);
+        }
+
+        .mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 12px;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            border: 1px solid rgba(56, 189, 248, 0.5);
+            font-size: 11px;
+            margin: 1px 4px 1px 0;
+        }
+
+        .pill-muted {
+            background: rgba(31, 41, 55, 0.85);
+            color: #e5e7eb;
+            border-color: rgba(55, 65, 81, 0.9);
+        }
+
+        .doc-block {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #e5e7eb;
+        }
+
+        .doc-block p + p {
+            margin-top: 4px;
+        }
+
+        .metadata {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .metadata-item {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(55, 65, 81, 0.9);
+            background: rgba(15, 23, 42, 0.96);
+            color: #e5e7eb;
+        }
+
+        .warn {
+            color: var(--danger);
+            font-size: 12px;
+        }
+
+        /* TESTS TABLE */
+        .tests-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .tests-table th,
+        .tests-table td {
+            padding: 6px 7px;
+            text-align: left;
+            border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+        }
+
+        .tests-table th {
+            font-weight: 500;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #9ca3af;
+            background: rgba(15, 23, 42, 0.96);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .tests-table tr:nth-child(even) td {
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        .tests-table tr:hover td {
+            background: radial-gradient(circle at left, rgba(56, 189, 248, 0.16), rgba(15, 23, 42, 0.98));
+        }
+
+        .tests-table tr.highlighted td {
+            background: radial-gradient(circle at left, rgba(56, 189, 248, 0.28), rgba(15, 23, 42, 1));
+            box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.6);
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .tag {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 999px;
+            background: rgba(56, 189, 248, 0.08);
+            color: #e0f2fe;
+            border: 1px solid rgba(56, 189, 248, 0.6);
+        }
+
+        .keyword-pill {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 999px;
+            background: rgba(129, 140, 248, 0.12);
+            color: #e0e7ff;
+            border: 1px solid rgba(129, 140, 248, 0.7);
+            margin: 1px 3px 1px 0;
+        }
+
+        .empty {
+            font-size: 12px;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        /* FIXED FOOTER (content scrolls behind) */
+        .footer-fixed {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            border-top: 1px solid rgba(148, 163, 184, 0.16);
+            background: radial-gradient(circle at top, #020617 0, #020617 55%, #020617 100%);
+            color: var(--muted);
+            font-size: 12px;
+            z-index: 100;
+        }
+        .footer-fixed a {
+            color: var(--text);
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(148, 163, 184, 0.35);
+            padding: 0 2px;
+            border-radius: 4px;
+            transition: color .15s ease, border-color .15s ease, background-color .15s ease;
+        }
+        .footer-fixed a:hover {
+            color: var(--accent);
+            border-bottom-color: rgba(56, 189, 248, 0.6);
+            background: rgba(56, 189, 248, 0.08);
+        }
+
+        /* TEST ITEM BLOCKS */
+        .tests-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(31, 41, 55, 0.9);
+            padding: 8px;
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        .test-block {
+            border: 1px solid rgba(31, 41, 55, 0.9);
+            background: rgba(2, 6, 23, 0.9);
+            border-radius: 10px;
+            padding: 8px 10px;
+        }
+
+        .test-block.highlighted {
+            background: radial-gradient(circle at left, rgba(56, 189, 248, 0.28), rgba(15, 23, 42, 1));
+            box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.6);
+            border-color: rgba(56, 189, 248, 0.65);
+        }
+
+        .test-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .test-subsection { margin-top: 12px; }
+        .test-subsection + .test-subsection { margin-top: 16px; }
+        .test-subsection .kv-label { display: block; margin-bottom: 6px; }
+
+        .rf-code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            background: rgba(2, 6, 23, 0.95);
+            color: #e5e7eb;
+            border: 1px solid rgba(31, 41, 55, 0.9);
+            border-radius: 8px;
+            padding: 8px 10px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+        }
+
+        .rf-doc {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            background: rgba(2, 6, 23, 0.7);
+            color: #e5e7eb;
+            border: 1px solid rgba(31, 41, 55, 0.8);
+            border-radius: 8px;
+            padding: 8px 10px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+        }
+
+        /* Robot Framework token colors (VS Code Dark+ inspired) */
+        .rf-code .rf-header { color: #C586C0; font-weight: 600; }
+        .rf-code .rf-testname { color: #DCDCAA; font-weight: 600; }
+        .rf-code .rf-keyword { color: #DCDCAA; }
+        .rf-code .rf-var { color: #9CDCFE; }
+        .rf-code .rf-string { color: #CE9178; }
+        .rf-code .rf-comment { color: #6A9955; font-style: italic; }
+        .rf-code .rf-assign { color: #D4D4D4; }
+
+        /* RESPONSIVE */
+        @media (max-width: 960px) {
+            body { display: block; }
+            .layout {
+                grid-template-columns: minmax(0, 1fr);
+                margin: 0;
+                padding: 10px;
+            }
+            .nav { max-height: 260px; }
+        }
+    </style>
+</head>
+<body>
+{% set suite = suites[0] if suites else None %}
+<div class="layout">
+    <!-- LEFT: NAVIGATION -->
+    <aside class="nav">
+        <div class="nav-header">
+            <div class="nav-title">
+                <div class="nav-title-main">
+                    {% if suite %}{{ suite.name or 'Suite file' }}{% else %}No suite loaded{% endif %}
+                </div>
+                <div class="nav-title-sub">Test Documentation</div>
+            </div>
+            <div class="badge tests">
+                {% if suite %}{{ suite.total_tests }} total tests{% else %}0 tests{% endif %}
+            </div>
+        </div>
+
+        <div class="nav-tree">
+            <ul class="tree-list">
+                {# Root suite entry #}
+                <li class="tree-item">
+                    <a href="#suite-{{ suite.id }}" class="tree-suite active" data-target="suite-{{ suite.id }}" data-suite-id="{{ suite.id }}">
+                        <span class="tree-icon {% if suite.is_folder %}suite-folder{% else %}suite-file{% endif %}">
+                            {% if suite.is_folder %}
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7z" />
+                                </svg>
+                            {% else %}
+                                <svg role="img" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><title>Robot Framework</title><path d="M4.9565 10.2246c0-1.8766 1.5257-3.4023 3.4-3.4023 1.8766 0 3.4024 1.5257 3.4024 3.4023 0 .6838-.5526 1.2364-1.2341 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364 0-.513-.4185-.9296-.9338-.9296-.5129 0-.9317.4165-.9317.9296 0 .6838-.5523 1.2364-1.234 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364m14.0868 5.717c0 .6842-.5524 1.2363-1.2341 1.2363H6.3575c-.6818 0-1.2344-.552-1.2344-1.2363 0-.6837.5526-1.2363 1.2344-1.2363h11.4517c.6817 0 1.234.5526 1.234 1.2363m-5.351-5.0244c-.3814-.5657-.2323-1.3328.3334-1.7143l2.8628-1.9334c.5613-.3902 1.3329-.2324 1.7144.3289.3815.5654.2323 1.3329-.3334 1.7144l-2.8628 1.9333c-.5442.3831-1.3348.2379-1.7144-.3289zm7.8393 7.6018a.8815.8815 0 0 1-.258.6227l-2.1277 2.1277a.8822.8822 0 0 1-.623.258H5.4772a.8822.8822 0 0 1-.623-.258l-2.1277-2.1277a.8815.8815 0 0 1-.258-.6227V5.4818a.8797.8797 0 0 1 .258-.6228l2.1277-2.1282a.8816.8816 0 0 1 .623-.2578h13.0456a.8816.8816 0 0 1 .623.2578l2.1277 2.1282a.8797.8797 0 0 1 .258.6228V18.519zm1.811-15.0835L20.5644.6577A2.2454 2.2454 0 0 0 18.9775 0H5.0207A2.2445 2.2445 0 0 0 3.433.658L.657 3.4359A2.2449 2.2449 0 0 0 0 5.0228v13.9547c0 .5953.2366 1.1667.6575 1.5872l2.778 2.7779c.421.421.9918.6573 1.5871.6573h13.9548a2.2448 2.2448 0 0 0 1.5872-.6573l2.7779-2.7779A2.2436 2.2436 0 0 0 24 18.9775V5.023a2.2451 2.2451 0 0 0-.6575-1.5875z"/></svg>
+                            {% endif %}
+                        </span>
+                        <span class="tree-main-label">{{ suite.name }}</span>
+                    </a>
+
+                </li>
+
+                {# Recursive tree of sub suites & tests #}
+                {% macro render_suite_tree(current) %}
+                    {% if current.sub_suites or current.tests %}
+                        <ul class="tree-children">
+                            {% for s in current.sub_suites %}
+                                <li class="tree-item">
+                                    <a href="#suite-{{ s.id }}" class="tree-suite" data-target="suite-{{ s.id }}" data-suite-id="{{ s.id }}">
+                                        <span class="tree-icon {% if s.is_folder %}suite-folder{% else %}suite-file{% endif %}">
+                                            {% if s.is_folder %}
+                                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                    <path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7z" />
+                                                </svg>
+                                            {% else %}
+                                                <svg role="img" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><title>Robot Framework</title><path d="M4.9565 10.2246c0-1.8766 1.5257-3.4023 3.4-3.4023 1.8766 0 3.4024 1.5257 3.4024 3.4023 0 .6838-.5526 1.2364-1.2341 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364 0-.513-.4185-.9296-.9338-.9296-.5129 0-.9317.4165-.9317.9296 0 .6838-.5523 1.2364-1.234 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364m14.0868 5.717c0 .6842-.5524 1.2363-1.2341 1.2363H6.3575c-.6818 0-1.2344-.552-1.2344-1.2363 0-.6837.5526-1.2363 1.2344-1.2363h11.4517c.6817 0 1.234.5526 1.234 1.2363m-5.351-5.0244c-.3814-.5657-.2323-1.3328.3334-1.7143l2.8628-1.9334c.5613-.3902 1.3329-.2324 1.7144.3289.3815.5654.2323 1.3329-.3334 1.7144l-2.8628 1.9333c-.5442.3831-1.3348.2379-1.7144-.3289zm7.8393 7.6018a.8815.8815 0 0 1-.258.6227l-2.1277 2.1277a.8822.8822 0 0 1-.623.258H5.4772a.8822.8822 0 0 1-.623-.258l-2.1277-2.1277a.8815.8815 0 0 1-.258-.6227V5.4818a.8797.8797 0 0 1 .258-.6228l2.1277-2.1282a.8816.8816 0 0 1 .623-.2578h13.0456a.8816.8816 0 0 1 .623.2578l2.1277 2.1282a.8797.8797 0 0 1 .258.6228V18.519zm1.811-15.0835L20.5644.6577A2.2454 2.2454 0 0 0 18.9775 0H5.0207A2.2445 2.2445 0 0 0 3.433.658L.657 3.4359A2.2449 2.2449 0 0 0 0 5.0228v13.9547c0 .5953.2366 1.1667.6575 1.5872l2.778 2.7779c.421.421.9918.6573 1.5871.6573h13.9548a2.2448 2.2448 0 0 0 1.5872-.6573l2.7779-2.7779A2.2436 2.2436 0 0 0 24 18.9775V5.023a2.2451 2.2451 0 0 0-.6575-1.5875z"/></svg>
+                                            {% endif %}
+                                        </span>
+                                        <span class="tree-main-label">{{ s.name }}</span>
+                                    </a>
+                                    {{ render_suite_tree(s) }}
+                                </li>
+                            {% endfor %}
+
+                            {% if current.tests %}
+                                {% for t in current.tests %}
+                                    <li class="tree-item">
+                                        <a href="#test-{{ current.id }}-{{ loop.index0 }}" class="tree-test"
+                                           data-target="test-{{ current.id }}-{{ loop.index0 }}" data-suite-id="{{ current.id }}">
+                                            <span class="tree-icon test">T</span>
+                                            <span class="tree-main-label">{{ t.name }}</span>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+                {% endmacro %}
+
+                {{ render_suite_tree(suite) }}
+            </ul>
+        </div>
+    </aside>
+
+    <!-- RIGHT: CONTENT -->
+    <main class="content">
+        {% macro render_suite_block(s, level) %}
+        <section class="suite-block" data-suite-id="{{ s.id }}">
+            <!-- Active suite header -->
+            <header class="content-header" id="suite-{{ s.id }}">
+                <div class="content-title">
+                    <div class="content-title-main">{{ s.name }}</div>
+                    <div class="badge-row">
+                        <span class="badge tests">{% if s.is_folder %}{{ s.total_tests }}{% else %}{{ s.num_tests }}{% endif %} Tests in this suite</span>
+                        {% if s.is_folder %}
+                            <span class="badge">Suite Directory</span>
+                        {% else %}
+                            <span class="badge">Suite File</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="content-meta">
+                    {% if s.metadata %}
+                        <div>Metadata entries: {{ s.metadata|length }}</div>
+                    {% endif %}
+                    <div class="mono">
+                        {{ s.filename }}
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- SUITE DETAIL SECTION -->
+                <section class="section">
+                    <div class="section-header">
+                        <div>
+                            <div class="section-title">Suite Details</div>
+                            <div class="section-subtitle">General information about the selected test suite</div>
+                        </div>
+                    </div>
+
+                    <div class="key-value-grid">
+                        <div class="kv-label">Name</div>
+                        <div class="kv-value">{{ s.name }}</div>
+
+                        <div class="kv-label">Source</div>
+                        <div class="kv-value mono">
+                            {% if s.source %}
+                                <a href="{{ s.source }}" target="_blank" rel="noopener noreferrer">{{ s.source }}</a>
+                            {% else %}
+                                {{ s.source }}
+                            {% endif %}
+                        </div>
+
+                        <div class="kv-label">Tests (direct)</div>
+                        <div class="kv-value">{{ s.num_tests }}</div>
+
+                        <div class="kv-label">Tests (total)</div>
+                        <div class="kv-value">{{ s.total_tests }}</div>
+                    </div>
+                </section>
+
+                <!-- SUITE DOC SECTION -->
+                {% if s.doc %}
+                <section class="section">
+                    <div class="section-header">
+                        <div>
+                            <div class="section-title">Suite Documentation</div>
+                            <div class="section-subtitle">Description and notes</div>
+                        </div>
+                    </div>
+
+                    <div class="doc-block">
+                        {% for line in s.doc %}
+                            <p>{{ line }}</p>
+                        {% endfor %}
+                    </div>
+                </section>
+                {% endif %}
+
+                <!-- SUITE METADATA -->
+                {% if s.metadata %}
+                <section class="section">
+                    <div class="section-header">
+                        <div>
+                            <div class="section-title">Metadata</div>
+                            <div class="section-subtitle">Additional suite information</div>
+                        </div>
+                    </div>
+
+                    <div class="key-value-grid">
+                        <div class="kv-label">Metadata</div>
+                        <div class="kv-value">
+                            <div class="metadata">
+                                {% for meta in s.metadata %}
+                                    <span class="metadata-item">{{ meta }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                {% endif %}
+
+                <!-- USER KEYWORDS -->
+                {% if s.user_keywords %}
+                <section class="section">
+                    <div class="section-header">
+                        <div>
+                            <div class="section-title">User Keywords</div>
+                            <div class="section-subtitle">Defined user keywords in this suite</div>
+                        </div>
+                    </div>
+
+                    <div class="test-subsection">
+                        <pre class="rf-code">*** Keywords ***
+{{ s.user_keywords | join('\n') }}</pre>
+                    </div>
+                </section>
+                {% endif %}
+
+                {% if s.tests %}
+                <!-- TEST CASE OVERVIEW OF CURRENT SUITE -->
+                <section class="section">
+                    <div class="section-header">
+                        <div>
+                            <div class="section-title">Test Case OVERVIEW</div>
+                            <div class="section-subtitle">
+                                Overview about test cases in this suite
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="test-subsection">
+                        <pre class="rf-code">*** Test Cases ***
+{{ s.tests | map(attribute='name') | join('\n') }}</pre>
+                    </div>
+                </section>
+
+                <!-- TEST DETAILS OF CURRENT SUITE -->
+                <section class="section">
+                    <div class="section-header">
+                        <div>
+                            <div class="section-title">Test Case Details</div>
+                            <div class="section-subtitle">
+                                Details for each test case in this suite
+                            </div>
+                        </div>
+                    </div>
+
+                        <div class="tests-list">
+                            {% for test in s.tests %}
+                                <section id="test-{{ s.id }}-{{ loop.index0 }}" class="test-block">
+                                    <div class="test-title mono">{{ test.name }}</div>
+                                    <div class="test-subsection">
+                                        <div class="kv-label">Documentation</div>
+                                        {% if test.doc %}
+                                            <pre class="rf-doc">{% if test.doc is string %}{{ test.doc }}{% else %}{{ test.doc | join('\n') }}{% endif %}</pre>
+                                        {% else %}
+                                            <span class="empty">No description.</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="test-subsection">
+                                        <div class="kv-label">Tags</div>
+                                        {% if test.tags %}
+                                            <div class="tag-row">
+                                                {% for tag in test.tags %}
+                                                    {% if tag is mapping %}
+                                                        <span class="tag">{{ tag.name or tag }}</span>
+                                                    {% else %}
+                                                        <span class="tag">{{ tag }}</span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            <span class="empty">No tags.</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="test-subsection">
+                                        <div class="kv-label">Test Case Body</div>
+                                        {% if test.keywords %}
+                                            <pre class="rf-code">*** Test Cases ***
+{{ test.name }}
+    {{ test.keywords | join('\n    ') }}
+</pre>
+                                        {% else %}
+                                            <span class="empty">No keywords.</span>
+                                        {% endif %}
+                                    </div>
+                                </section>
+                            {% endfor %}
+                        </div>
+                </section>
+                {% endif %}
+
+                <!-- SUB SUITES OVERVIEW -->
+                <section class="section">
+                    <div class="section-header">
+                        <div>
+                            <div class="section-title">Sub-suites</div>
+                            <div class="section-subtitle">Structure of nested suites</div>
+                        </div>
+                    </div>
+
+                    {% if s.sub_suites %}
+                        {% macro render_suite_details(s2, level2) %}
+                            <div id="suite-{{ s2.id }}" style="margin-left: {{ level2 * 10 }}px; margin-bottom: 8px; padding: 7px 9px; border-radius: 10px; border: 1px solid rgba(31, 41, 55, 0.9); background: rgba(15, 23, 42, 0.95);">
+                                <div style="display:flex;justify-content:space-between;align-items:center; gap:8px;">
+                                    <div>
+                                        <strong>{{ s2.name }}</strong>
+                                        <span style="font-size:11px; color: var(--muted); margin-left:6px;">
+                                            ({{ s2.num_tests }} / {{ s2.total_tests }} tests)
+                                        </span>
+                                    </div>
+                                    <div class="badge-row">
+                                        <span class="badge">{{ s2.filename }}</span>
+                                    </div>
+                                </div>
+                                {% if s2.doc %}
+                                    <div class="doc-block" style="margin-top:4px;">
+                                        {% for line in s2.doc[:2] %}
+                                            <p>{{ line }}</p>
+                                        {% endfor %}
+                                        {% if s2.doc|length > 2 %}
+                                            <p class="empty">… ({{ s2.doc|length - 2 }} more lines)</p>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            {% for child in s2.sub_suites %}
+                                {{ render_suite_details(child, level2 + 1) }}
+                            {% endfor %}
+                        {% endmacro %}
+
+                        {{ render_suite_details(s, 0) }}
+                    {% else %}
+                        <p class="empty">
+                            No sub-suites available.
+                        </p>
+                    {% endif %}
+                </section>
+            </div>
+        </section>
+
+        {% for child in s.sub_suites %}
+            {{ render_suite_block(child, level + 1) }}
+        {% endfor %}
+        {% endmacro %}
+
+        <div>
+            {% if suites %}
+                {% for root in suites %}
+                    {{ render_suite_block(root, 0) }}
+                {% endfor %}
+            {% else %}
+                <p class="empty" style="padding: 12px 16px;">
+                    No suites available.
+                </p>
+            {% endif %}
+        </div>
+    </main>
+</div>
+
+<footer class="footer-fixed">
+    <div>
+        <a href="https://marvkler.github.io/robotframework-testdoc/" target="_blank" rel="noopener noreferrer">Visit the tool at: robotframework-testdoc</a>
+    </div>
+    <div>
+        <a href="https://github.com/MarvKler/robotframework-testdoc" target="_blank" rel="noopener noreferrer">Contribute!</a>
+    </div>
+    <div>
+        Generated at: {{ generated_at }}
+    </div>
+</footer>
+
+<script>
+    // Navigation: aktive Items markieren, zu Zielen scrollen und Suiten/Test-Details filtern
+    document.addEventListener('DOMContentLoaded', function () {
+        const suiteLinks = document.querySelectorAll('.tree-suite');
+        const testLinks = document.querySelectorAll('.tree-test');
+        const allLinks = document.querySelectorAll('.tree-suite, .tree-test');
+        let testBlocks = document.querySelectorAll('.test-block[id^="test-"]');
+        const suiteBlocks = document.querySelectorAll('.suite-block');
+
+        // Collapse all branches by default
+        document.querySelectorAll('.tree-children').forEach(function (ul) {
+            const li = ul.closest('li');
+            if (li) li.classList.remove('expanded');
+            ul.style.display = 'none';
+        });
+
+        function clearRowHighlight() {
+            testBlocks.forEach(block => block.classList.remove('highlighted'));
+        }
+
+        // Suite-Hierarchie aus dem Tree aufbauen (robust, ohne :scope)
+        function buildSuiteTree() {
+            const tree = {};
+            document.querySelectorAll('.tree-suite').forEach(function (link) {
+                const suiteId = link.dataset.suiteId;
+                const parentLi = link.closest('li');
+                let childUl = null;
+                if (parentLi) {
+                    // direct child ul.tree-children
+                    childUl = Array.from(parentLi.children).find(el => el.classList && el.classList.contains('tree-children')) || null;
+                    // root-level sibling ul.tree-children
+                    if (!childUl) {
+                        const sib = parentLi.nextElementSibling;
+                        if (sib && sib.classList && sib.classList.contains('tree-children')) childUl = sib;
+                    }
+                }
+                let subLinks = [];
+                if (childUl) {
+                    subLinks = Array.from(childUl.children)
+                        .map(li => li.querySelector('.tree-suite'))
+                        .filter(Boolean);
+                }
+                tree[suiteId] = subLinks.map(l => l.dataset.suiteId);
+            });
+            return tree;
+        }
+
+        function getAllDescendantSuites(tree, suiteId) {
+            let ids = [suiteId];
+            if (tree[suiteId]) {
+                tree[suiteId].forEach(function (childId) {
+                    ids = ids.concat(getAllDescendantSuites(tree, childId));
+                });
+            }
+            return ids;
+        }
+
+        const suiteTree = buildSuiteTree();
+
+        // Lazy render test details to reduce initial DOM size
+        const LAZY_PREFILL = 20;
+        let io;
+
+        function mountBlock(block) {
+            if (block.dataset.mounted === '1') return;
+            const tpl = block.querySelector('template.lazy-tpl');
+            if (tpl) {
+                block.appendChild(tpl.content.cloneNode(true));
+                // Highlight any rf-code inside just mounted content
+                block.querySelectorAll('pre.rf-code').forEach(highlightRfPre);
+                block.dataset.mounted = '1';
+            }
+        }
+
+        function prepareLazyRenderingForCurrentSuite() {
+            // Disconnect previous observer
+            if (io) io.disconnect();
+            io = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        mountBlock(entry.target);
+                        io.unobserve(entry.target);
+                    }
+                });
+            }, { root: null, rootMargin: '200px', threshold: 0.01 });
+
+            // Only consider test blocks in currently visible suite
+            testBlocks = document.querySelectorAll('.suite-block:not([style*="display: none"]) .test-block[id^="test-"]');
+
+            let index = 0;
+            testBlocks.forEach(block => {
+                // Skip if already prepared
+                if (block.dataset.prepared === '1' || block.dataset.mounted === '1') {
+                    if (block.dataset.mounted === '1') {
+                        // ensure code is highlighted if needed
+                        block.querySelectorAll('pre.rf-code').forEach(highlightRfPre);
+                    }
+                    return;
+                }
+                // Move only heavy subsections into template; keep title visible
+                const heavySections = Array.from(block.querySelectorAll('.test-subsection'));
+                if (heavySections.length > 0) {
+                    const tpl = document.createElement('template');
+                    tpl.classList.add('lazy-tpl');
+                    const frag = document.createDocumentFragment();
+                    heavySections.forEach(sec => frag.appendChild(sec));
+                    tpl.content.appendChild(frag);
+                    block.appendChild(tpl);
+                }
+                block.dataset.prepared = '1';
+
+                if (index < LAZY_PREFILL) {
+                    mountBlock(block);
+                } else {
+                    io.observe(block);
+                }
+                index++;
+            });
+        }
+
+        function applySuiteFilter(selectedSuiteId) {
+            if (!selectedSuiteId) return;
+            // Show ONLY the selected suite, no descendants
+            suiteBlocks.forEach(function (block) {
+                const id = block.dataset.suiteId;
+                block.style.display = (id === selectedSuiteId) ? '' : 'none';
+            });
+        }
+
+        function scrollToTarget(targetId, isTest) {
+            if (!targetId) return;
+            const el = document.getElementById(targetId);
+            if (!el) return;
+
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            if (isTest) {
+                clearRowHighlight();
+                el.classList.add('highlighted');
+            }
+        }
+
+        // Initial filter to currently active or first suite
+        const initiallyActive = document.querySelector('.tree-suite.active') || suiteLinks[0];
+        if (initiallyActive) {
+            applySuiteFilter(initiallyActive.dataset.suiteId);
+        }
+        // After initial filter, prepare lazy rendering for visible suite
+        prepareLazyRenderingForCurrentSuite();
+
+        suiteLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                // Toggle this branch open/closed (supports root-level sibling UL as well)
+                const li = this.closest('li');
+                let childUl = null;
+                if (li) {
+                    // Try to find a direct child .tree-children without :scope (compat)
+                    childUl = Array.from(li.children).find(el => el.classList && el.classList.contains('tree-children')) || null;
+                    // If not found, handle root case where the children UL is a sibling after this LI
+                    if (!childUl) {
+                        const sib = li.nextElementSibling;
+                        if (sib && sib.classList && sib.classList.contains('tree-children')) {
+                            childUl = sib;
+                        }
+                    }
+                }
+                if (childUl) {
+                    const willExpand = childUl.style.display === 'none' || getComputedStyle(childUl).display === 'none';
+                    if (willExpand) {
+                        if (li) li.classList.add('expanded');
+                        childUl.style.display = 'block';
+                    } else {
+                        if (li) li.classList.remove('expanded');
+                        childUl.style.display = 'none';
+                    }
+                }
+                const targetId = this.dataset.target;
+                const suiteId = this.dataset.suiteId;
+                allLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                applySuiteFilter(suiteId);
+                // Re-init lazy rendering for the newly visible suite
+                prepareLazyRenderingForCurrentSuite();
+                scrollToTarget(targetId, false);
+            });
+        });
+
+        testLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.dataset.target;
+                const suiteId = this.dataset.suiteId;
+                allLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                applySuiteFilter(suiteId);
+                // Re-init lazy rendering after test jump
+                prepareLazyRenderingForCurrentSuite();
+                scrollToTarget(targetId, true);
+            });
+        });
+
+        // Klick im Hauptbereich auf einen Testblock synchronisiert die Sidebar
+        testBlocks.forEach(block => {
+            block.addEventListener('click', function () {
+                const blockId = this.id;
+                clearRowHighlight();
+                this.classList.add('highlighted');
+
+                allLinks.forEach(l => l.classList.remove('active'));
+                const matchingLink = document.querySelector('.tree-test[data-target="' + blockId + '"]');
+                if (matchingLink) {
+                    matchingLink.classList.add('active');
+                    matchingLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
+        });
+
+        // Syntax highlight Robot Framework bodies inside pre.rf-code
+        function rfEscape(html) {
+            return html.replace(/[&<>]/g, function (ch) {
+                return ch === '&' ? '&amp;' : (ch === '<' ? '&lt;' : '&gt;');
+            });
+        }
+
+        function highlightRfPre(pre) {
+            if (pre.dataset.highlighted === '1') return;
+            const text = pre.textContent;
+            const lines = text.split(/\r?\n/);
+
+            function renderVars(raw) {
+                let result = '';
+                const re = /(\$\{[^}]+\}|@\{[^}]+\}|&\{[^}]+\}|%\{[^}]+\})/g;
+                let last = 0, m;
+                while ((m = re.exec(raw)) !== null) {
+                    if (m.index > last) result += rfEscape(raw.slice(last, m.index));
+                    result += '<span class="rf-var">' + rfEscape(m[1]) + '</span>';
+                    last = re.lastIndex;
+                }
+                if (last < raw.length) result += rfEscape(raw.slice(last));
+                return result;
+            }
+
+            function highlightTailRaw(rawTail) {
+                // Split into quoted and unquoted segments
+                const reQuote = /("[^"\n]*"|'[^'\n]*')/g;
+                let m, last = 0, parts = [];
+                while ((m = reQuote.exec(rawTail)) !== null) {
+                    if (m.index > last) parts.push({ t: 'plain', v: rawTail.slice(last, m.index) });
+                    parts.push({ t: 'quote', v: m[0] });
+                    last = reQuote.lastIndex;
+                }
+                if (last < rawTail.length) parts.push({ t: 'plain', v: rawTail.slice(last) });
+
+                let out = '';
+                for (const p of parts) {
+                    if (p.t === 'quote') {
+                        // keep quotes, highlight variables inside
+                        const content = p.v.slice(1, -1);
+                        const rendered = renderVars(content);
+                        const quoteChar = p.v[0];
+                        out += '<span class="rf-string">' + rfEscape(quoteChar) + rendered + rfEscape(quoteChar) + '</span>';
+                    } else {
+                        out += renderVars(p.v);
+                    }
+                }
+                // Assignment operator in non-HTML context (spaces around '=')
+                out = out.replace(/\s=\s/g, ' <span class="rf-assign">=<\/span> ');
+                return out;
+            }
+
+            const out = [];
+            for (let i = 0; i < lines.length; i++) {
+                const raw = lines[i];
+                const escLine = rfEscape(raw);
+                const trimmed = raw.trim();
+
+                if (i === 0 && /^\*\*\*.*\*\*\*$/.test(trimmed)) {
+                    out.push('<span class="rf-header">' + escLine + '</span>');
+                    continue;
+                }
+                if (i === 1) {
+                    out.push('<span class="rf-testname">' + escLine + '</span>');
+                    continue;
+                }
+                if (/^\s*#/.test(raw)) {
+                    out.push('<span class="rf-comment">' + escLine + '</span>');
+                    continue;
+                }
+
+                const m = raw.match(/^(\s*)(\S.*?)(?=(\s{2,}|$))/);
+                if (m) {
+                    const indent = m[1];
+                    const headRaw = m[2];
+                    const tailRaw = raw.slice(m[0].length);
+                    const headHtml = indent + '<span class="rf-keyword">' + rfEscape(headRaw) + '</span>';
+                    const tailHtml = highlightTailRaw(tailRaw);
+                    out.push(headHtml + tailHtml);
+                } else {
+                    // No distinct keyword cell; just highlight variables/strings/assign in the whole line
+                    out.push(highlightTailRaw(raw));
+                }
+            }
+
+            pre.innerHTML = out.join('\n');
+            pre.dataset.highlighted = '1';
+        }
+
+        document.querySelectorAll('.rf-code').forEach(highlightRfPre);
+    });
+</script>
+</body>
+</html>
