@@ -881,6 +881,7 @@
                 {% endif %}
 
                 <!-- SUB SUITES OVERVIEW -->
+                {% if s.sub_suites %}
                 <section class="section">
                     <div class="section-header">
                         <div>
@@ -889,7 +890,6 @@
                         </div>
                     </div>
 
-                    {% if s.sub_suites %}
                         {% macro render_suite_details(s2, level2) %}
                             <div id="suite-{{ s2.id }}" style="margin-left: {{ level2 * 10 }}px; margin-bottom: 8px; padding: 7px 9px; border-radius: 10px; border: 1px solid rgba(31, 41, 55, 0.9); background: rgba(15, 23, 42, 0.95);">
                                 <div style="display:flex;justify-content:space-between;align-items:center; gap:8px;">
@@ -921,12 +921,8 @@
                         {% endmacro %}
 
                         {{ render_suite_details(s, 0) }}
-                    {% else %}
-                        <p class="empty">
-                            No sub-suites available.
-                        </p>
-                    {% endif %}
                 </section>
+                {% endif %}
             </div>
         </section>
 

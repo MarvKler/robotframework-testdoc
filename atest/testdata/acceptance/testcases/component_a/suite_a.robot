@@ -1,4 +1,5 @@
 *** Settings ***
+Documentation    This is a suite documentation
 Metadata    name=marvin
 
 
