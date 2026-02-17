@@ -97,7 +97,7 @@ class CommandLineArguments:
     
     @property
     def html_template(self):
-        return self._args.get("html_template", "v2")
+        return self._args.get("html_template", "v3")
     
     @property
     def output_file(self):
