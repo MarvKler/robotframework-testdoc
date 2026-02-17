@@ -43,3 +43,11 @@ You can simply open the defined output HTML file in any browser on your local sy
 
 !!! tip "Host a CI/CD Webpage"
     You also can host this generated output HTML file as static page in your CI/CD environment, e.g. as ``GitLab Page`` or ``GitHub Page``.
+
+## Example HTML Page via Jinja2
+
+Below you can see two examples how your test documentation will look when generating it using the internal jinja2 template:
+
+![Jinja Example Overview](../images/jinja_example_main.png)
+
+![Jinja Example Test Suite Details](../images/jinja_example_test.png)
