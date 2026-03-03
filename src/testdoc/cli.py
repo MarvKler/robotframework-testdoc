@@ -21,13 +21,6 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 ))
 @click.option("-i","--include",     multiple=True, required=False, help="Include test cases with given tags")
 @click.option("-e","--exclude",     multiple=True, required=False, help="Exclude test cases with given tags")
-@click.option("--hide-tags",        is_flag=True, required=False, help="If given, test case tags are hidden")
-@click.option("--hide-test-doc",    is_flag=True,required=False, help="If given, test documentation is hidden")
-@click.option("--hide-suite-doc",   is_flag=True, required=False, help="If given, suite documentation is hidden")
-@click.option("--hide-source",      is_flag=True, required=False, help="If given, test suite/ test case source is hidden")
-@click.option("--hide-keywords",    is_flag=True, required=False, help="If given, keyword calls in test cases are hidden")
-@click.option("-S", "--style", required=False, help="Choose a predefined default style theme - 'default', 'robot', 'dark' or 'blue' ")
-@click.option("-ht","--html-template", required=False, help="Select the HTML template - possible values: 'v1', 'v2'")
 @click.option("-c", "--configfile", required=False, help="Optional .toml configuration file (includes all cmd-args)")
 @click.option("-v", "--verbose",    is_flag=True, required=False, help="More precise debugging into shell")
 @click.version_option(package_name='robotframework-testdoc')
@@ -44,13 +37,6 @@ def main(
         mkdocs_template_dir,
         include,
         exclude,
-        hide_tags,
-        hide_test_doc,
-        hide_suite_doc,
-        hide_source,
-        hide_keywords,
-        style,
-        html_template,
         configfile,
         verbose,
         path,
@@ -86,13 +72,6 @@ See more in the README.md of the GitHub Project: https://github.com/MarvKler/rob
         mkdocs_template_dir=mkdocs_template_dir,
         include=list(include),
         exclude=list(exclude),
-        hide_tags=hide_tags,
-        hide_test_doc=hide_test_doc,
-        hide_suite_doc=hide_suite_doc,
-        hide_source=hide_source,
-        hide_keywords=hide_keywords,
-        style=style,
-        html_template=html_template,
         config_file=configfile,
         verbose_mode=verbose,
         suite_file=list(path),

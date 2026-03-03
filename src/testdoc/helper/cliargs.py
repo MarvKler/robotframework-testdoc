@@ -60,26 +60,6 @@ class CommandLineArguments:
         return self._args.get("exclude", [])
     
     @property
-    def hide_tags(self):
-        return self._args.get("hide_tags", False)
-    
-    @property
-    def hide_test_doc(self):
-        return self._args.get("hide_test_doc", False)
-    
-    @property
-    def hide_suite_doc(self):
-        return self._args.get("hide_suite_doc", False)
-    
-    @property
-    def hide_source(self):
-        return self._args.get("hide_source", False)
-    
-    @property
-    def hide_keywords(self):
-        return self._args.get("hide_keywords", False)
-    
-    @property
     def config_file(self):
         return self._args.get("config_file", None)
     
@@ -90,14 +70,6 @@ class CommandLineArguments:
     @property
     def suite_file(self):
         return self._args.get("suite_file", None)
-    
-    @property
-    def style(self):
-        return self._args.get("style", None)
-    
-    @property
-    def html_template(self):
-        return self._args.get("html_template", "v3")
     
     @property
     def output_file(self):
