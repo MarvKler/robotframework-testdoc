@@ -1,7 +1,7 @@
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
-from ...parser.models import SuiteInfoModel
+from robot import running
 
 from ...html.themes.theme_config import ThemeConfig
 from ...helper.cliargs import CommandLineArguments
@@ -27,7 +27,7 @@ class JinjaIntegration:
             raise ValueError(f"CLI Argument 'html_template' got value '{self.args.html_template}' - value not known!")
 
     def render_jinja2_page(self,
-            suites: list[SuiteInfoModel],
+            suites: running.TestSuite,
             output_file
         ):
 

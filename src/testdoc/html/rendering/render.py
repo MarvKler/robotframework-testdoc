@@ -1,7 +1,7 @@
 from .mkdocs import MkdocsIntegration
 from .jinja2 import JinjaIntegration
 
-from ...parser.models import SuiteInfoModel
+from robot import running
 
 from ...helper.cliargs import CommandLineArguments
 
@@ -11,7 +11,7 @@ class TestDocHtmlRendering():
         self.args = CommandLineArguments()
 
     def render_testdoc(self,
-            suites: list[SuiteInfoModel],
+            suites: running.TestSuite,
             output_file
         ):
 
