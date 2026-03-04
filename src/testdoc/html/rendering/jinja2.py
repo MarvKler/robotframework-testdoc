@@ -21,7 +21,6 @@ class JinjaIntegration:
         return Path(__file__).resolve().parent / ".." / "templates" / "jinja_html_default" / "jinja_template.html"
 
     def render_jinja2_page(self, suites: CustomTestSuite, output_file: Path):
-
         jinja_template_file = self._get_jinja_template_path()
 
         env = Environment(loader=FileSystemLoader(jinja_template_file.parent))

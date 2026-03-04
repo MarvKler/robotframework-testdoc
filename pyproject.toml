@@ -95,7 +95,8 @@ dependencies = [
   "pytest"
 ]
 [tool.hatch.envs.dev.scripts]
-lint = "ruff check src/"
+lint = "ruff check --force-exclude"
+format = "ruff format --force-exclude"
 atest = "pytest atest/acceptance"
 perftest = "pytest atest/performance"
 alltest = "pytest atest"

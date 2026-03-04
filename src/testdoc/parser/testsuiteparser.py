@@ -31,7 +31,6 @@ class RobotSuiteParser(SuiteVisitor):
         self.robot_suite_model: running.TestSuite = None
 
     def visit_suite(self, suite: running.TestSuite):
-
         # Skip suite if its already parsed into list
         # self._already_parsed(suite)
 
@@ -60,7 +59,6 @@ class RobotSuiteParser(SuiteVisitor):
         return self.suite
 
     def get_customized_suite_model(self, suite) -> CustomTestSuite:
-
         suite_info: CustomTestSuite = CustomTestSuite(
             id=suite.id,
             name=suite.name,

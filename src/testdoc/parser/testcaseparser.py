@@ -13,7 +13,6 @@ class TestCaseParser:
         self.args = CommandLineArguments()
 
     def parse_test(self, suite: TestSuite, suite_info: CustomTestSuite) -> CustomTestSuite:
-
         for test in suite.tests:
             test_info: CustomTestCase = CustomTestCase(
                 id=test.id,
@@ -27,7 +26,6 @@ class TestCaseParser:
         return suite_info
 
     def test_body_parser(self, body: Body) -> list[CustomTestCaseBody]:
-
         result = []
         for item in body:
             body_item = CustomTestCaseBody(

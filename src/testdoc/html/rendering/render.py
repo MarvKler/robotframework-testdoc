@@ -10,7 +10,6 @@ class TestDocHtmlRendering:
         self.args = CommandLineArguments()
 
     def render_testdoc(self, suites: CustomTestSuite, output_file):
-
         if self.args.mkdocs_usage:
             mkdocs = MkdocsIntegration()
             mkdocs.render_mkdocs_page(suites)
