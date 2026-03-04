@@ -1,7 +1,8 @@
 import os
 from abc import ABC, abstractmethod
 
-from robot import running
+
+from testdoc.parser.models import CustomTestSuite
 
 from ...helper.cliargs import CommandLineArguments
 from ...helper.logger import Logger
@@ -49,7 +50,7 @@ class SourcePrefixModifier():
         prefix = self.args.sourceprefix.split("::")
         return prefix[0], prefix[1]
     
-    def modify_source_prefix(self, suite_object: running.TestSuite) -> running.TestSuite:
+    def modify_source_prefix(self, suite_object: CustomTestSuite) -> CustomTestSuite:
         Logger().LogKeyValue("Using Prefix for Source: ", self.args.sourceprefix, "yellow") if self.args.verbose_mode else None
         prefix_type, prefix = self._prefix_validation(self.args.sourceprefix)
         modifier = SourceModifierFactory.get_modifier(prefix_type)
@@ -90,11 +91,11 @@ class GitLabModifier():
         rel_path = os.path.relpath(file_path, git_root).replace(os.sep, "/")
         return prefix.rstrip("/") + "/-/blob/" + git_branch + "/" + rel_path
 
-    def apply(self, suite_dict: running.TestSuite, prefix):
+    def apply(self, suite_dict: CustomTestSuite, prefix):
         try:
-            suite_dict.source = self._convert_to_gitlab_url(suite_dict.source, prefix)
+            suite_dict.custom_source = self._convert_to_gitlab_url(suite_dict.source, prefix)
         except:
-            suite_dict.source = "GitLink error"
+            suite_dict.custom_source = None
 
         # UPDATE 03.03.2026:
         # --> test.source attribute from running.TestCase doesnt have a Setter function and cannot be modified
@@ -143,11 +144,11 @@ class GitHubModifier():
         rel_path = os.path.relpath(file_path, git_root).replace(os.sep, "/")
         return prefix.rstrip("/") + "/blob/" + git_branch + "/" + rel_path
 
-    def apply(self, suite_dict: running.TestSuite, prefix):
+    def apply(self, suite_dict: CustomTestSuite, prefix):
         try:
-            suite_dict.source = self._convert_to_github_url(suite_dict.source, prefix)
+            suite_dict.custom_source = self._convert_to_github_url(suite_dict.source, prefix)
         except:
-            suite_dict.source = "GitLink error"
+            suite_dict.custom_source = None
 
         # UPDATE 03.03.2026:
         # --> test.source attribute from running.TestCase doesnt have a Setter function and cannot be modified

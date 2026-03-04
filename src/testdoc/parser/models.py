@@ -1,23 +1,35 @@
 from __future__ import annotations
-from pydantic import BaseModel
 
-class SuiteInfoModel(BaseModel):
+from dataclasses import dataclass, field
+from pathlib import Path
+from robot.model.metadata import Metadata
+from robot.running.model import Body
+
+
+@dataclass
+class CustomTestCase:
     id: str
-    filename: str
     name: str
-    doc: list[str] | None
-    is_folder: bool
-    num_tests: int
-    source: str
-    total_tests: int = 0
-    tests: list[TestInfoModel] = []
-    user_keywords: list | None = None
-    sub_suites: list[SuiteInfoModel] = []
-    metadata: list[str] | None
+    source: Path
+    body: Body
 
-class TestInfoModel(BaseModel):
+    doc: str | None = None
+    custom_source: str | None = None
+    tags: list[str] = field(default_factory=list)
+
+
+@dataclass
+class CustomTestSuite:
+    id: str
     name: str
-    doc: list[str] | None
-    tags: list | None
-    source: str
-    keywords: list[str] | list
+    is_folder: bool
+    source: Path
+    metadata: Metadata | None
+    type: str
+
+    doc: str | None = None
+    custom_source: str | None = None
+    test_count: int = 0
+    tests: list[CustomTestCase] = field(default_factory=list)
+    suites: list[CustomTestSuite] = field(default_factory=list)
+    user_keywords: list[str] = field(default_factory=list)  # oder eigenes Model

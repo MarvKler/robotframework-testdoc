@@ -1,9 +1,7 @@
 from robot.api import TestSuite
 from robot.running.model import Keyword, Body
-from robot.errors import DataError
 from ..helper.cliargs import CommandLineArguments
-from .models import SuiteInfoModel,  TestInfoModel
-from .parser import Parser
+from .models import CustomTestSuite,  CustomTestCase
 import textwrap
 
 class TestCaseParser():
@@ -13,30 +11,20 @@ class TestCaseParser():
 
     def parse_test(self,
             suite: TestSuite,
-            suite_info: SuiteInfoModel
-        ) -> SuiteInfoModel:
+            suite_info: CustomTestSuite
+        ) -> CustomTestSuite:
 
         for test in suite.tests:
-            test_info: TestInfoModel = TestInfoModel(
+            test_info: CustomTestCase = CustomTestCase(
+                id=test.id,
                 name=test.name,
-                doc=Parser().get_formatted_docs(test.doc), 
+                doc=test.doc, 
                 tags=test.tags if test.tags else None,
-                source=str(test.source),
-                keywords=self._keyword_parser(test.body)
+                source=test.source,
+                body=test.body
             )
             suite_info.tests.append(test_info)
         return suite_info
-        
-    # Consider tags via officially provided robot api
-    def consider_tags(self, suite: TestSuite) -> TestSuite:
-        try: 
-            if len(self.args.include) > 0:
-                suite.configure(include_tags=self.args.include) 
-            if len(self.args.exclude) > 0:
-                suite.configure(exclude_tags=self.args.exclude)
-            return suite
-        except DataError as e:
-            raise DataError(e.message)
         
     def _keyword_parser(self, test_body: Body):
         """ Parse keywords and their child-items """

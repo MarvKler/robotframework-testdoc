@@ -1,7 +1,7 @@
+from testdoc.parser.models import CustomTestSuite
 from .mkdocs import MkdocsIntegration
 from .jinja2 import JinjaIntegration
 
-from robot import running
 
 from ...helper.cliargs import CommandLineArguments
 
@@ -11,7 +11,7 @@ class TestDocHtmlRendering():
         self.args = CommandLineArguments()
 
     def render_testdoc(self,
-            suites: running.TestSuite,
+            suites: CustomTestSuite,
             output_file
         ):
 

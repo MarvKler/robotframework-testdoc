@@ -1,13 +1,17 @@
 # Portions of this file are derived from Robot Framework, licensed under the Apache License 2.0.
 # Derived code: see class `RobotSuiteFiltering`.
 
+import os
+from pathlib import PosixPath
 from typing import cast
 from robot.api import SuiteVisitor
 from robot import running
 
 from testdoc.parser.modifier.sourceprefixmodifier import SourcePrefixModifier
+from testdoc.parser.testcaseparser import TestCaseParser
 from ..helper.cliargs import CommandLineArguments
 from ..helper.pathconverter import PathConverter
+from testdoc.parser.models import CustomTestSuite
 
 from robot.conf import RobotSettings
 from robot.api.parsing import get_model
@@ -23,12 +27,39 @@ class RobotSuiteParser(SuiteVisitor):
         self.suite_counter = 0
         self.tests = []
         self.args = CommandLineArguments()
+        self.suite: CustomTestSuite  | None = None
 
         self.robot_suite_model: running.TestSuite = None
 
     def visit_suite(self, suite: running.TestSuite):
 
-        self.robot_suite_model = suite
+        # Skip suite if its already parsed into list
+        # self._already_parsed(suite)
+
+        suite_info: CustomTestSuite = CustomTestSuite(
+            id=suite.id,
+            name=suite.name,
+            doc=suite.doc,
+            is_folder=self._is_directory(suite),
+            source=suite.source,
+            test_count=suite.test_count,
+            metadata=suite.metadata,
+            user_keywords=None,
+            type=suite.type
+        )
+
+        # Parse Test Cases
+        suite_info = TestCaseParser().parse_test(suite, suite_info)
+
+        if not suite_info.is_folder:
+            # visit suite model to check if user keywords got created
+            suite_info.user_keywords = self.get_suite_user_keywords(suite.source)
+
+        # Collect sub-suites recursive
+        self.suite = self._recursive_sub_suite(suite, suite_info)
+
+        # Append to suites object
+        # self.suites.append(suite_info)
 
     def parse_suite(self) -> running.TestSuite:
         # Use official Robot Framework Application Package to parse cli arguments and modify suite object.
@@ -43,9 +74,9 @@ class RobotSuiteParser(SuiteVisitor):
 
         # Modify the source path for the test documentation
         if self.args.sourceprefix:
-            self.robot_suite_model = SourcePrefixModifier().modify_source_prefix(self.robot_suite_model)
+            self.suite = SourcePrefixModifier().modify_source_prefix(self.suite)
 
-        return self.robot_suite_model
+        return self.suite
     
     ##############################################################################################
     # Helper:
@@ -81,16 +112,26 @@ class RobotSuiteParser(SuiteVisitor):
         robot_options.append(self.args.output_file)
         return robot_options
     
+    def _recursive_sub_suite(self,
+            suite: running.TestSuite,
+            suite_info: CustomTestSuite
+        ) -> CustomTestSuite:
+        for sub_suite in suite.suites:
+            sub_parser = RobotSuiteParser()
+            sub_parser.visit_suite(sub_suite)
+            suite_info.suites.append(sub_parser.suite)
+        return suite_info
+    
     def get_suite_user_keywords(
             self,
-            suite_path: str,
-        ) -> list:
+            suite_path: PosixPath,
+        ) -> list | None:
         """
         function checks if user keywords are defined within the currently visiting suite object
         """
 
         suite_keywords: list = []
-        suite_model: File = get_model(suite_path)
+        suite_model: File = get_model(str(suite_path))
         for section in suite_model.sections:
             if not isinstance(section, KeywordSection):
                 continue
@@ -101,8 +142,19 @@ class RobotSuiteParser(SuiteVisitor):
             section = cast(KeywordSection, section)
             for kw in section.body:
                 kw = cast(Keyword, kw)
+                if not hasattr(kw, "name"):
+                    continue
                 suite_keywords.append(kw.name)
         return suite_keywords
+    
+    def _is_directory(self, suite) -> bool:
+        suite_path = suite.source if suite.source else ""
+        return(os.path.isdir(suite_path) if suite_path else False)
+    
+    def _already_parsed(self, suite: running.TestSuite):
+        existing_suite = next((s for s in self.suite if s.id == suite.id), None)
+        if existing_suite:
+            return
 
 class RobotSuiteFiltering(Application):
     """ Use official RF Application package to build test suite object with given cli options & arguments """

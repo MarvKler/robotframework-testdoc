@@ -711,9 +711,6 @@
                     {% if s.metadata %}
                         <div>Metadata entries: {{ s.metadata|length }}</div>
                     {% endif %}
-                    <div class="mono">
-                        {{ s.source | string }}
-                    </div>
                 </div>
             </header>
 
@@ -733,8 +730,8 @@
 
                         <div class="kv-label">Source</div>
                         <div class="kv-value mono">
-                            {% if s.source %}
-                                <a href="{{ s.source }}" target="_blank" rel="noopener noreferrer">{{ s.source }}</a>
+                            {% if s.custom_source %}
+                                <a href="{{ s.custom_source }}" target="_blank" rel="noopener noreferrer">{{ s.custom_source }}</a>
                             {% else %}
                                 {{ s.source }}
                             {% endif %}
@@ -786,7 +783,7 @@
                 {% endif %}
 
                 <!-- USER KEYWORDS -->
-                 {% if s.source | get_user_keywords %}
+                 {% if s.user_keywords %}
                 <section class="section">
                     <div class="section-header">
                         <div>
@@ -797,7 +794,7 @@
 
                     <div class="test-subsection">
                         <pre class="rf-code">*** Keywords ***
-{{ s.source | get_user_keywords | join('\n') }}</pre>
+{{ s.user_keywords | join('\n') }}</pre>
                     </div>
                 </section>
                 {% endif %}
@@ -834,7 +831,9 @@
                         <div class="tests-list">
                             {% for test in s.tests %}
                                 <section id="test-{{ s.id }}-{{ loop.index0 }}" class="test-block">
-                                    <div class="test-title mono">{{ test.name }}</div>
+                                    <div class="test-subsection">
+                                        <div class="kv-label">{{ test.name }}</div>
+                                    </div>
                                     <div class="test-subsection">
                                         <div class="kv-label">Documentation</div>
                                         {% if test.doc %}

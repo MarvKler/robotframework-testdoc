@@ -8,7 +8,7 @@ import yaml
 
 from ...helper.logger import Logger
 
-from ...parser.models import SuiteInfoModel
+from ...parser.models import CustomTestSuite
 from ...helper.cliargs import CommandLineArguments
 
 
@@ -25,7 +25,7 @@ class MkdocsIntegration:
     def __init__(self):
         self.args = CommandLineArguments()
 
-    def render_mkdocs_page(self, suites: list[SuiteInfoModel]) -> Path:
+    def render_mkdocs_page(self, suites: list[CustomTestSuite]) -> Path:
         if not self.args.mkdocs_template_dir:
             user_template_dir = Path(__file__).resolve().parent.parent / "templates" / "mkdocs_default"
         else:
@@ -61,7 +61,7 @@ class MkdocsIntegration:
             shutil.rmtree(work_dir)
         shutil.copytree(user_template_dir, work_dir)
 
-    def _dump_suites_to_json(self, work_dir: Path, suites: list[SuiteInfoModel]) -> list[dict]:
+    def _dump_suites_to_json(self, work_dir: Path, suites: list[CustomTestSuite]) -> list[dict]:
         # convert pydantic object into normal dict
         suites_dict = [s.model_dump(mode="python") for s in suites]
 
