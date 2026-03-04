@@ -600,6 +600,50 @@
         .rf-code .rf-comment { color: #6A9955; font-style: italic; }
         .rf-code .rf-assign { color: #D4D4D4; }
 
+        /* Collapsible code sections */
+        .code-wrapper {
+            position: relative;
+            margin-top: 4px;
+        }
+
+        .code-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: 6px;
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            margin-bottom: 4px;
+        }
+
+        .code-toggle:hover {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: rgba(56, 189, 248, 0.7);
+            color: #e0f2fe;
+        }
+
+        .code-toggle-icon {
+            font-size: 14px;
+            transition: transform 0.2s ease;
+            line-height: 1;
+        }
+
+        .code-toggle.collapsed .code-toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .code-wrapper.collapsed .rf-code,
+        .code-wrapper.collapsed .rf-doc {
+            display: none;
+        }
+
         /* RESPONSIVE */
         @media (max-width: 960px) {
             body { display: block; }
@@ -793,8 +837,11 @@
                     </div>
 
                     <div class="test-subsection">
+                        <div class="code-wrapper">
+                            <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
                         <pre class="rf-code">*** Keywords ***
 {{ s.user_keywords | join('\n') }}</pre>
+                        </div>
                     </div>
                 </section>
                 {% endif %}
@@ -812,8 +859,11 @@
                     </div>
 
                     <div class="test-subsection">
-                        <pre class="rf-code">*** Test Cases ***
+                        <div class="code-wrapper">
+                            <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
+                            <pre class="rf-code">*** Test Cases ***
 {{ s.tests | map(attribute='name') | join('\n') }}</pre>
+                        </div>
                     </div>
                 </section>
 
@@ -837,7 +887,10 @@
                                     <div class="test-subsection">
                                         <div class="kv-label">Documentation</div>
                                         {% if test.doc %}
-                                            <pre class="rf-doc">{{ test.doc }}</pre>
+                                            <div class="code-wrapper">
+                                                <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
+                                                <pre class="rf-doc">{{ test.doc }}</pre>
+                                            </div>
                                         {% else %}
                                             <span class="empty">No description.</span>
                                         {% endif %}
@@ -861,10 +914,13 @@
                                     <div class="test-subsection">
                                         <div class="kv-label">Test Case Body</div>
                                         {% if test.body %}
-<pre class="rf-code">*** Test Cases ***
+<div class="code-wrapper">
+    <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
+    <pre class="rf-code">*** Test Cases ***
 {{ test.name }}
     {{ test.body | format_test_body | join('\n    ') }}
 </pre>
+</div>
                                         {% else %}
                                             <span class="empty">No keywords.</span>
                                         {% endif %}
@@ -1249,6 +1305,26 @@
         }
 
         document.querySelectorAll('.rf-code').forEach(highlightRfPre);
+
+        // Collapse all code sections by default
+        document.querySelectorAll('.code-wrapper').forEach(wrapper => {
+            wrapper.classList.add('collapsed');
+        });
+        document.querySelectorAll('.code-toggle').forEach(toggle => {
+            toggle.classList.add('collapsed');
+        });
+
+        // Collapsible code sections functionality
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.code-toggle')) {
+                const toggle = e.target.closest('.code-toggle');
+                const wrapper = toggle.closest('.code-wrapper');
+                if (wrapper) {
+                    wrapper.classList.toggle('collapsed');
+                    toggle.classList.toggle('collapsed');
+                }
+            }
+        });
     });
 </script>
 </body>
