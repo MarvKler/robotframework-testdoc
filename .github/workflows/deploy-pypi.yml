@@ -1,4 +1,4 @@
-name: Release Creation
+name: Deploy to PyPi
 
 on:
   push:
