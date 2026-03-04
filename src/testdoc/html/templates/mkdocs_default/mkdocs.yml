@@ -36,12 +36,15 @@ theme:
         name: Switch to system preference
 
 extra_css:
+  - stylesheets/pygments-myrobot.css
   - stylesheets/custom.css
 
 markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.highlight:
+      use_pygments: true
   - pymdownx.emoji
   - attr_list
   - pymdownx.emoji:

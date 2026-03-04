@@ -64,6 +64,9 @@ plugins:
   - macros:
       module_name: main
 
+extra_css:
+  - stylesheets/pygments-myrobot.css
+
 exclude_docs: |
   _partials/
   generated/_resolve_suite.md

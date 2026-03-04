@@ -24,6 +24,9 @@ Please create the following structure in your local file path & create at least 
 
 ## Configuration - mkdocs.yml
 
+!!! tip "Custom Lexer"
+    Using the following custom css stylesheet is required for the custom lexer provided by testdoc: ``stylesheets/pygments-myrobot.css``
+
 Copy the following content into your local ``mkdocs.yml``:
 
 ??? example "mkdocs.yml"
@@ -62,6 +65,7 @@ Copy the following content into your local ``mkdocs.yml``:
             name: Switch to system preference
 
     extra_css:
+      - stylesheets/pygments-myrobot.css
       - stylesheets/custom.css
 
     markdown_extensions:

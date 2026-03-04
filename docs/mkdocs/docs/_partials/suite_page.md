@@ -32,18 +32,10 @@
 {{ suite.doc | indent(4, true) }}
 {% endif %}
 
-{% if suite.user_keywords %}
-🔑 **Available Suite User Keyword:**
-```robotframework
-*** Keywords ***
-{{ suite.user_keywords | join('\n') }}
-```
-{% endif %}
-
 ## Test Case Overview
 
 {% if suite.tests %}
-**All Test Cases in Suite:**
+Below you can find a list of all test cases defined in this suite:
 ```robotframework
 *** Settings ***
 Name    {{ suite.name }}
@@ -51,6 +43,18 @@ Name    {{ suite.name }}
 *** Test Cases ***
 {{ suite.tests | map(attribute='name') | join('\n') }}
 ```
+
+{% if suite.user_keywords %}
+## Suite User Keywords
+Below you can find a list of all user keywords defined in this suite.
+
+!!! tip "Suite User Keyword - Defintion"
+    User keywords defined in a suite are most probably a kind of "helper" keywords required in any test case of the suite.
+```robotframework
+*** Keywords ***
+{{ suite.user_keywords | join('\n') }}
+```
+{% endif %}
 
 
 ## Test Case Details
@@ -79,11 +83,12 @@ Name    {{ suite.name }}
 
 {% if test.body %}
 **Test Case Body:**
-```robotframework
-*** Test Cases ***
-{{ test.name }}
-    {{ test.body | format_test_body | join('\n    ') }}
-```
+??? note "Test Case Body"
+    ```robotframework
+    *** Test Cases ***
+    {{ test.name }}
+        {{ test.body | format_test_body | join('\n        ') }}
+    ```
 {% endif %}
 
 {% endfor %}

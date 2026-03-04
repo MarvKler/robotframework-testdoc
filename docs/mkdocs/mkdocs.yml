@@ -27,6 +27,7 @@ theme:
     primary: custom
 
 extra_css:
+  - stylesheets/pygments-myrobot.css
   - stylesheets/custom.css
 
 markdown_extensions:
