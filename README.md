@@ -53,7 +53,7 @@ You have two option to use it this way:
 
 For further details about the usage, please read the [official documentation](https://marvkler.github.io/robotframework-testdoc/usage).
 
-#### Use customized Jinja2 Template
+#### Use customized Jinja2 HTML Template
 
 ![Custom Jinja Template](./docs/gifs/customjinja.gif)
 
@@ -96,115 +96,13 @@ doc = "New doc text of root suite element"
 sourceprefix = "gitlab::https://gitlab.com/myrepo/repo_path"
 include = ["TagA", "TagB"]
 exclude = ["TagC"]
-hide_tags = true
-hide_test_doc = true
-hide_suite_doc = true
-hide_source = true
-hide_keywords = true
-style = "blue"
 verbose_mode = false
 
 [tool.testdoc.metadata]
 Author = "Your-Name"
 Version = "1.0.0"
 Source = "AnySourceAsMetaData"
-
-[tool.testdoc.colors]
-# Use predefined theme:
-default = "blue"
-# OR
-# Use custom colors:
-background = "#000028"
-inner_color = "#000028"
-button_active_color = "#193966"
-button_hover_color = "#193966"
-border_color = "#CCCCCC"
-text_color = "#CCCCCC"
-title_color = "#00ffb9"
-robot_icon = "#00ffb9"
-code_area_background = "#303030"
-code_area_foreground = "#f1f1f1"
 ```
-
-## Theme Selection / Color Configuration
-
-You can select between several themes (color configurations) for your HTML document to create!
-
-> [!CAUTION]
-> This is only possible via toml-configuration file, but not via cmd args directly!
-
-### Default Themes
-
-There are a few predefined default themes available that you can choose via the toml-configuration file OR cli.   
-Therefore, please use the following syntax: for the toml file
-```toml
-[colors]
-# Use the default theme
-default = "default"
-default = 0
-# Use the dark theme
-default = "dark"
-default = 1
-# Use the blue theme
-default = "blue"
-default = 2
-# Use the robot theme
-default = "robot"
-default = 3
-# Use the dark robot theme
-default = "robot_dark"
-default = 4
-# Use the green theme
-default = "green"
-default = 5
-```
-
-For setting it via CLI, please use the following:
-```shell
-# Applying dark theme
-testdoc ... -S dark PATH OUTPUT_FILE
-
-# Applying blue theme
-testdoc ... --style blue PATH OUTPUT_FILE
-```
-
-> [!TIP]
-> You can select the default theme using either a string value or an integer value.
-
-### Custom Themes
-
-You can apply your own custom theme to modify the colors of the created HTML document.   
-Use the following syntax & parameters in your toml-configuration file, to overwrite the predefined themes:
-```toml
-[colors]
-background = "#000028"
-inner_color = "#000028"
-button_active_color = "#193966"
-button_hover_color = "#193966"
-border_color = "#CCCCCC"
-text_color = "#CCCCCC"
-title_color = "#00ffb9"
-robot_icon = "#00ffb9"
-code_area_background = "#303030"
-code_area_foreground = "#f1f1f1"
-```
-
-> [!TIP]
-> Please make sure to configure all available color values from this example — missing values may cause layout or rendering issues in the generated HTML document!
-
-### Default Themes - Screenshot
-
-#### Dark
-
-![alt text](docs/style_dark.png)
-
-#### Blue
-
-![alt text](docs/style_blue.png)
-
-#### Robot / Default
-
-![alt text](docs/style_robot.png)
 
 ## Contribution & Development
 

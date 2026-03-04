@@ -1,20 +1,20 @@
-# Using Jinja2 Template
+# Using Jinja2 HTML Template
 
 Jinja2 can be used to create generic HTML templates that contains variables as placeholders which are getting filled during the rendering process. With that you can create your own custom HTML pages without any static data, because the data gets filled automatically at runtime.
 
-``robotframework-testdoc`` parses your given suite directory and fills the given jinja2 template with the parsed data.
+``robotframework-testdoc`` parses your given suite directory and fills the given Jinja2 HTML template with the parsed data.
 
 You can choose between:
 
-1. Using the predefined internal jinja2 template provided by testdoc
-2. Writing your own jinja2 template & attach it as CLI argument to the testdoc execution
+1. Using the predefined internal Jinja2 HTML template provided by testdoc
+2. Writing your own Jinja2 HTML template & attach it as CLI argument to the testdoc execution
 
 !!! tip "Default Behaviour"
     testdoc will always use the internal jinja2 template as default template unless you specify something else!
 
-## Internal Jinja2 Template
+## Internal Jinja2 HTML Template
 
-The tool ``robotframework-testdoc`` provides an internal ``jinja2`` template which can be found here: [Internal Jinja2 Template](https://github.com/MarvKler/robotframework-testdoc/blob/main/src/testdoc/html/templates/v2/jinja_template_03.html).
+The tool ``robotframework-testdoc`` provides an internal ``jinja2`` HTML template which can be found here: [Internal Jinja2 Template](https://github.com/MarvKler/robotframework-testdoc/blob/main/src/testdoc/html/templates/jiinja_html_default/jinja_template.html).
 
 Execute the following command to generate a test documentation using this predefined template:
 ```bash
@@ -23,7 +23,7 @@ testdoc suite_directory output/testdocumentation.html
 
 ## External Jinja2 Template
 
-You can also create your own ``jinja2`` template & pass it into the ``testdoc`` tool via CLI argument:
+You can also create your own ``jinja2`` html template & pass it into the ``testdoc`` tool via CLI argument:
 
 ```bash
 testdoc --custom-jinja-template <path>/my_jinja2_template.html suite_directory output/testdocumentation.html

@@ -4,6 +4,22 @@ from dataclasses import dataclass, field
 
 
 @dataclass
+class CustomTestSuite:
+    id: str
+    name: str
+    is_folder: bool
+    source: str
+    metadata: dict | None
+    type: str
+
+    doc: str | None = None
+    custom_source: str | None = None
+    test_count: int = 0
+    tests: list[CustomTestCase] = field(default_factory=list)
+    suites: list[CustomTestSuite] = field(default_factory=list)
+    user_keywords: list[str] = field(default_factory=list)
+
+@dataclass
 class CustomTestCase:
     id: str
     name: str
@@ -28,20 +44,3 @@ class CustomTestCaseBody:
     assign: list = field(default_factory=list)
     body: list[CustomTestCaseBody] = field(default_factory=list)
 
-
-
-@dataclass
-class CustomTestSuite:
-    id: str
-    name: str
-    is_folder: bool
-    source: str
-    metadata: dict | None
-    type: str
-
-    doc: str | None = None
-    custom_source: str | None = None
-    test_count: int = 0
-    tests: list[CustomTestCase] = field(default_factory=list)
-    suites: list[CustomTestSuite] = field(default_factory=list)
-    user_keywords: list[str] = field(default_factory=list)

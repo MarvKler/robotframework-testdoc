@@ -40,7 +40,7 @@ This screenshot shows a test documentation generated from scratch using the inte
     You can also write your own customized jinja2 template that can be used by testdoc to generate the documentation in your custom style!
 
 !!! example "Example 03: Documentation via Jinja2"
-    ![Tests Overview](images/tests_jinja_default.png)
+    ![Tests Overview](images/jinja_example_new.png)
 
 ??? example "CLI Command"
     ```bash
