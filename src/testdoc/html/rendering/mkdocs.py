@@ -3,6 +3,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+from dataclasses import asdict
 
 import yaml
 
@@ -25,7 +26,7 @@ class MkdocsIntegration:
     def __init__(self):
         self.args = CommandLineArguments()
 
-    def render_mkdocs_page(self, suites: list[CustomTestSuite]) -> Path:
+    def render_mkdocs_page(self, suites: CustomTestSuite) -> Path:
         if not self.args.mkdocs_template_dir:
             user_template_dir = Path(__file__).resolve().parent.parent / "templates" / "mkdocs_default"
         else:
@@ -61,11 +62,11 @@ class MkdocsIntegration:
             shutil.rmtree(work_dir)
         shutil.copytree(user_template_dir, work_dir)
 
-    def _dump_suites_to_json(self, work_dir: Path, suites: list[CustomTestSuite]) -> list[dict]:
-        # convert pydantic object into normal dict
-        suites_dict = [s.model_dump(mode="python") for s in suites]
+    def _dump_suites_to_json(self, work_dir: Path, suites: CustomTestSuite) -> dict:
+        # Convert dataclasses to dicts - JsonObjectEncoder handles the rest automatically
+        suites_dict = asdict(suites)
 
-        # write suites object into json file
+        # Write to JSON with custom encoder that handles Path, Body, Keyword, Metadata objects
         json_path = work_dir / "suites.json"
         json_path.write_text(
             json.dumps(suites_dict, ensure_ascii=False, indent=2),
@@ -106,7 +107,7 @@ class MkdocsIntegration:
         out = "".join(ch for ch in s if ch in keep)
         return out or "suite"
 
-    def _ensure_suite_ids(self, suites: list[dict]) -> None:
+    def _ensure_suite_ids(self, suites: dict) -> None:
         """
         Ensure each suite/subsuite has a stable 'id'. Needed for wrapper filenames.
         If user already has an id -> keep it.
@@ -114,13 +115,12 @@ class MkdocsIntegration:
         def rec(suite: dict, prefix: str) -> None:
             if not suite.get("id"):
                 suite["id"] = self._slugify(f"{prefix}-{suite.get('name', 'suite')}")
-            for child in (suite.get("sub_suites") or []):
+            for child in (suite.get("suites") or []):
                 rec(child, suite["id"])
 
-        for s in suites:
-            rec(s, "root")
+        rec(suites, "root")
 
-    def _generate_wrapper_pages(self, docs_dir: Path, suites: list[dict], user_suite_template: str) -> None:
+    def _generate_wrapper_pages(self, docs_dir: Path, suites: dict, user_suite_template: str) -> None:
         """
         Creates:
           docs/generated/<suite-id>.md        (one per suite/subsuite)
@@ -135,10 +135,17 @@ class MkdocsIntegration:
         # Resolver template: finds the suite object for suite_id and includes the user’s template
         (gen_dir / "_resolve_suite.md").write_text(
             "{% macro find(items, target) %}\n"
-            "  {% for s in items %}\n"
-            "    {% if s.id == target %}{% set ns.found = s %}{% endif %}\n"
-            "    {% if not ns.found and s.sub_suites %}{{ find(s.sub_suites, target) }}{% endif %}\n"
-            "  {% endfor %}\n"
+            "  {% if items is mapping %}\n"
+            "    {# items is a single dict #}\n"
+            "    {% if items.id == target %}{% set ns.found = items %}{% endif %}\n"
+            "    {% if not ns.found and items.suites %}{{ find(items.suites, target) }}{% endif %}\n"
+            "  {% else %}\n"
+            "    {# items is a list #}\n"
+            "    {% for s in items %}\n"
+            "      {% if s.id == target %}{% set ns.found = s %}{% endif %}\n"
+            "      {% if not ns.found and s.suites %}{{ find(s.suites, target) }}{% endif %}\n"
+            "    {% endfor %}\n"
+            "  {% endif %}\n"
             "{% endmacro %}\n\n"
             "{% set ns = namespace(found=None) %}\n"
             "{{ find(suites, suite_id) }}\n"
@@ -155,11 +162,10 @@ class MkdocsIntegration:
                 "{% include 'generated/_resolve_suite.md' %}\n",
                 encoding="utf-8",
             )
-            for child in (suite.get("sub_suites") or []):
+            for child in (suite.get("suites") or []):
                 write_wrapper(child)
 
-        for s in suites:
-            write_wrapper(s)
+        write_wrapper(suites)
 
     def _build_nav_tree(self, suite: dict) -> dict:
         """
@@ -168,12 +174,12 @@ class MkdocsIntegration:
           - With children: { "SuiteName": [ {"Overview": "...md"}, <child items...> ] }
         """
         page = f"generated/{suite['id']}.md"
-        children = suite.get("sub_suites") or []
+        children = suite.get("suites") or []
         if children:
             return {suite["name"]: [{"Overview": page}] + [self._build_nav_tree(c) for c in children]}
         return {suite["name"]: page}
 
-    def _patch_mkdocs_nav(self, mkdocs_yml_path: Path, suites: list[dict]) -> None:
+    def _patch_mkdocs_nav(self, mkdocs_yml_path: Path, suites: dict) -> None:
         self._ensure_suite_ids(suites)
 
         text = mkdocs_yml_path.read_text(encoding="utf-8")
@@ -183,7 +189,7 @@ class MkdocsIntegration:
             text,
         )
 
-        suites_nav = [self._build_nav_tree(s) for s in suites]
+        suites_nav = self._build_nav_tree(suites)
 
         if match:
             current_nav = yaml.safe_load(match.group(0)) or {"nav": []}

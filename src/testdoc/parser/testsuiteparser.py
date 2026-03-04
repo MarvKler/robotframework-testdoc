@@ -36,27 +36,7 @@ class RobotSuiteParser(SuiteVisitor):
         # Skip suite if its already parsed into list
         # self._already_parsed(suite)
 
-        suite_info: CustomTestSuite = CustomTestSuite(
-            id=suite.id,
-            name=suite.name,
-            doc=suite.doc,
-            is_folder=self._is_directory(suite),
-            source=suite.source,
-            test_count=suite.test_count,
-            metadata=suite.metadata,
-            user_keywords=None,
-            type=suite.type
-        )
-
-        # Parse Test Cases
-        suite_info = TestCaseParser().parse_test(suite, suite_info)
-
-        if not suite_info.is_folder:
-            # visit suite model to check if user keywords got created
-            suite_info.user_keywords = self.get_suite_user_keywords(suite.source)
-
-        # Collect sub-suites recursive
-        self.suite = self._recursive_sub_suite(suite, suite_info)
+        self.robot_suite_model = suite
 
         # Append to suites object
         # self.suites.append(suite_info)
@@ -72,11 +52,39 @@ class RobotSuiteParser(SuiteVisitor):
         suite = self._modify_root_suite_details(suite)
         suite.visit(self)
 
+        self.suite = self.get_customized_suite_model(self.robot_suite_model)
+
         # Modify the source path for the test documentation
         if self.args.sourceprefix:
             self.suite = SourcePrefixModifier().modify_source_prefix(self.suite)
 
         return self.suite
+    
+    def get_customized_suite_model(self, suite) -> CustomTestSuite:
+
+        suite_info: CustomTestSuite = CustomTestSuite(
+            id=suite.id,
+            name=suite.name,
+            doc=suite.doc,
+            is_folder=self._is_directory(suite),
+            source=str(suite.source),
+            test_count=suite.test_count,
+            metadata=dict(suite.metadata),
+            user_keywords=None,
+            type=suite.type
+        )
+
+        # Parse Test Cases
+        suite_info = TestCaseParser().parse_test(suite, suite_info)
+
+        if not suite_info.is_folder:
+            # visit suite model to check if user keywords got created
+            suite_info.user_keywords = self.get_suite_user_keywords(suite.source)
+
+        # Collect sub-suites recursive
+        suite = self._recursive_sub_suite(suite, suite_info)
+
+        return suite
     
     ##############################################################################################
     # Helper:
@@ -117,9 +125,8 @@ class RobotSuiteParser(SuiteVisitor):
             suite_info: CustomTestSuite
         ) -> CustomTestSuite:
         for sub_suite in suite.suites:
-            sub_parser = RobotSuiteParser()
-            sub_parser.visit_suite(sub_suite)
-            suite_info.suites.append(sub_parser.suite)
+            suite = self.get_customized_suite_model(sub_suite)
+            suite_info.suites.append(suite)
         return suite_info
     
     def get_suite_user_keywords(

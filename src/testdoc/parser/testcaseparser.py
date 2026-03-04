@@ -1,7 +1,7 @@
 from robot.api import TestSuite
-from robot.running.model import Keyword, Body
+from robot.running.model import Body
 from ..helper.cliargs import CommandLineArguments
-from .models import CustomTestSuite,  CustomTestCase
+from .models import CustomTestCaseBody, CustomTestSuite,  CustomTestCase
 import textwrap
 
 class TestCaseParser():
@@ -19,14 +19,39 @@ class TestCaseParser():
                 id=test.id,
                 name=test.name,
                 doc=test.doc, 
-                tags=test.tags if test.tags else None,
-                source=test.source,
-                body=test.body
+                tags=list(test.tags) if test.tags else None,
+                source=str(test.source),
+                body=self.test_body_parser(test.body)
             )
             suite_info.tests.append(test_info)
         return suite_info
+    
+    def test_body_parser(self, body: Body) -> list[CustomTestCaseBody]:
+
+        result = []
+        for item in body:
+            body_item = CustomTestCaseBody(
+                id=getattr(item, 'id'),
+                type=getattr(item, 'type'),
+                name=getattr(item, 'name') if hasattr(item, 'name') else getattr(item, 'type'),
+                args=getattr(item, 'args') if hasattr(item, 'args') else None,
+                value=getattr(item, 'value') if hasattr(item, 'value') else None,
+                values=getattr(item, 'values') if hasattr(item, 'values') else None,
+                condition=getattr(item, 'condition') if hasattr(item, 'condition') else None,
+                assign=getattr(item, 'assign') if hasattr(item, 'assign') else None,
+                flavor=getattr(item, 'flavor') if hasattr(item, 'flavor') else None,
+                patterns=getattr(item, 'patterns') if hasattr(item, 'patterns') else None,
+            )
+                
+            if hasattr(item, 'body') and item.body:
+                body_item.body = self.test_body_parser(item.body)
+            
+            result.append(body_item)
         
-    def _keyword_parser(self, test_body: Body):
+        return result
+
+        
+    def _keyword_parser(self, test_body: list[CustomTestCaseBody] | list[dict]):
         """ Parse keywords and their child-items """
         _keyword_object = []
         for kw in test_body:
@@ -39,43 +64,43 @@ class TestCaseParser():
             return ["No Keyword Calls in Test"]
         return _keyword_object
         
-    def _handle_keyword_types(self, kw: Keyword, indent: int = 0):
+    def _handle_keyword_types(self, kw: CustomTestCaseBody | dict, indent: int = 0):
         """ Handle different keyword types """
         result = []
-        kw_type = getattr(kw, 'type', None)
+        kw_type = self._get_value(kw, 'type', None)
 
         _sd = "    " # classic rfw delimiter with 4 spaces
         _indent = _sd * indent
 
         # Classic keyword
-        if kw_type == "KEYWORD" and getattr(kw, 'name', None):
-            args = _sd.join(kw.args) if getattr(kw, 'args', None) else ""
-            entry =  _indent + kw.name
+        if kw_type == "KEYWORD" and self._get_value(kw, 'name', None):
+            args = _sd.join(self._get_value(kw, 'args', [])) if self._get_value(kw, 'args', None) else ""
+            entry =  _indent + self._get_value(kw, 'name', '')
             if args:
                 entry += _sd + args
-            wrapped = textwrap.wrap(entry, width=150, subsequent_indent=_indent + "..." + _sd)
+            wrapped = textwrap.wrap(entry, width=200, subsequent_indent=_indent + "..." + _sd)
             result.extend(wrapped)
 
         # VAR syntax
-        elif kw_type == "VAR" and getattr(kw, 'name', None):
-            value = _sd.join(kw.value) if getattr(kw, 'value', None) else ""
-            result.append(f"{_indent}VAR    {kw.name} =    {value}")
+        elif kw_type == "VAR" and self._get_value(kw, 'name', None):
+            value = _sd.join(self._get_value(kw, 'value', [])) if self._get_value(kw, 'value', None) else ""
+            result.append(f"{_indent}VAR    {self._get_value(kw, 'name', '')} =    {value}")
 
         # IF/ELSE/ELSE IF
         elif kw_type == "IF/ELSE ROOT":
-            for branch in getattr(kw, 'body', []):
-                branch_type = getattr(branch, 'type', None)
+            for branch in self._get_value(kw, 'body', []):
+                branch_type = self._get_value(branch, 'type', None)
                 if branch_type == "IF":
-                    header = f"{_indent}IF{_sd}{getattr(branch, 'condition', '')}".rstrip()
+                    header = f"{_indent}IF{_sd}{self._get_value(branch, 'condition', '')}".rstrip()
                 elif branch_type == "ELSE IF":
-                    header = f"{_indent}ELSE IF{_sd}{getattr(branch, 'condition', '')}".rstrip()
+                    header = f"{_indent}ELSE IF{_sd}{self._get_value(branch, 'condition', '')}".rstrip()
                 elif branch_type == "ELSE":
                     header = f"{_indent}ELSE"
                 else:
                     header = f"{_indent}{branch_type or ''}"
                 if header:
                     result.append(header)
-                for subkw in getattr(branch, 'body', []):
+                for subkw in self._get_value(branch, 'body', []):
                     result.extend(self._handle_keyword_types(subkw, indent=indent+1))
             result.append(
                 f"{_indent}END\n" if indent == 0 else f"{_indent}END"
@@ -84,15 +109,21 @@ class TestCaseParser():
         # FOR loop
         elif kw_type == "FOR":
             header = f"{_indent}FOR"
-            if hasattr(kw, 'assign') and kw.assign:
-                header += f"    {'    '.join(kw.assign)}"
-            if hasattr(kw, 'flavor') and kw.flavor:
-                header += f"    {kw.flavor}"
-            if hasattr(kw, 'values') and kw.values:
-                header += f"    IN    {'    '.join(kw.values)}"
+            assign = self._get_value(kw, 'assign', [])
+            if self._get_value(kw, 'assign') and assign:
+                header += f"    {'    '.join(assign)}"
+            flavor = self._get_value(kw, 'flavor', '')
+            if self._get_value(kw, 'flavor') and flavor:
+                header += f"    {flavor}"
+            else:
+                header += "    IN"
+            values = self._get_value(kw, 'values', [])
+            if self._get_value(kw, 'values') and values:
+                header += f"    {'    '.join(values)}"
             result.append(header)
-            if hasattr(kw, 'body'):
-                for subkw in kw.body:
+            body = self._get_value(kw, 'body', [])
+            if self._get_value(kw, 'body'):
+                for subkw in body:
                     result.extend(self._handle_keyword_types(subkw, indent=indent+1))
             result.append(
                 f"{_indent}END\n" if indent == 0 else f"{_indent}END"
@@ -101,13 +132,16 @@ class TestCaseParser():
         # GROUP loop
         elif kw_type == "GROUP":
             header = f"{_indent}GROUP"
-            if not kw.name == "":
-                header += f"{_sd}{kw.name}"
-            if hasattr(kw, 'condition') and kw.condition:
-                header += f"    {kw.condition}"
+            name = self._get_value(kw, 'name', '')
+            if not name == "":
+                header += f"{_sd}{name}"
+            condition = self._get_value(kw, 'condition', '')
+            if self._get_value(kw, 'condition') and condition:
+                header += f"    {condition}"
             result.append(header)
-            if hasattr(kw, 'body'):
-                for subkw in kw.body:
+            body = self._get_value(kw, 'body', [])
+            if self._get_value(kw, 'body'):
+                for subkw in body:
                     result.extend(self._handle_keyword_types(subkw, indent=indent+1))
             result.append(
                 f"{_indent}END\n" if indent == 0 else f"{_indent}END"
@@ -116,11 +150,13 @@ class TestCaseParser():
         # WHILE loop
         elif kw_type == "WHILE":
             header = f"{_indent}WHILE"
-            if hasattr(kw, 'condition') and kw.condition:
-                header += f"    {kw.condition}"
+            condition = self._get_value(kw, 'condition', '')
+            if self._get_value(kw, 'condition') and condition:
+                header += f"    {condition}"
             result.append(header)
-            if hasattr(kw, 'body'):
-                for subkw in kw.body:
+            body = self._get_value(kw, 'body', [])
+            if self._get_value(kw, 'body'):
+                for subkw in body:
                     result.extend(self._handle_keyword_types(subkw, indent=indent+1))
             result.append(
                 f"{_indent}END\n" if indent == 0 else f"{_indent}END"
@@ -129,13 +165,16 @@ class TestCaseParser():
         # TRY/EXCEPT/FINALLY
         elif kw_type in ("TRY", "EXCEPT", "FINALLY"):
             header = f"{_indent}{kw_type}"
-            if hasattr(kw, 'patterns') and kw.patterns:
-                header += f"    {'    '.join(kw.patterns)}"
-            if hasattr(kw, 'condition') and kw.condition:
-                header += f"    {kw.condition}"
+            patterns = self._get_value(kw, 'patterns', [])
+            if self._get_value(kw, 'patterns') and patterns:
+                header += f"    {'    '.join(patterns)}"
+            condition = self._get_value(kw, 'condition', '')
+            if self._get_value(kw, 'condition') and condition:
+                header += f"    {condition}"
             result.append(header)
-            if hasattr(kw, 'body'):
-                for subkw in kw.body:
+            body = self._get_value(kw, 'body', [])
+            if self._get_value(kw, 'body'):
+                for subkw in body:
                     result.extend(self._handle_keyword_types(subkw, indent=indent+1))
             if kw_type in ("EXCEPT", "FINALLY"):
                 result.append(
@@ -145,13 +184,15 @@ class TestCaseParser():
         # BREAK, CONTINUE, RETURN, ERROR
         elif kw_type in ("BREAK", "CONTINUE", "RETURN", "ERROR"):
             entry = f"{_indent}{kw_type}"
-            if hasattr(kw, 'values') and kw.values:
-                entry += f"    {_sd.join(kw.values)}"
+            values = self._get_value(kw, 'values', [])
+            if self._get_value(kw, 'values') and values:
+                entry += f"    {_sd.join(values)}"
             result.append(entry)
 
         # Unknown types
-        elif hasattr(kw, 'body'):
-            for subkw in kw.body:
+        elif self._get_value(kw, 'body'):
+            body = self._get_value(kw, 'body', [])
+            for subkw in body:
                 result.extend(self._handle_keyword_types(subkw))
 
         return result
@@ -167,6 +208,14 @@ class TestCaseParser():
                 kw.pop(i)
                 break
         return kw
+    
+    def _get_value(self, obj, key, default=None):
+        """
+        TBD
+        """
+        if isinstance(obj, dict):
+            return obj.get(key, default)
+        return getattr(obj, key, default)
 
 
 

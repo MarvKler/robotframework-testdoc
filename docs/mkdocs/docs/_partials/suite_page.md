@@ -3,24 +3,16 @@
 # :material-folder: {{ suite.name }}
 
 !!! tip ""
-    📊 **{{ suite.total_tests }} Test Cases in all Sub-Suites**
+    📊 **{{ suite.test_count }} Test Cases in all Sub-Suites**
 
-
-{% if suite.doc %}
-!!! abstract "📝 Suite Documentation"
-    {% for doc_line in (suite.doc or ["No documentation available for this suite"]) %}
-    {{ doc_line }}
-    {% endfor %}
-{% endif %}
-
-{% if suite.source != "" %}
-!!! note "GitHub Source Code"
-    You can directly visit the suite directory: [Navigate to GitHub]({{ suite.source }})
+{% if suite.custom_source != "" %}
+!!! note "GitLab Source Code"
+    You can directly visit the suite directory: [Navigate to GitLab]({{ suite.custom_source }})
 {% endif %}
 
 ## **Available Sub-Suites**
 ```
-{{ suite.sub_suites | map(attribute='name') | join('\n') }}
+{{ suite.suites | map(attribute='name') | join('\n') }}
 ```
 
 {% else %}
@@ -28,18 +20,17 @@
 # :simple-robotframework: {{ suite.name }}
 
 !!! tip ""
-    📊 **{{ suite.num_tests }} Test Cases in Current Suite**
+    📊 **{{ suite.test_count }} Test Cases in Current Suite**
 
-!!! abstract "📝 Suite Documentation"
-    {% for doc_line in (suite.doc or ["No documentation available for this suite"]) %}
-    {{ doc_line }}
-    {% endfor %}
-
-{% if suite.source != "" %}
-!!! note "GitHub Source Code"
-    You can directly visit the suite source code: [Navigate to GitHub]({{ suite.source }})
+{% if suite.custom_source %}
+!!! note "GitLab Source Code"
+    You can directly visit the suite source code: [Navigate to GitLab]({{ suite.custom_source }})
 {% endif %}
 
+{% if suite.doc %}
+!!! abstract "Suite Documentation"
+{{ suite.doc | indent(4, true) }}
+{% endif %}
 
 {% if suite.user_keywords %}
 🔑 **Available Suite User Keyword:**
@@ -51,7 +42,7 @@
 
 ## Test Case Overview
 
-{% if suite.tests | length > 0 %}
+{% if suite.tests %}
 **All Test Cases in Suite:**
 ```robotframework
 *** Settings ***
@@ -70,28 +61,28 @@ Name    {{ suite.name }}
 
 ### {{ test.name }}
 
+{% if test.doc %}
 !!! abstract "**Documentation:**"
-    {% for doc_line in (test.doc or ["No documentation available for this test case"]) %}
-    {{ doc_line }}
-    {% endfor %}
+{{ test.doc | indent(4, true) }}
+{% endif %}
 
 !!! tip "Tags"
-    {% for tag in (test.tags or ["No tags defined for this test"]) %}
-    ``{{ tag }}``
-    {% endfor %}
+    {% for tag in (test.tags or ["No tags defined for this test"]) -%}
+    ``{{ tag }}``{% if not loop.last %} {% endif %}
+    {%- endfor %}
 
-{% if test.source != "" %}
-!!! note "GitHub Source Code"
-    You can directly visit the test source code: [Navigate to GitHub]({{ test.source }})
+{% if test.custom_source %}
+!!! note "GitLab Source Code"
+    You can directly visit the test source code: [Navigate to GitLab]({{ test.custom_source }})
 {% endif %}
 
 
-{% if test.keywords %}
+{% if test.body %}
 **Test Case Body:**
 ```robotframework
 *** Test Cases ***
 {{ test.name }}
-    {{ test.keywords | join('\n    ') }}
+    {{ test.body | format_test_body | join('\n    ') }}
 ```
 {% endif %}
 

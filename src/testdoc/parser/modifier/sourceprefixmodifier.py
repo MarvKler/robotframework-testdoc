@@ -1,8 +1,9 @@
 import os
 from abc import ABC, abstractmethod
+from typing import cast
 
 
-from testdoc.parser.models import CustomTestSuite
+from testdoc.parser.models import CustomTestCase, CustomTestSuite
 
 from ...helper.cliargs import CommandLineArguments
 from ...helper.logger import Logger
@@ -97,14 +98,12 @@ class GitLabModifier():
         except:
             suite_dict.custom_source = None
 
-        # UPDATE 03.03.2026:
-        # --> test.source attribute from running.TestCase doesnt have a Setter function and cannot be modified
-        # for test in suite_dict.tests:
-        #     test = cast(running.TestCase, test)
-        #     try:
-        #         test.source = self._convert_to_gitlab_url(test.source, prefix)
-        #     except:
-        #         test.source = "GitLink error"
+        for test in suite_dict.tests:
+            test = cast(CustomTestCase, test)
+            try:
+                test.custom_source = self._convert_to_gitlab_url(test.source, prefix)
+            except:
+                test.custom_source = None
 
         for suite in suite_dict.suites:
             self.apply(suite, prefix)
@@ -150,14 +149,12 @@ class GitHubModifier():
         except:
             suite_dict.custom_source = None
 
-        # UPDATE 03.03.2026:
-        # --> test.source attribute from running.TestCase doesnt have a Setter function and cannot be modified
-        # for test in suite_dict.tests:
-        #     test = cast(running.TestCase, test)
-        #     try:
-        #         test.source = self._convert_to_github_url(test.source, prefix)
-        #     except:
-        #         test.source = "GitLink error"
+        for test in suite_dict.tests:
+            test = cast(CustomTestCase, test)
+            try:
+                test.custom_source = self._convert_to_github_url(test.source, prefix)
+            except:
+                test.custom_source = None
 
         for suite in suite_dict.suites:
             self.apply(suite, prefix)
