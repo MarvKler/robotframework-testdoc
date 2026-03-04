@@ -80,9 +80,5 @@ class CommandLineArguments:
         return self._args.get("output_file", None)
 
     @property
-    def colors(self):
-        return self._args.get("colors", None)
-
-    @property
     def all_as_dict(self):
         return self._args

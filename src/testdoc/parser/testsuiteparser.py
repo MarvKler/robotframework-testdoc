@@ -4,6 +4,7 @@
 from pathlib import Path, PosixPath
 from typing import cast
 
+import click
 from robot import running
 from robot.api import SuiteVisitor
 from robot.api.parsing import get_model
@@ -13,6 +14,7 @@ from robot.running import TestSuiteBuilder
 from robot.testdoc import USAGE
 from robot.utils import Application, abspath, is_list_like
 
+from testdoc.helper.logger import Logger
 from testdoc.parser.models import CustomTestSuite
 from testdoc.parser.modifier.sourceprefixmodifier import SourcePrefixModifier
 from testdoc.parser.testcaseparser import TestCaseParser
@@ -45,6 +47,10 @@ class RobotSuiteParser(SuiteVisitor):
         _rfs = RobotSuiteFiltering()
         _rfs.execute_cli(robot_options, False)
         suite = _rfs._suite_object
+
+        if not suite:
+            Logger().log("=== WARNING: No tests in the given directory - exit testdoc ===", "yellow")
+            raise click.exceptions.Exit(1)
 
         # Custom suite object modification with new test doc library
         suite = self._modify_root_suite_details(suite)
