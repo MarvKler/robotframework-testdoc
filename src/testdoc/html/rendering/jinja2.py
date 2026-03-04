@@ -2,6 +2,7 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
 
+from testdoc.html.rendering.jinja2_support.lexer_support import highlight_robot_in_pre, pygments_css
 from testdoc.parser.models import CustomTestSuite
 from testdoc.parser.testcaseparser import TestCaseParser
 
@@ -26,11 +27,16 @@ class JinjaIntegration:
         env = Environment(loader=FileSystemLoader(jinja_template_file.parent))
 
         env.filters["format_test_body"] = TestCaseParser()._keyword_parser
+        env.filters["highlight_robot_in_pre"] = highlight_robot_in_pre
 
         template = env.get_template(jinja_template_file.name)
 
         rendered_html = template.render(
-            suites=suites, generated_at=DateTimeConverter().get_generated_datetime(), title=self.args.title, contact_mail="marvinklerx20@gmail.com"
+            suites=suites,
+            generated_at=DateTimeConverter().get_generated_datetime(),
+            title=self.args.title,
+            contact_mail="marvinklerx20@gmail.com",
+            pygments_css=pygments_css(),
         )
         with output_file.open("w", encoding="utf-8") as f:
             f.write(rendered_html)

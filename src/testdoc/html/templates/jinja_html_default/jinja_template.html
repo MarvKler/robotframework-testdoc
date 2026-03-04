@@ -563,12 +563,11 @@
         .test-subsection + .test-subsection { margin-top: 16px; }
         .test-subsection .kv-label { display: block; margin-bottom: 6px; }
 
-        .rf-code {
+        .robotframework {
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
             font-size: 12px;
             line-height: 1.6;
             background: rgb(31, 32, 36);
-            color: #e5e7eb;
             border: 1px solid rgba(31, 41, 55, 0.9);
             border-radius: 8px;
             padding: 8px 10px;
@@ -589,36 +588,6 @@
             white-space: pre-wrap;
             word-break: break-word;
             overflow-wrap: anywhere;
-        }
-
-        /* Robot Framework token colors - VS Code Dark+ Theme */
-        .rf-code .rf-header { 
-            color: #C586C0; 
-            font-weight: 700;
-        }
-        .rf-code .rf-testname { 
-            color: #DCDCAA; 
-            font-weight: 600;
-        }
-        .rf-code .rf-keyword { 
-            color: #DCDCAA;
-            font-weight: 600;
-        }
-        .rf-code .rf-var { 
-            color: #21b1ff;
-            font-weight: 500;
-        }
-        .rf-code .rf-string { 
-            color: #CE9178;
-            font-weight: 400;
-        }
-        .rf-code .rf-comment { 
-            color: #6A9955;
-            font-style: italic;
-        }
-        .rf-code .rf-assign { 
-            color: #21b1ff;
-            font-weight: 500;
         }
 
         /* Collapsible code sections */
@@ -660,7 +629,7 @@
             transform: rotate(-90deg);
         }
 
-        .code-wrapper.collapsed .rf-code,
+        .code-wrapper.collapsed .robotframework,
         .code-wrapper.collapsed .rf-doc {
             display: none;
         }
@@ -675,6 +644,9 @@
             }
             .nav { max-height: 260px; }
         }
+    </style>
+    <style>
+        {{ pygments_css | safe }}
     </style>
 </head>
 <body>
@@ -858,8 +830,12 @@
                     <div class="test-subsection">
                         <div class="code-wrapper">
                             <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
-                        <pre class="rf-code">*** Keywords ***
-{{ s.user_keywords | join('\n') }}</pre>
+{% set code -%}
+*** Test Cases ***
+{{ s.user_keywords | join('\n') }}
+{%- endset %}
+
+{{ code | highlight_robot_in_pre | safe }}
                         </div>
                     </div>
                 </section>
@@ -880,8 +856,12 @@
                     <div class="test-subsection">
                         <div class="code-wrapper">
                             <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
-                            <pre class="rf-code">*** Test Cases ***
-{{ s.tests | map(attribute='name') | join('\n') }}</pre>
+{% set code -%}
+*** Test Cases ***
+{{ s.tests | map(attribute='name') | join('\n') }}
+{%- endset %}
+
+{{ code | highlight_robot_in_pre | safe }}
                         </div>
                     </div>
                 </section>
@@ -932,10 +912,13 @@
                                         {% if test.body %}
 <div class="code-wrapper">
     <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
-    <pre class="rf-code">*** Test Cases ***
+    {% set code -%}
+*** Test Cases ***
 {{ test.name }}
     {{ test.body | format_test_body | join('\n    ') }}
-</pre>
+{%- endset %}
+
+{{ code | highlight_robot_in_pre | safe }}
 </div>
                                         {% else %}
                                             <span class="empty">No keywords.</span>
@@ -1320,7 +1303,7 @@
             pre.dataset.highlighted = '1';
         }
 
-        document.querySelectorAll('.rf-code').forEach(highlightRfPre);
+        document.querySelectorAll('robotframework').forEach(highlightRfPre);
 
         // Collapse all code sections by default
         document.querySelectorAll('.code-wrapper').forEach(wrapper => {
