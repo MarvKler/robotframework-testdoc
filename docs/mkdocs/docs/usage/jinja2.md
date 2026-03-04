@@ -51,3 +51,36 @@ Below you can see two examples how your test documentation will look when genera
 ![Jinja Example Overview](../images/jinja_example_main.png)
 
 ![Jinja Example Test Suite Details](../images/jinja_example_test.png)
+
+## Using Robot Framework Lexer
+
+Testdoc provides a generic Robot Framework Lexer for modern syntax highlighting.
+You can use this lexer in your custom Jinja HTML template.
+
+Therefore, you need to add the following attributes to your HTML template:
+
+**HTML Style Section:**
+
+```html
+{% raw %}
+{{ pygments_css | safe }}
+{% endraw %}
+```
+
+**HTML Section:**
+
+The following code generates a ``pre`` section in your HTML with the custom RF lexer.
+
+```html
+{% raw %}
+{% set code -%}
+
+*** Test Cases ***
+
+{{ s.tests | map(attribute='name') | join('\n') }}
+
+{%- endset %}
+
+{{ code | highlight_robot_in_pre | safe }}
+{% endraw %}
+```
