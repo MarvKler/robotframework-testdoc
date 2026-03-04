@@ -567,7 +567,7 @@
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
             font-size: 12px;
             line-height: 1.6;
-            background: rgba(2, 6, 23, 0.95);
+            background: rgb(31, 32, 36);
             color: #e5e7eb;
             border: 1px solid rgba(31, 41, 55, 0.9);
             border-radius: 8px;
@@ -591,14 +591,35 @@
             overflow-wrap: anywhere;
         }
 
-        /* Robot Framework token colors (VS Code Dark+ inspired) */
-        .rf-code .rf-header { color: #C586C0; font-weight: 600; }
-        .rf-code .rf-testname { color: #DCDCAA; font-weight: 600; }
-        .rf-code .rf-keyword { color: #DCDCAA; }
-        .rf-code .rf-var { color: #9CDCFE; }
-        .rf-code .rf-string { color: #CE9178; }
-        .rf-code .rf-comment { color: #6A9955; font-style: italic; }
-        .rf-code .rf-assign { color: #D4D4D4; }
+        /* Robot Framework token colors - VS Code Dark+ Theme */
+        .rf-code .rf-header { 
+            color: #C586C0; 
+            font-weight: 700;
+        }
+        .rf-code .rf-testname { 
+            color: #DCDCAA; 
+            font-weight: 600;
+        }
+        .rf-code .rf-keyword { 
+            color: #DCDCAA;
+            font-weight: 600;
+        }
+        .rf-code .rf-var { 
+            color: #21b1ff;
+            font-weight: 500;
+        }
+        .rf-code .rf-string { 
+            color: #CE9178;
+            font-weight: 400;
+        }
+        .rf-code .rf-comment { 
+            color: #6A9955;
+            font-style: italic;
+        }
+        .rf-code .rf-assign { 
+            color: #21b1ff;
+            font-weight: 500;
+        }
 
         /* Collapsible code sections */
         .code-wrapper {
@@ -797,9 +818,7 @@
                             <div class="section-title">Suite Documentation</div>
                         </div>
                     </div>
-                    <div class="doc-block" style="margin-top:4px; white-space: pre-line;">
-{{ s.doc }}
-                    </div>
+                    <pre class="rf-doc">{{ suite.doc }}</pre>
                 </section>
                 {% endif %}
 
@@ -887,10 +906,7 @@
                                     <div class="test-subsection">
                                         <div class="kv-label">Documentation</div>
                                         {% if test.doc %}
-                                            <div class="code-wrapper">
-                                                <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
-                                                <pre class="rf-doc">{{ test.doc }}</pre>
-                                            </div>
+                                            <pre class="rf-doc">{{ test.doc }}</pre>
                                         {% else %}
                                             <span class="empty">No description.</span>
                                         {% endif %}
