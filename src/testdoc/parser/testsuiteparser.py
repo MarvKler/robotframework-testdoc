@@ -100,6 +100,8 @@ class RobotSuiteParser(SuiteVisitor):
             suite_keywords: list = []
             for kw in section.body:
                 kw = cast(Keyword, kw)
+                if not hasattr(kw, "name"):
+                    continue
                 suite_keywords.append(kw.name)
             suite_info.user_keywords = suite_keywords
         return suite_info
