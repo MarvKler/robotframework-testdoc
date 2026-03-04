@@ -7,6 +7,10 @@ In case you're using the ``mkdocs`` integration, the CLI argument ``OUTPUT`` doe
 !!! tip "View the Docs"
     Read the section [Open Mkdocs Webpages](#open-mkdocs-webpages) to open the generated documentation locally!
 
+!!! tip "Using Custom Robot Framework Lexer"
+    You can create a code section in your customized mkdocs template and define ``robotframework`` as style type.
+    Testdoc provides a custom pygment lexer for this type and you will get a modern style for the Robot Framework code sections.
+
 ## Internal Mkdocs Template
 
 Use the following command to generate a ``mkdocs`` documentation using the internal template provided by ``robotframework-testdoc``:
