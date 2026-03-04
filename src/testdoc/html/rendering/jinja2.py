@@ -7,6 +7,7 @@ from robot import running
 from robot.model import BodyItem
 
 from testdoc.parser.testcaseparser import TestCaseParser
+from testdoc.parser.testsuiteparser import RobotSuiteParser
 
 from ...helper.cliargs import CommandLineArguments
 from ...helper.datetimeconverter import DateTimeConverter
@@ -34,6 +35,7 @@ class JinjaIntegration:
         env = Environment(loader=FileSystemLoader(jinja_template_file.parent))
 
         env.filters['format_test_body'] = TestCaseParser()._keyword_parser
+        env.filters['get_user_keywords'] = RobotSuiteParser().get_suite_user_keywords
 
         template = env.get_template(jinja_template_file.name)
 

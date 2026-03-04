@@ -1,6 +1,7 @@
 # Portions of this file are derived from Robot Framework, licensed under the Apache License 2.0.
 # Derived code: see class `RobotSuiteFiltering`.
 
+from typing import cast
 from robot.api import SuiteVisitor
 from robot import running
 
@@ -9,6 +10,8 @@ from ..helper.cliargs import CommandLineArguments
 from ..helper.pathconverter import PathConverter
 
 from robot.conf import RobotSettings
+from robot.api.parsing import get_model
+from robot.parsing.model.blocks import File, KeywordSection, Keyword
 from robot.running import TestSuiteBuilder
 from robot.testdoc import USAGE
 from robot.utils import (
@@ -77,6 +80,29 @@ class RobotSuiteParser(SuiteVisitor):
             robot_options.append(f"{_os_indep_path}")
         robot_options.append(self.args.output_file)
         return robot_options
+    
+    def get_suite_user_keywords(
+            self,
+            suite_path: str,
+        ) -> list:
+        """
+        function checks if user keywords are defined within the currently visiting suite object
+        """
+
+        suite_keywords: list = []
+        suite_model: File = get_model(suite_path)
+        for section in suite_model.sections:
+            if not isinstance(section, KeywordSection):
+                continue
+
+            if len(section.body) == 0:
+                return suite_keywords.append("No user keywords defined in this suite!")
+
+            section = cast(KeywordSection, section)
+            for kw in section.body:
+                kw = cast(Keyword, kw)
+                suite_keywords.append(kw.name)
+        return suite_keywords
 
 class RobotSuiteFiltering(Application):
     """ Use official RF Application package to build test suite object with given cli options & arguments """

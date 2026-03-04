@@ -786,7 +786,7 @@
                 {% endif %}
 
                 <!-- USER KEYWORDS -->
-                <!-- {% if s.user_keywords %}
+                 {% if s.source | get_user_keywords %}
                 <section class="section">
                     <div class="section-header">
                         <div>
@@ -797,10 +797,10 @@
 
                     <div class="test-subsection">
                         <pre class="rf-code">*** Keywords ***
-{{ s.user_keywords | join('\n') }}</pre>
+{{ s.source | get_user_keywords | join('\n') }}</pre>
                     </div>
                 </section>
-                {% endif %} -->
+                {% endif %}
 
                 {% if s.tests %}
                 <!-- TEST CASE OVERVIEW OF CURRENT SUITE -->
