@@ -1,5 +1,6 @@
-import datetime
+from datetime import datetime, timezone
 
-class DateTimeConverter():
+
+class DateTimeConverter:
     def get_generated_datetime(self) -> str:
-        return(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")

@@ -1,7 +1,7 @@
 import os
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import cast
-
 
 from testdoc.parser.models import CustomTestCase, CustomTestSuite
 
@@ -9,6 +9,7 @@ from ...helper.cliargs import CommandLineArguments
 from ...helper.logger import Logger
 
 available_implementations = "gitlab, github"
+
 
 ########################################
 # Interface
@@ -18,6 +19,7 @@ class SourceModifier(ABC):
     def apply(self, suite_dict, prefix):
         pass
 
+
 ########################################
 # Factory
 ########################################
@@ -26,22 +28,20 @@ class SourceModifierFactory:
     def get_modifier(prefix_type: str) -> SourceModifier:
         if prefix_type.lower() == "gitlab":
             return GitLabModifier()
-        elif prefix_type.lower() == "github":
+        if prefix_type.lower() == "github":
             return GitHubModifier()
         # EXAMPLE Extension:
         # elif prefix_type.lower() == "github":
         #     return GitHubModifier()
-        raise ValueError(
-            f"No source modifier found for type '{prefix_type}' - actually available implementation are:\n{available_implementations}"
-        )
+        raise ValueError(f"No source modifier found for type '{prefix_type}' - actually available implementation are:\n{available_implementations}")
+
 
 ########################################
 # Prefix Modifier - Implementation
 ########################################
-class SourcePrefixModifier():
-    
+class SourcePrefixModifier:
     GITLAB_CONNECTOR = "-/blob/main/"
-    
+
     def __init__(self):
         self.args = CommandLineArguments()
 
@@ -50,35 +50,38 @@ class SourcePrefixModifier():
             raise ValueError("Missing source-prefix type - expected type in format like 'gitlab::source-prefix!'")
         prefix = self.args.sourceprefix.split("::")
         return prefix[0], prefix[1]
-    
+
     def modify_source_prefix(self, suite_object: CustomTestSuite) -> CustomTestSuite:
-        Logger().LogKeyValue("Using Prefix for Source: ", self.args.sourceprefix, "yellow") if self.args.verbose_mode else None
+        Logger().log_key_value("Using Prefix for Source: ", self.args.sourceprefix, "yellow") if self.args.verbose_mode else None
         prefix_type, prefix = self._prefix_validation(self.args.sourceprefix)
         modifier = SourceModifierFactory.get_modifier(prefix_type)
         modifier.apply(suite_object, prefix)
         return suite_object
-    
+
+
 ########################################
 # Low-Level Implementation for GitLab
 ########################################
-class GitLabModifier():
+class GitLabModifier:
     """
     Source Prefix Modifier for "GitLab" Projects.
     Expected CMD Line Arg: "gitlab::prefix"
     """
+
     def _get_git_root(self, path):
-        current = os.path.abspath(path)
-        while current != os.path.dirname(current):
-            if os.path.isdir(os.path.join(current, ".git")):
+        path: Path = Path(path)
+        current = path.resolve()
+        while current != current.parent:
+            if Path(current / ".git").is_dir():
                 return current
-            current = os.path.dirname(current)
+            current = current.parent
         return None
-    
+
     def _get_git_branch(self, git_root):
-        head_file = os.path.join(git_root, ".git", "HEAD")
-        if not os.path.isfile(head_file):
+        head_file = Path(git_root / ".git" / "HEAD")
+        if not head_file.is_fifo():
             return "main"
-        with open(head_file, "r") as f:
+        with head_file.open() as f:
             content = f.read().strip()
             if content.startswith("ref:"):
                 return content.replace("ref: refs/heads/", "")
@@ -95,14 +98,14 @@ class GitLabModifier():
     def apply(self, suite_dict: CustomTestSuite, prefix):
         try:
             suite_dict.custom_source = self._convert_to_gitlab_url(suite_dict.source, prefix)
-        except:
+        except Exception:
             suite_dict.custom_source = None
 
         for test in suite_dict.tests:
             test = cast(CustomTestCase, test)
             try:
                 test.custom_source = self._convert_to_gitlab_url(test.source, prefix)
-            except:
+            except Exception:
                 test.custom_source = None
 
         for suite in suite_dict.suites:
@@ -112,24 +115,26 @@ class GitLabModifier():
 ########################################
 # Low-Level Implementation for GitHub
 ########################################
-class GitHubModifier():
+class GitHubModifier:
     """
     Source Prefix Modifier for "GitHub" Projects.
     Expected CMD Line Arg: "github::prefix"
     """
+
     def _get_git_root(self, path):
-        current = os.path.abspath(path)
-        while current != os.path.dirname(current):
-            if os.path.isdir(os.path.join(current, ".git")):
+        path: Path = Path(path)
+        current = path.resolve()
+        while current != current.parent:
+            if Path(current / ".git").is_dir():
                 return current
-            current = os.path.dirname(current)
+            current = current.parent
         return None
-    
+
     def _get_git_branch(self, git_root):
-        head_file = os.path.join(git_root, ".git", "HEAD")
-        if not os.path.isfile(head_file):
+        head_file = Path(git_root / ".git" / "HEAD")
+        if not head_file.is_file():
             return "main"
-        with open(head_file, "r") as f:
+        with head_file.open() as f:
             content = f.read().strip()
             if content.startswith("ref:"):
                 return content.replace("ref: refs/heads/", "")
@@ -146,18 +151,19 @@ class GitHubModifier():
     def apply(self, suite_dict: CustomTestSuite, prefix):
         try:
             suite_dict.custom_source = self._convert_to_github_url(suite_dict.source, prefix)
-        except:
+        except Exception:
             suite_dict.custom_source = None
 
         for test in suite_dict.tests:
             test = cast(CustomTestCase, test)
             try:
                 test.custom_source = self._convert_to_github_url(test.source, prefix)
-            except:
+            except Exception:
                 test.custom_source = None
 
         for suite in suite_dict.suites:
             self.apply(suite, prefix)
+
 
 ########################################
 # Low-Level Implementation for ...

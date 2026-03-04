@@ -1,33 +1,32 @@
 # Portions of this file are derived from Robot Framework, licensed under the Apache License 2.0.
 # Derived code: see class `RobotSuiteFiltering`.
 
-import os
-from pathlib import PosixPath
+from pathlib import Path, PosixPath
 from typing import cast
-from robot.api import SuiteVisitor
+
 from robot import running
-
-from testdoc.parser.modifier.sourceprefixmodifier import SourcePrefixModifier
-from testdoc.parser.testcaseparser import TestCaseParser
-from ..helper.cliargs import CommandLineArguments
-from ..helper.pathconverter import PathConverter
-from testdoc.parser.models import CustomTestSuite
-
-from robot.conf import RobotSettings
+from robot.api import SuiteVisitor
 from robot.api.parsing import get_model
-from robot.parsing.model.blocks import File, KeywordSection, Keyword
+from robot.conf import RobotSettings
+from robot.parsing.model.blocks import File, Keyword, KeywordSection
 from robot.running import TestSuiteBuilder
 from robot.testdoc import USAGE
-from robot.utils import (
-    abspath, Application, is_list_like
-)
+from robot.utils import Application, abspath, is_list_like
+
+from testdoc.parser.models import CustomTestSuite
+from testdoc.parser.modifier.sourceprefixmodifier import SourcePrefixModifier
+from testdoc.parser.testcaseparser import TestCaseParser
+
+from ..helper.cliargs import CommandLineArguments
+from ..helper.pathconverter import PathConverter
+
 
 class RobotSuiteParser(SuiteVisitor):
-    def __init__(self):
+    def __init__(self) -> None:
         self.suite_counter = 0
         self.tests = []
         self.args = CommandLineArguments()
-        self.suite: CustomTestSuite  | None = None
+        self.suite: CustomTestSuite | None = None
 
         self.robot_suite_model: running.TestSuite = None
 
@@ -41,7 +40,7 @@ class RobotSuiteParser(SuiteVisitor):
         # Append to suites object
         # self.suites.append(suite_info)
 
-    def parse_suite(self) -> running.TestSuite:
+    def parse_suite(self) -> CustomTestSuite:
         # Use official Robot Framework Application Package to parse cli arguments and modify suite object.
         robot_options = self._convert_args()
         _rfs = RobotSuiteFiltering()
@@ -59,7 +58,7 @@ class RobotSuiteParser(SuiteVisitor):
             self.suite = SourcePrefixModifier().modify_source_prefix(self.suite)
 
         return self.suite
-    
+
     def get_customized_suite_model(self, suite) -> CustomTestSuite:
 
         suite_info: CustomTestSuite = CustomTestSuite(
@@ -71,7 +70,7 @@ class RobotSuiteParser(SuiteVisitor):
             test_count=suite.test_count,
             metadata=dict(suite.metadata),
             user_keywords=None,
-            type=suite.type
+            type=suite.type,
         )
 
         # Parse Test Cases
@@ -82,16 +81,14 @@ class RobotSuiteParser(SuiteVisitor):
             suite_info.user_keywords = self.get_suite_user_keywords(suite.source)
 
         # Collect sub-suites recursive
-        suite = self._recursive_sub_suite(suite, suite_info)
+        return self._recursive_sub_suite(suite, suite_info)
 
-        return suite
-    
     ##############################################################################################
     # Helper:
     ##############################################################################################
 
     # Modify name, doc & metadata via officially provided robot api
-    def _modify_root_suite_details(self, suite: running.TestSuite):
+    def _modify_root_suite_details(self, suite: running.TestSuite) -> running.TestSuite:
         if self.args.name:
             suite.configure(name=self.args.name)
         if self.args.doc:
@@ -101,7 +98,7 @@ class RobotSuiteParser(SuiteVisitor):
         return suite
 
     def _convert_args(self):
-        """ Convert given cli args to match internal robotframework syntax """
+        """Convert given cli args to match internal robotframework syntax"""
         _include = self.args.include
         _exclude = self.args.exclude
         _source = self.args.suite_file
@@ -119,20 +116,17 @@ class RobotSuiteParser(SuiteVisitor):
             robot_options.append(f"{_os_indep_path}")
         robot_options.append(self.args.output_file)
         return robot_options
-    
-    def _recursive_sub_suite(self,
-            suite: running.TestSuite,
-            suite_info: CustomTestSuite
-        ) -> CustomTestSuite:
+
+    def _recursive_sub_suite(self, suite: running.TestSuite, suite_info: CustomTestSuite) -> CustomTestSuite:
         for sub_suite in suite.suites:
             suite = self.get_customized_suite_model(sub_suite)
             suite_info.suites.append(suite)
         return suite_info
-    
+
     def get_suite_user_keywords(
-            self,
-            suite_path: PosixPath,
-        ) -> list | None:
+        self,
+        suite_path: PosixPath,
+    ) -> list | None:
         """
         function checks if user keywords are defined within the currently visiting suite object
         """
@@ -153,18 +147,20 @@ class RobotSuiteParser(SuiteVisitor):
                     continue
                 suite_keywords.append(kw.name)
         return suite_keywords
-    
+
     def _is_directory(self, suite) -> bool:
         suite_path = suite.source if suite.source else ""
-        return(os.path.isdir(suite_path) if suite_path else False)
-    
+        return Path.is_dir(suite_path) if suite_path else False
+
     def _already_parsed(self, suite: running.TestSuite):
         existing_suite = next((s for s in self.suite if s.id == suite.id), None)
         if existing_suite:
             return
 
+
 class RobotSuiteFiltering(Application):
-    """ Use official RF Application package to build test suite object with given cli options & arguments """
+    """Use official RF Application package to build test suite object with given cli options & arguments"""
+
     OPTIONS = """
 Options
 =======
@@ -180,6 +176,7 @@ NOT SUPPORTED YET: -s --suite name *      Include suites by name.
   -i --include tag *     Include tests by tags.
   -e --exclude tag *     Exclude tests by tags.
 """
+
     def __init__(self):
         self._suite_object = None
         Application.__init__(self, USAGE, arg_limits=(2,))

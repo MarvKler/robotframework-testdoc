@@ -1,11 +1,12 @@
 from testdoc.parser.models import CustomTestSuite
-from .helper.pathconverter import PathConverter
-from .parser.testsuiteparser import RobotSuiteParser
-from .html.rendering.render import TestDocHtmlRendering
 
-class TestDoc():
-    
-    def main(self):
+from .helper.pathconverter import PathConverter
+from .html.rendering.render import TestDocHtmlRendering
+from .parser.testsuiteparser import RobotSuiteParser
+
+
+class TestDoc:
+    def main(self) -> None:
         # Parse suite object & return complete suite object with all information
         suite_object: CustomTestSuite = RobotSuiteParser().parse_suite()
 

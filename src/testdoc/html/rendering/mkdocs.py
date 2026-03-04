@@ -1,16 +1,15 @@
 import json
-from pathlib import Path
 import re
 import shutil
 import subprocess
 from dataclasses import asdict
+from pathlib import Path
 
 import yaml
 
-from ...helper.logger import Logger
-
-from ...parser.models import CustomTestSuite
 from ...helper.cliargs import CommandLineArguments
+from ...helper.logger import Logger
+from ...parser.models import CustomTestSuite
 
 
 class MkdocsIntegration:
@@ -35,7 +34,7 @@ class MkdocsIntegration:
         p = Path(work_dir_prefix)
         if not p.is_dir():
             raise ValueError("Output path must be path to directory - not path to file!")
-        work_dir = (work_dir_prefix / "testdoc_output")
+        work_dir = work_dir_prefix / "testdoc_output"
 
         self._prepare_workdir(user_template_dir, work_dir)
 
@@ -76,7 +75,7 @@ class MkdocsIntegration:
 
     def _install_main_py(self, work_dir: Path) -> None:
         # using main.py to register suites object into mkdocs workflow
-        src = Path(__file__).parent / "mkdocs" / "example_main.py"
+        src = Path(__file__).parent / "mkdocs_support" / "example_main.py"
         dst = work_dir / "main.py"
         shutil.copyfile(src, dst)
 
@@ -85,17 +84,16 @@ class MkdocsIntegration:
         if not self.args.verbose_mode:
             cmd.append("--quiet")
         subprocess.check_call(cmd)
-        Logger().Log("---------------------------------------------------------------------------", "green")
-        Logger().Log("Generated mkdocs pages here:", "green")
-        Logger().Log(work_dir)
-        Logger().Log("---------------------------------------------------------------------------", "green")
-        Logger().Log("Run following command to open the page:", "green")
-        Logger().Log(f"cd {work_dir} && mkdocs serve")
-        Logger().Log("---------------------------------------------------------------------------", "green")
-        Logger().Log("Or open 'index.html' in directory:", "green")
-        Logger().Log(f"{work_dir}/site/")
-        Logger().Log("---------------------------------------------------------------------------", "green")
-        
+        Logger().log("---------------------------------------------------------------------------", "green")
+        Logger().log("Generated mkdocs pages here:", "green")
+        Logger().log(work_dir)
+        Logger().log("---------------------------------------------------------------------------", "green")
+        Logger().log("Run following command to open the page:", "green")
+        Logger().log(f"cd {work_dir} && mkdocs serve")
+        Logger().log("---------------------------------------------------------------------------", "green")
+        Logger().log("Or open 'index.html' in directory:", "green")
+        Logger().log(f"{work_dir}/site/")
+        Logger().log("---------------------------------------------------------------------------", "green")
 
     # -----------------------
     # nav + pages generation
@@ -112,10 +110,11 @@ class MkdocsIntegration:
         Ensure each suite/subsuite has a stable 'id'. Needed for wrapper filenames.
         If user already has an id -> keep it.
         """
+
         def rec(suite: dict, prefix: str) -> None:
             if not suite.get("id"):
                 suite["id"] = self._slugify(f"{prefix}-{suite.get('name', 'suite')}")
-            for child in (suite.get("suites") or []):
+            for child in suite.get("suites") or []:
                 rec(child, suite["id"])
 
         rec(suites, "root")
@@ -132,7 +131,7 @@ class MkdocsIntegration:
 
         self._ensure_suite_ids(suites)
 
-        # Resolver template: finds the suite object for suite_id and includes the user’s template
+        # Resolver template: finds the suite object for suite_id and includes the users template
         (gen_dir / "_resolve_suite.md").write_text(
             "{% macro find(items, target) %}\n"
             "  {% if items is mapping %}\n"
@@ -158,11 +157,10 @@ class MkdocsIntegration:
         def write_wrapper(suite: dict) -> None:
             suite_id = suite["id"]
             (gen_dir / f"{suite_id}.md").write_text(
-                "{% set suite_id = '" + suite_id + "' %}\n"
-                "{% include 'generated/_resolve_suite.md' %}\n",
+                "{% set suite_id = '" + suite_id + "' %}\n{% include 'generated/_resolve_suite.md' %}\n",
                 encoding="utf-8",
             )
-            for child in (suite.get("suites") or []):
+            for child in suite.get("suites") or []:
                 write_wrapper(child)
 
         write_wrapper(suites)
@@ -205,7 +203,7 @@ class MkdocsIntegration:
         )
 
         if match:
-            text = text[:match.start()] + new_nav_block + text[match.end():]
+            text = text[: match.start()] + new_nav_block + text[match.end() :]
         else:
             if not text.endswith("\n"):
                 text += "\n"

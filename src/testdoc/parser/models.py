@@ -19,6 +19,7 @@ class CustomTestSuite:
     suites: list[CustomTestSuite] = field(default_factory=list)
     user_keywords: list[str] = field(default_factory=list)
 
+
 @dataclass
 class CustomTestCase:
     id: str
@@ -28,19 +29,19 @@ class CustomTestCase:
 
     doc: str | None = None
     custom_source: str | None = None
-    tags: list[str] = field(default_factory=list)
+    tags: list[str] | None = field(default_factory=list)
+
 
 @dataclass
 class CustomTestCaseBody:
     id: str
     type: str
     name: str
-    args: list = field(default_factory=list)
-    flavor: str = ''
-    value: list = field(default_factory=list)
-    values: list = field(default_factory=list)
-    condition: str = ''
-    patterns: list = field(default_factory=list)
-    assign: list = field(default_factory=list)
+    args: list | None = field(default_factory=list)
+    flavor: str | None = ""
+    value: list | None = field(default_factory=list)
+    values: list | None = field(default_factory=list)
+    condition: str | None = ""
+    patterns: list | None = field(default_factory=list)
+    assign: list | None = field(default_factory=list)
     body: list[CustomTestCaseBody] = field(default_factory=list)
-

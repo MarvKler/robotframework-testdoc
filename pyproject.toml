@@ -100,8 +100,63 @@ atest = "pytest atest/acceptance"
 perftest = "pytest atest/performance"
 alltest = "pytest atest"
 
+
 [tool.ruff]
 line-length = 150
-lint.select = ["E", "F"]  # Pyflakes & pycodestyle
-lint.ignore = ["E722"]
-exclude = ["build", "dist"]
+src = ["src"]
+exclude = [
+  ".venv",
+  ".git",
+  "__pycache__",
+  "build",
+  "dist",
+  "bootstrap.py",
+  "atest/",
+]
+
+[tool.ruff.lint]
+select = [
+  "E",
+  "F",
+  "W",
+  "C90",
+  "I",
+  "N",
+  "B",
+  "PYI",
+  "PL",
+  "PTH",
+  "UP",
+  "A",
+  "C4",
+  "DTZ",
+  "ISC",
+  "ICN",
+  "INP",
+  "PIE",
+  "T20",
+  "PYI",
+  "PT",
+  "RSE",
+  "RET",
+  "SIM",
+  "RUF"
+]
+ignore = [
+  "N999",  # Robot library names stay CamelCase
+]
+unfixable = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+strict = true
+show_error_codes = true
+warn_return_any = true
+warn_unused_configs = true
+warn_unreachable = true
+files = ["src"]
+exclude = "/(\\.venv|\\.git|__pycache__|build|dist|atest)/"
+disable_error_code = ["import-untyped"]
