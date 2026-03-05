@@ -563,12 +563,11 @@
         .test-subsection + .test-subsection { margin-top: 16px; }
         .test-subsection .kv-label { display: block; margin-bottom: 6px; }
 
-        .rf-code {
+        .robotframework {
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
             font-size: 12px;
             line-height: 1.6;
-            background: rgba(2, 6, 23, 0.95);
-            color: #e5e7eb;
+            background: rgb(31, 32, 36);
             border: 1px solid rgba(31, 41, 55, 0.9);
             border-radius: 8px;
             padding: 8px 10px;
@@ -591,14 +590,49 @@
             overflow-wrap: anywhere;
         }
 
-        /* Robot Framework token colors (VS Code Dark+ inspired) */
-        .rf-code .rf-header { color: #C586C0; font-weight: 600; }
-        .rf-code .rf-testname { color: #DCDCAA; font-weight: 600; }
-        .rf-code .rf-keyword { color: #DCDCAA; }
-        .rf-code .rf-var { color: #9CDCFE; }
-        .rf-code .rf-string { color: #CE9178; }
-        .rf-code .rf-comment { color: #6A9955; font-style: italic; }
-        .rf-code .rf-assign { color: #D4D4D4; }
+        /* Collapsible code sections */
+        .code-wrapper {
+            position: relative;
+            margin-top: 4px;
+        }
+
+        .code-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: 6px;
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            margin-bottom: 4px;
+        }
+
+        .code-toggle:hover {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: rgba(56, 189, 248, 0.7);
+            color: #e0f2fe;
+        }
+
+        .code-toggle-icon {
+            font-size: 14px;
+            transition: transform 0.2s ease;
+            line-height: 1;
+        }
+
+        .code-toggle.collapsed .code-toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .code-wrapper.collapsed .robotframework,
+        .code-wrapper.collapsed .rf-doc {
+            display: none;
+        }
 
         /* RESPONSIVE */
         @media (max-width: 960px) {
@@ -611,9 +645,12 @@
             .nav { max-height: 260px; }
         }
     </style>
+    <style>
+        {{ pygments_css | safe }}
+    </style>
 </head>
 <body>
-{% set suite = suites[0] if suites else None %}
+{% set suite = suites if suites else None %}
 <div class="layout">
     <!-- LEFT: NAVIGATION -->
     <aside class="nav">
@@ -625,7 +662,7 @@
                 <div class="nav-title-sub">Test Documentation</div>
             </div>
             <div class="badge tests">
-                {% if suite %}{{ suite.total_tests }} total tests{% else %}0 tests{% endif %}
+                {% if suite %}{{ suite.test_count }} total tests{% else %}0 tests{% endif %}
             </div>
         </div>
 
@@ -635,12 +672,12 @@
                 <li class="tree-item">
                     <a href="#suite-{{ suite.id }}" class="tree-suite active" data-target="suite-{{ suite.id }}" data-suite-id="{{ suite.id }}">
                         <span class="tree-icon {% if suite.is_folder %}suite-folder{% else %}suite-file{% endif %}">
-                            {% if suite.is_folder %}
+                            {% if suite.tests %}
+                                <svg role="img" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><title>Robot Framework</title><path d="M4.9565 10.2246c0-1.8766 1.5257-3.4023 3.4-3.4023 1.8766 0 3.4024 1.5257 3.4024 3.4023 0 .6838-.5526 1.2364-1.2341 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364 0-.513-.4185-.9296-.9338-.9296-.5129 0-.9317.4165-.9317.9296 0 .6838-.5523 1.2364-1.234 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364m14.0868 5.717c0 .6842-.5524 1.2363-1.2341 1.2363H6.3575c-.6818 0-1.2344-.552-1.2344-1.2363 0-.6837.5526-1.2363 1.2344-1.2363h11.4517c.6817 0 1.234.5526 1.234 1.2363m-5.351-5.0244c-.3814-.5657-.2323-1.3328.3334-1.7143l2.8628-1.9334c.5613-.3902 1.3329-.2324 1.7144.3289.3815.5654.2323 1.3329-.3334 1.7144l-2.8628 1.9333c-.5442.3831-1.3348.2379-1.7144-.3289zm7.8393 7.6018a.8815.8815 0 0 1-.258.6227l-2.1277 2.1277a.8822.8822 0 0 1-.623.258H5.4772a.8822.8822 0 0 1-.623-.258l-2.1277-2.1277a.8815.8815 0 0 1-.258-.6227V5.4818a.8797.8797 0 0 1 .258-.6228l2.1277-2.1282a.8816.8816 0 0 1 .623-.2578h13.0456a.8816.8816 0 0 1 .623.2578l2.1277 2.1282a.8797.8797 0 0 1 .258.6228V18.519zm1.811-15.0835L20.5644.6577A2.2454 2.2454 0 0 0 18.9775 0H5.0207A2.2445 2.2445 0 0 0 3.433.658L.657 3.4359A2.2449 2.2449 0 0 0 0 5.0228v13.9547c0 .5953.2366 1.1667.6575 1.5872l2.778 2.7779c.421.421.9918.6573 1.5871.6573h13.9548a2.2448 2.2448 0 0 0 1.5872-.6573l2.7779-2.7779A2.2436 2.2436 0 0 0 24 18.9775V5.023a2.2451 2.2451 0 0 0-.6575-1.5875z"/></svg>
+                            {% else %}
                                 <svg viewBox="0 0 24 24" aria-hidden="true">
                                     <path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7z" />
                                 </svg>
-                            {% else %}
-                                <svg role="img" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><title>Robot Framework</title><path d="M4.9565 10.2246c0-1.8766 1.5257-3.4023 3.4-3.4023 1.8766 0 3.4024 1.5257 3.4024 3.4023 0 .6838-.5526 1.2364-1.2341 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364 0-.513-.4185-.9296-.9338-.9296-.5129 0-.9317.4165-.9317.9296 0 .6838-.5523 1.2364-1.234 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364m14.0868 5.717c0 .6842-.5524 1.2363-1.2341 1.2363H6.3575c-.6818 0-1.2344-.552-1.2344-1.2363 0-.6837.5526-1.2363 1.2344-1.2363h11.4517c.6817 0 1.234.5526 1.234 1.2363m-5.351-5.0244c-.3814-.5657-.2323-1.3328.3334-1.7143l2.8628-1.9334c.5613-.3902 1.3329-.2324 1.7144.3289.3815.5654.2323 1.3329-.3334 1.7144l-2.8628 1.9333c-.5442.3831-1.3348.2379-1.7144-.3289zm7.8393 7.6018a.8815.8815 0 0 1-.258.6227l-2.1277 2.1277a.8822.8822 0 0 1-.623.258H5.4772a.8822.8822 0 0 1-.623-.258l-2.1277-2.1277a.8815.8815 0 0 1-.258-.6227V5.4818a.8797.8797 0 0 1 .258-.6228l2.1277-2.1282a.8816.8816 0 0 1 .623-.2578h13.0456a.8816.8816 0 0 1 .623.2578l2.1277 2.1282a.8797.8797 0 0 1 .258.6228V18.519zm1.811-15.0835L20.5644.6577A2.2454 2.2454 0 0 0 18.9775 0H5.0207A2.2445 2.2445 0 0 0 3.433.658L.657 3.4359A2.2449 2.2449 0 0 0 0 5.0228v13.9547c0 .5953.2366 1.1667.6575 1.5872l2.778 2.7779c.421.421.9918.6573 1.5871.6573h13.9548a2.2448 2.2448 0 0 0 1.5872-.6573l2.7779-2.7779A2.2436 2.2436 0 0 0 24 18.9775V5.023a2.2451 2.2451 0 0 0-.6575-1.5875z"/></svg>
                             {% endif %}
                         </span>
                         <span class="tree-main-label">{{ suite.name }}</span>
@@ -650,9 +687,9 @@
 
                 {# Recursive tree of sub suites & tests #}
                 {% macro render_suite_tree(current) %}
-                    {% if current.sub_suites or current.tests %}
+                    {% if current.suites or current.tests %}
                         <ul class="tree-children">
-                            {% for s in current.sub_suites %}
+                            {% for s in current.suites %}
                                 <li class="tree-item">
                                     <a href="#suite-{{ s.id }}" class="tree-suite" data-target="suite-{{ s.id }}" data-suite-id="{{ s.id }}">
                                         <span class="tree-icon {% if s.is_folder %}suite-folder{% else %}suite-file{% endif %}">
@@ -699,11 +736,11 @@
                 <div class="content-title">
                     <div class="content-title-main">{{ s.name }}</div>
                     <div class="badge-row">
-                        <span class="badge tests">{% if s.is_folder %}{{ s.total_tests }}{% else %}{{ s.num_tests }}{% endif %} Tests in this suite</span>
-                        {% if s.is_folder %}
-                            <span class="badge">Suite Directory</span>
-                        {% else %}
+                        <span class="badge tests">{{ s.test_count }} Tests in this suite</span>
+                        {% if s.tests %}
                             <span class="badge">Suite File</span>
+                        {% else %}
+                            <span class="badge">Suite Directory</span>
                         {% endif %}
                     </div>
                 </div>
@@ -711,9 +748,6 @@
                     {% if s.metadata %}
                         <div>Metadata entries: {{ s.metadata|length }}</div>
                     {% endif %}
-                    <div class="mono">
-                        {{ s.filename }}
-                    </div>
                 </div>
             </header>
 
@@ -733,18 +767,18 @@
 
                         <div class="kv-label">Source</div>
                         <div class="kv-value mono">
-                            {% if s.source %}
-                                <a href="{{ s.source }}" target="_blank" rel="noopener noreferrer">{{ s.source }}</a>
+                            {% if s.custom_source %}
+                                <a href="{{ s.custom_source }}" target="_blank" rel="noopener noreferrer">{{ s.custom_source }}</a>
                             {% else %}
                                 {{ s.source }}
                             {% endif %}
                         </div>
 
-                        <div class="kv-label">Tests (direct)</div>
-                        <div class="kv-value">{{ s.num_tests }}</div>
-
                         <div class="kv-label">Tests (total)</div>
-                        <div class="kv-value">{{ s.total_tests }}</div>
+                        <div class="kv-value">{{ s.test_count }}</div>
+
+                        <div class="kv-label">Tests (direct)</div>
+                        <div class="kv-value">{{ s.tests | length }}</div>
                     </div>
                 </section>
 
@@ -754,15 +788,9 @@
                     <div class="section-header">
                         <div>
                             <div class="section-title">Suite Documentation</div>
-                            <div class="section-subtitle">Description and notes</div>
                         </div>
                     </div>
-
-                    <div class="doc-block">
-                        {% for line in s.doc %}
-                            <p>{{ line }}</p>
-                        {% endfor %}
-                    </div>
+                    <pre class="rf-doc">{{ s.doc }}</pre>
                 </section>
                 {% endif %}
 
@@ -790,7 +818,7 @@
                 {% endif %}
 
                 <!-- USER KEYWORDS -->
-                {% if s.user_keywords %}
+                 {% if s.user_keywords %}
                 <section class="section">
                     <div class="section-header">
                         <div>
@@ -800,8 +828,15 @@
                     </div>
 
                     <div class="test-subsection">
-                        <pre class="rf-code">*** Keywords ***
-{{ s.user_keywords | join('\n') }}</pre>
+                        <div class="code-wrapper">
+                            <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
+{% set code -%}
+*** Test Cases ***
+{{ s.user_keywords | join('\n') }}
+{%- endset %}
+
+{{ code | highlight_robot_in_pre | safe }}
+                        </div>
                     </div>
                 </section>
                 {% endif %}
@@ -819,8 +854,15 @@
                     </div>
 
                     <div class="test-subsection">
-                        <pre class="rf-code">*** Test Cases ***
-{{ s.tests | map(attribute='name') | join('\n') }}</pre>
+                        <div class="code-wrapper">
+                            <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
+{% set code -%}
+*** Test Cases ***
+{{ s.tests | map(attribute='name') | join('\n') }}
+{%- endset %}
+
+{{ code | highlight_robot_in_pre | safe }}
+                        </div>
                     </div>
                 </section>
 
@@ -838,11 +880,13 @@
                         <div class="tests-list">
                             {% for test in s.tests %}
                                 <section id="test-{{ s.id }}-{{ loop.index0 }}" class="test-block">
-                                    <div class="test-title mono">{{ test.name }}</div>
+                                    <div class="test-subsection">
+                                        <div class="kv-label">{{ test.name }}</div>
+                                    </div>
                                     <div class="test-subsection">
                                         <div class="kv-label">Documentation</div>
                                         {% if test.doc %}
-                                            <pre class="rf-doc">{% if test.doc is string %}{{ test.doc }}{% else %}{{ test.doc | join('\n') }}{% endif %}</pre>
+                                            <pre class="rf-doc">{{ test.doc }}</pre>
                                         {% else %}
                                             <span class="empty">No description.</span>
                                         {% endif %}
@@ -865,11 +909,17 @@
                                     </div>
                                     <div class="test-subsection">
                                         <div class="kv-label">Test Case Body</div>
-                                        {% if test.keywords %}
-                                            <pre class="rf-code">*** Test Cases ***
+                                        {% if test.body %}
+<div class="code-wrapper">
+    <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
+    {% set code -%}
+*** Test Cases ***
 {{ test.name }}
-    {{ test.keywords | join('\n    ') }}
-</pre>
+    {{ test.body | format_test_body | join('\n    ') }}
+{%- endset %}
+
+{{ code | highlight_robot_in_pre | safe }}
+</div>
                                         {% else %}
                                             <span class="empty">No keywords.</span>
                                         {% endif %}
@@ -881,7 +931,7 @@
                 {% endif %}
 
                 <!-- SUB SUITES OVERVIEW -->
-                {% if s.sub_suites %}
+                {% if s.suites %}
                 <section class="section">
                     <div class="section-header">
                         <div>
@@ -896,26 +946,16 @@
                                     <div>
                                         <strong>{{ s2.name }}</strong>
                                         <span style="font-size:11px; color: var(--muted); margin-left:6px;">
-                                            ({{ s2.num_tests }} / {{ s2.total_tests }} tests)
+                                            ({{ s2.test_count }} tests)
                                         </span>
                                     </div>
                                     <div class="badge-row">
-                                        <span class="badge">{{ s2.filename }}</span>
+                                        <span class="badge">{{ s2.source }}</span>
                                     </div>
                                 </div>
-                                {% if s2.doc %}
-                                    <div class="doc-block" style="margin-top:4px;">
-                                        {% for line in s2.doc[:2] %}
-                                            <p>{{ line }}</p>
-                                        {% endfor %}
-                                        {% if s2.doc|length > 2 %}
-                                            <p class="empty">… ({{ s2.doc|length - 2 }} more lines)</p>
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
                             </div>
 
-                            {% for child in s2.sub_suites %}
+                            {% for child in s2.suites %}
                                 {{ render_suite_details(child, level2 + 1) }}
                             {% endfor %}
                         {% endmacro %}
@@ -926,16 +966,14 @@
             </div>
         </section>
 
-        {% for child in s.sub_suites %}
+        {% for child in s.suites %}
             {{ render_suite_block(child, level + 1) }}
         {% endfor %}
         {% endmacro %}
 
         <div>
             {% if suites %}
-                {% for root in suites %}
-                    {{ render_suite_block(root, 0) }}
-                {% endfor %}
+                {{ render_suite_block(suites, 0) }}
             {% else %}
                 <p class="empty" style="padding: 12px 16px;">
                     No suites available.
@@ -1265,7 +1303,27 @@
             pre.dataset.highlighted = '1';
         }
 
-        document.querySelectorAll('.rf-code').forEach(highlightRfPre);
+        document.querySelectorAll('robotframework').forEach(highlightRfPre);
+
+        // Collapse all code sections by default
+        document.querySelectorAll('.code-wrapper').forEach(wrapper => {
+            wrapper.classList.add('collapsed');
+        });
+        document.querySelectorAll('.code-toggle').forEach(toggle => {
+            toggle.classList.add('collapsed');
+        });
+
+        // Collapsible code sections functionality
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.code-toggle')) {
+                const toggle = e.target.closest('.code-toggle');
+                const wrapper = toggle.closest('.code-wrapper');
+                if (wrapper) {
+                    wrapper.classList.toggle('collapsed');
+                    toggle.classList.toggle('collapsed');
+                }
+            }
+        });
     });
 </script>
 </body>

@@ -1,7 +1,6 @@
 """A library for custom keywords
 """
 import json
-import re
 
 def defineEnvironmentVariablesFromJsonFile(env):
     print(f'Looking for {env} environment')
@@ -13,11 +12,11 @@ def defineEnvironmentVariablesFromJsonFile(env):
             if data["environment"] == env:
                 print(f'Found an environment {env}!')
             for key, value in data.items():
-                if type(value) == dict:
+                if isinstance(value, dict):
                     for key, value in value.items():
                         if key not in variables:
                             variables[key] = value
-                elif type(value) == str:
+                elif isinstance(value, str):
                     if key not in variables:
                             variables[key] = value
     except:
@@ -45,7 +44,7 @@ def fill_variables_from_text_string(*args):
     for item in keys_list:
         # 'if item' checks if the key value is not empty and iterates only over keys that have a value
         if item:
-    	    # interate through all keys, get their indexes and assign to each a value with the same index and put them into disctionary
+            # interate through all keys, get their indexes and assign to each a value with the same index and put them into disctionary
             # strip() removed all whitespaces
             key = item.strip()
             index = keys_list.index(item)

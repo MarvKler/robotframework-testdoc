@@ -1,15 +1,15 @@
 import json
-from pathlib import Path
 import re
 import shutil
 import subprocess
+from dataclasses import asdict
+from pathlib import Path
 
 import yaml
 
-from ...helper.logger import Logger
-
-from ...parser.models import SuiteInfoModel
 from ...helper.cliargs import CommandLineArguments
+from ...helper.logger import Logger
+from ...parser.models import CustomTestSuite
 
 
 class MkdocsIntegration:
@@ -25,7 +25,7 @@ class MkdocsIntegration:
     def __init__(self):
         self.args = CommandLineArguments()
 
-    def render_mkdocs_page(self, suites: list[SuiteInfoModel]) -> Path:
+    def render_mkdocs_page(self, suites: CustomTestSuite) -> Path:
         if not self.args.mkdocs_template_dir:
             user_template_dir = Path(__file__).resolve().parent.parent / "templates" / "mkdocs_default"
         else:
@@ -34,7 +34,7 @@ class MkdocsIntegration:
         p = Path(work_dir_prefix)
         if not p.is_dir():
             raise ValueError("Output path must be path to directory - not path to file!")
-        work_dir = (work_dir_prefix / "testdoc_output")
+        work_dir = work_dir_prefix / "testdoc_output"
 
         self._prepare_workdir(user_template_dir, work_dir)
 
@@ -61,11 +61,11 @@ class MkdocsIntegration:
             shutil.rmtree(work_dir)
         shutil.copytree(user_template_dir, work_dir)
 
-    def _dump_suites_to_json(self, work_dir: Path, suites: list[SuiteInfoModel]) -> list[dict]:
-        # convert pydantic object into normal dict
-        suites_dict = [s.model_dump(mode="python") for s in suites]
+    def _dump_suites_to_json(self, work_dir: Path, suites: CustomTestSuite) -> dict:
+        # Convert dataclasses to dicts - JsonObjectEncoder handles the rest automatically
+        suites_dict = asdict(suites)
 
-        # write suites object into json file
+        # Write to JSON with custom encoder that handles Path, Body, Keyword, Metadata objects
         json_path = work_dir / "suites.json"
         json_path.write_text(
             json.dumps(suites_dict, ensure_ascii=False, indent=2),
@@ -75,7 +75,7 @@ class MkdocsIntegration:
 
     def _install_main_py(self, work_dir: Path) -> None:
         # using main.py to register suites object into mkdocs workflow
-        src = Path(__file__).parent / "mkdocs" / "example_main.py"
+        src = Path(__file__).parent / "mkdocs_support" / "example_main.py"
         dst = work_dir / "main.py"
         shutil.copyfile(src, dst)
 
@@ -84,17 +84,16 @@ class MkdocsIntegration:
         if not self.args.verbose_mode:
             cmd.append("--quiet")
         subprocess.check_call(cmd)
-        Logger().Log("---------------------------------------------------------------------------", "green")
-        Logger().Log("Generated mkdocs pages here:", "green")
-        Logger().Log(work_dir)
-        Logger().Log("---------------------------------------------------------------------------", "green")
-        Logger().Log("Run following command to open the page:", "green")
-        Logger().Log(f"cd {work_dir} && mkdocs serve")
-        Logger().Log("---------------------------------------------------------------------------", "green")
-        Logger().Log("Or open 'index.html' in directory:", "green")
-        Logger().Log(f"{work_dir}/site/")
-        Logger().Log("---------------------------------------------------------------------------", "green")
-        
+        Logger().log("---------------------------------------------------------------------------", "green")
+        Logger().log("Generated mkdocs pages here:", "green")
+        Logger().log(work_dir)
+        Logger().log("---------------------------------------------------------------------------", "green")
+        Logger().log("Run following command to open the page:", "green")
+        Logger().log(f"cd {work_dir} && mkdocs serve")
+        Logger().log("---------------------------------------------------------------------------", "green")
+        Logger().log("Or open 'index.html' in directory:", "green")
+        Logger().log(f"{work_dir}/site/")
+        Logger().log("---------------------------------------------------------------------------", "green")
 
     # -----------------------
     # nav + pages generation
@@ -106,21 +105,21 @@ class MkdocsIntegration:
         out = "".join(ch for ch in s if ch in keep)
         return out or "suite"
 
-    def _ensure_suite_ids(self, suites: list[dict]) -> None:
+    def _ensure_suite_ids(self, suites: dict) -> None:
         """
         Ensure each suite/subsuite has a stable 'id'. Needed for wrapper filenames.
         If user already has an id -> keep it.
         """
+
         def rec(suite: dict, prefix: str) -> None:
             if not suite.get("id"):
                 suite["id"] = self._slugify(f"{prefix}-{suite.get('name', 'suite')}")
-            for child in (suite.get("sub_suites") or []):
+            for child in suite.get("suites") or []:
                 rec(child, suite["id"])
 
-        for s in suites:
-            rec(s, "root")
+        rec(suites, "root")
 
-    def _generate_wrapper_pages(self, docs_dir: Path, suites: list[dict], user_suite_template: str) -> None:
+    def _generate_wrapper_pages(self, docs_dir: Path, suites: dict, user_suite_template: str) -> None:
         """
         Creates:
           docs/generated/<suite-id>.md        (one per suite/subsuite)
@@ -132,13 +131,20 @@ class MkdocsIntegration:
 
         self._ensure_suite_ids(suites)
 
-        # Resolver template: finds the suite object for suite_id and includes the user’s template
+        # Resolver template: finds the suite object for suite_id and includes the users template
         (gen_dir / "_resolve_suite.md").write_text(
             "{% macro find(items, target) %}\n"
-            "  {% for s in items %}\n"
-            "    {% if s.id == target %}{% set ns.found = s %}{% endif %}\n"
-            "    {% if not ns.found and s.sub_suites %}{{ find(s.sub_suites, target) }}{% endif %}\n"
-            "  {% endfor %}\n"
+            "  {% if items is mapping %}\n"
+            "    {# items is a single dict #}\n"
+            "    {% if items.id == target %}{% set ns.found = items %}{% endif %}\n"
+            "    {% if not ns.found and items.suites %}{{ find(items.suites, target) }}{% endif %}\n"
+            "  {% else %}\n"
+            "    {# items is a list #}\n"
+            "    {% for s in items %}\n"
+            "      {% if s.id == target %}{% set ns.found = s %}{% endif %}\n"
+            "      {% if not ns.found and s.suites %}{{ find(s.suites, target) }}{% endif %}\n"
+            "    {% endfor %}\n"
+            "  {% endif %}\n"
             "{% endmacro %}\n\n"
             "{% set ns = namespace(found=None) %}\n"
             "{{ find(suites, suite_id) }}\n"
@@ -151,15 +157,13 @@ class MkdocsIntegration:
         def write_wrapper(suite: dict) -> None:
             suite_id = suite["id"]
             (gen_dir / f"{suite_id}.md").write_text(
-                "{% set suite_id = '" + suite_id + "' %}\n"
-                "{% include 'generated/_resolve_suite.md' %}\n",
+                "{% set suite_id = '" + suite_id + "' %}\n{% include 'generated/_resolve_suite.md' %}\n",
                 encoding="utf-8",
             )
-            for child in (suite.get("sub_suites") or []):
+            for child in suite.get("suites") or []:
                 write_wrapper(child)
 
-        for s in suites:
-            write_wrapper(s)
+        write_wrapper(suites)
 
     def _build_nav_tree(self, suite: dict) -> dict:
         """
@@ -168,12 +172,12 @@ class MkdocsIntegration:
           - With children: { "SuiteName": [ {"Overview": "...md"}, <child items...> ] }
         """
         page = f"generated/{suite['id']}.md"
-        children = suite.get("sub_suites") or []
+        children = suite.get("suites") or []
         if children:
             return {suite["name"]: [{"Overview": page}] + [self._build_nav_tree(c) for c in children]}
         return {suite["name"]: page}
 
-    def _patch_mkdocs_nav(self, mkdocs_yml_path: Path, suites: list[dict]) -> None:
+    def _patch_mkdocs_nav(self, mkdocs_yml_path: Path, suites: dict) -> None:
         self._ensure_suite_ids(suites)
 
         text = mkdocs_yml_path.read_text(encoding="utf-8")
@@ -183,7 +187,7 @@ class MkdocsIntegration:
             text,
         )
 
-        suites_nav = [self._build_nav_tree(s) for s in suites]
+        suites_nav = self._build_nav_tree(suites)
 
         if match:
             current_nav = yaml.safe_load(match.group(0)) or {"nav": []}
@@ -199,7 +203,7 @@ class MkdocsIntegration:
         )
 
         if match:
-            text = text[:match.start()] + new_nav_block + text[match.end():]
+            text = text[: match.start()] + new_nav_block + text[match.end() :]
         else:
             if not text.endswith("\n"):
                 text += "\n"

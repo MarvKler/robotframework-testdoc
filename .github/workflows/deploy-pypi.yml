@@ -1,0 +1,32 @@
+name: Deploy to PyPi
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:  
+  deploy-to-pypi:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Hatch
+        run: pip install twine hatch
+
+      - name: Build package
+        run: hatch build
+
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          twine upload dist/*

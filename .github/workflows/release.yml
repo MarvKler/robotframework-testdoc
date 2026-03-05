@@ -1,9 +1,12 @@
-name: Release Creation
+name: GitHub Release Creation
 
 on:
   push:
     tags:
       - 'v*.*.*'
+      - '!v*.*.*a*'
+      - '!v*.*.*b*'
+      - '!v*.*.*rc*'
 
 jobs:
   create-github-release:
@@ -23,29 +26,3 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  
-  deploy-to-pypi:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Install Hatch
-        run: pip install twine hatch
-
-      - name: Build package
-        run: hatch build
-
-      - name: Publish to PyPI
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          twine upload dist/*

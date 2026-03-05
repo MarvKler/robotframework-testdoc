@@ -8,12 +8,13 @@ ${SUITE_VAR} =    Hello Suite Variable
 
 
 *** Test Cases ***
-Suite A - TC-001
+Suite A - TC-001 - ${SUITE_VAR}
     [Documentation]    Doc for test A
     ...    Next line
     ...
     ...    another line
     [Tags]    CompA    Regression
+    [Setup]    Log   Setup
     Log    A-TC001
     Log    ABC
     Suite A - User Keyword A

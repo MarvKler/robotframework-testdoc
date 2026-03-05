@@ -4,116 +4,87 @@
 
 The ``robotframework-testdoc`` tool provides an external API which can be used to create custom ``jinja`` / ``mkdocs`` templates. Therefore, you need to know which objects / elements the testdoc tool provides which you can use as placeholder (variable) in your template files.
 
-Basically, the testdoc tool provides a ``suites`` object, which is actually a list of suites & sub-suites. Within every suite & sub-suite object, you will have some metadata, but also an object called ``tests`` which takes a list of test cases. Please see the following model descriptions for more information.
+!!! info "Initial Architecture Draft"
+    Initially, i wanted to use the original Robot Framework Suite Model which gets generated after running the Suite Visitor. Unfortunately, using this model doesnt allow you to add custom key objects into each suite model. Testdoc requires some special keys, which are not part of the core model & therefore i have created my own models based on the original models.
 
-## Test Suite Model
+Basically, the testdoc tool provides a ``suites`` object, which is actually a customized ``TestSuite`` model. This suite can have X sub-suites which can also have sub-suites. In the end, any suite object should have test objects. The test object is also a customized ``TestCase`` model based on the original model.
 
-The ``suites`` object actually is a list of ``SuiteInfoModel`` elements.
+## Models
 
-The ``SuiteInfoModel`` element has the following metadata:
+### Test Suite Model
+
+The ``suites`` object actually is a ``CustomTestSuite`` object.
+
+The ``CustomTestSuite`` element has the following metadata:
 ```python
-from pydantic import BaseModel
-
-class SuiteInfoModel(BaseModel):
+@dataclass
+class CustomTestSuite:
     id: str
-    filename: str
     name: str
-    doc: list[str] | None
-    is_folder: bool
-    num_tests: int
+    is_folder: bool    # customized helper key
     source: str
-    total_tests: int
-    tests: list[TestInfoModel]
-    user_keywords: list | None
-    sub_suites: list[SuiteInfoModel]
-    metadata: list[str] | None
+    metadata: dict | None
+    type: str
+
+    doc: str | None = None
+    custom_source: str | None = None    # customized helper key
+    test_count: int = 0
+    tests: list[CustomTestCase] = field(default_factory=list)    # contains tests
+    suites: list[CustomTestSuite] = field(default_factory=list)    # contains sub-suites
+    user_keywords: list[str] = field(default_factory=list)    # customized helper key
+
 ```
 
-## Test Case Model
+### Test Case Model
 
-Within the ``SuiteInfoModel`` object, you can find a element of type ``TestInfoModel``. If the given suite contains at least one RF test case, this list will have at least one child element of type ``TestInfoModel``.
+Within the ``CustomTestSuite`` object, you can find a element of type ``CustomTestCase``. If the given suite contains at least one RF test case, this list will have at least one child element of type ``CustomTestCase``.
+
+The ``CustomTestCase`` object has the following metadata:
+```python
+@dataclass
+class CustomTestCase:
+    id: str
+    name: str
+    source: str
+    body: list[CustomTestCaseBody]
+
+    doc: str | None = None
+    custom_source: str | None = None    # customized helper key
+    tags: list[str] = field(default_factory=list)
+```
+
+### Test Case Body Model
+
+Within the ``CustomTestCaseBody`` object, you can find the required metadata to visualize any body item supported by Robot Framework.
+
+E.g. Groups, For, If, While, etc. do have different values as arguments that are required for the visualization.
 
 The ``TestInfoModel`` object has the following metadata:
 ```python
-from pydantic import BaseModel
-
-class TestInfoModel(BaseModel):
+@dataclass
+class CustomTestCaseBody:
+    id: str
+    type: str
     name: str
-    doc: list[str] | None
-    tags: list | None
-    source: str
-    keywords: list[str] | list
+    args: list = field(default_factory=list)
+    flavor: str = ''
+    value: list = field(default_factory=list)
+    values: list = field(default_factory=list)
+    condition: str = ''
+    patterns: list = field(default_factory=list)
+    assign: list = field(default_factory=list)
+    body: list[CustomTestCaseBody] = field(default_factory=list)
 ```
 
-## Example
+## Helper Functions - Jinja2 Filters
 
-Here you can see an example of the suites object, that takes one parent directory, two robot framework suite files and a total of three test cases:
+Testdoc provides helper functions, better said Jinja2 filters for Jinja2 HTML & Mkdocs Templates.
 
-```py
-suites = {
-    id: id_a
-    filename: dir_a
-    name: DirA
-    doc: None
-    is_folder: true
-    num_tests: 0
-    source: <local-path>
-    total_tests: 3
-    tests: []
-    user_keywords: None
-    sub_suites: [
-        {
-            id: id_b
-            filename: file_b
-            name: FileB
-            doc: ["List of Suite Documentation Lines"]
-            is_folder: false
-            num_tests: 2
-            source: <local-path>
-            total_tests: 2
-            tests: [
-                {
-                    name: TestA
-                    doc: ["List of Test Documentation Lines"]
-                    tags: []
-                    source: <local-path>
-                    keywords: ["KeywordCallA", "KeywordCallB"]
-                },
-                {
-                    name: TestB
-                    doc: ["List of Test Documentation Lines"]
-                    tags: []
-                    source: <local-path>
-                    keywords: ["KeywordCallA", "KeywordCallB", "KeywordCallC"]
-                }
-            ]
-            user_keywords: ["UserKeywordA"]
-            sub_suites: []
-            metadata: None
-        },
-        {
-            id: id_c
-            filename: file_c
-            name: FileC
-            doc: ["List of Suite Documentation Lines"]
-            is_folder: false
-            num_tests: 1
-            source: <local-path>
-            total_tests: 1
-            tests: [
-                {
-                    name: TestC
-                    doc: ["List of Test Documentation Lines"]
-                    tags: []
-                    source: <local-path>
-                    keywords: ["KeywordCallA", "KeywordCallB", "KeywordCallC"]
-                }
-            ]
-            user_keywords: None
-            sub_suites: []
-            metadata: None
-        }
-    ]
-    metadata: None
-}
-```
+### Keyword Parser - Format Test Case Body
+
+This filter formats the test case body object with indentation, arguments, etc. for a better visualization.
+
+Its registered as ``format_test_body`` in both templates and can be used in combination with the pipe character ("|")
+
+!!! tip ""
+    This filter is recommended to use if you create your own HTML templates!

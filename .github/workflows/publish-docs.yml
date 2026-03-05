@@ -4,6 +4,9 @@ on:
   push:
     tags:
       - 'v*.*.*'
+      - '!v*.*.*a*'
+      - '!v*.*.*b*'
+      - '!v*.*.*rc*'
 
 permissions:
   contents: write

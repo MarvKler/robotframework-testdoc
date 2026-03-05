@@ -2,16 +2,6 @@
 
 ## Supported Arguments
 
-!!! warning "Incompatible with Mkdocs & External Jinja2 Templates"
-    Initially, all of the following CLI arguments have been introduced for using internal & predefined jinja2 templates.
-    
-    Nowadays, the tool supports also custom jinja2, as well as internal / external mkdocs templates. Therefore, most of the CLI arguments are most probably not compatible and won't have any effect during the documentation creation. In the worst case an error gets raised in your CLI.
-
-    Validating all CLI arguments with the current feature implementation will be a future task - unless this is not done, please be careful when using arguments with custom jinja2 & mkdocs templates.
-
-    !!! success "Internal Jinja2 Template"
-        When using the internal jinja2 template, you should be able to use all available CLI arguments!
-
 | Argument | Description | Additional Information | Mandatory |
 | -------- | ----------- | ---------------------- | --------- |
 | ``--title``, ``-t`` | Set a custom title for your webpage | - | :x: |
@@ -24,13 +14,6 @@
 | ``--mkdocs-template-dir`` | Define a custom mkdocs template from your local path | - | :x: |
 | ``--include``, ``-i`` | Define Robot Framework tags to include only specific tests | Can be used multiple times | :x: |
 | ``--exclude``, ``-e`` | Define Robot Framework tags to exclude specific tests | Can be used multiple times | :x: |
-| ``--hide-tags`` | Hide the tags in the HTML page | Most probably not working in combination with ``--mkdocs`` | :x: |
-| ``--hide-test-doc`` | Hide the test documentation in the HTML page | Most probably not working in combination with ``--mkdocs`` | :x: |
-| ``--hide-suite-doc`` | Hide the suite documentation in the HTML page | Most probably not working in combination with ``--mkdocs`` | :x: |
-| ``--hide-source`` | Hide the source in the HTML page | Most probably not working in combination with ``--mkdocs`` | :x: |
-| ``--hide-keywords`` | Hide the test case keyword calls in the HTML page | Most probably not working in combination with ``--mkdocs`` | :x: |
-| ``--style``, ``-S`` | Define a specific style for a different color theme | Most probably not working in combination with ``--mkdocs`` | :x: |
-| ``--html-template``, ``-ht`` | - | :warning: deprecated - do not use it anymore! | :x: |
 | ``--configfile``, ``-c`` | Define a path to a ``.toml`` configuration file | - | :x: |
 | ``--verbose``, ``-v`` | Print debug output | - | :x: |
 | ``PATH`` | Define path to a suite directory or suite file | - | :white_check_mark: |

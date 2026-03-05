@@ -1,23 +1,47 @@
 from __future__ import annotations
-from pydantic import BaseModel
 
-class SuiteInfoModel(BaseModel):
+from dataclasses import dataclass, field
+
+
+@dataclass
+class CustomTestSuite:
     id: str
-    filename: str
     name: str
-    doc: list[str] | None
     is_folder: bool
-    num_tests: int
     source: str
-    total_tests: int = 0
-    tests: list[TestInfoModel] = []
-    user_keywords: list | None = None
-    sub_suites: list[SuiteInfoModel] = []
-    metadata: list[str] | None
+    metadata: dict | None
+    type: str
 
-class TestInfoModel(BaseModel):
+    doc: str | None = None
+    custom_source: str | None = None
+    test_count: int = 0
+    tests: list[CustomTestCase] = field(default_factory=list)
+    suites: list[CustomTestSuite] = field(default_factory=list)
+    user_keywords: list[str] = field(default_factory=list)
+
+
+@dataclass
+class CustomTestCase:
+    id: str
     name: str
-    doc: list[str] | None
-    tags: list | None
     source: str
-    keywords: list[str] | list
+    body: list[CustomTestCaseBody]
+
+    doc: str | None = None
+    custom_source: str | None = None
+    tags: list[str] | None = field(default_factory=list)
+
+
+@dataclass
+class CustomTestCaseBody:
+    id: str
+    type: str
+    name: str
+    args: list | None = field(default_factory=list)
+    flavor: str | None = ""
+    value: list | None = field(default_factory=list)
+    values: list | None = field(default_factory=list)
+    condition: str | None = ""
+    patterns: list | None = field(default_factory=list)
+    assign: list | None = field(default_factory=list)
+    body: list[CustomTestCaseBody] = field(default_factory=list)
