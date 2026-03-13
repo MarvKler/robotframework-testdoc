@@ -7,6 +7,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .md-typeset { background: ; color: #D4D4D4 }
 .md-typeset .c { color: #6A9955; font-style: italic } /* Comment */
 .md-typeset .k { color: #C586C0; font-weight: bold } /* Keyword */
+.md-typeset .n { color: #DCDCAA } /* Name */
 .md-typeset .o { color: #D4D4D4 } /* Operator */
 .md-typeset .p { color: #D4D4D4 } /* Punctuation */
 .md-typeset .ch { color: #6A9955; font-style: italic } /* Comment.Hashbang */
@@ -23,8 +24,19 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .md-typeset .kt { color: #C586C0; font-weight: bold } /* Keyword.Type */
 .md-typeset .m { color: #B5CEA8 } /* Literal.Number */
 .md-typeset .s { color: #CE9178 } /* Literal.String */
+.md-typeset .na { color: #DCDCAA } /* Name.Attribute */
+.md-typeset .nb { color: #DCDCAA } /* Name.Builtin */
 .md-typeset .nc { color: #DCDCAA } /* Name.Class */
+.md-typeset .no { color: #569CD6 } /* Name.Constant */
+.md-typeset .nd { color: #DCDCAA } /* Name.Decorator */
+.md-typeset .ni { color: #DCDCAA } /* Name.Entity */
+.md-typeset .ne { color: #DCDCAA } /* Name.Exception */
 .md-typeset .nf { color: #DCDCAA } /* Name.Function */
+.md-typeset .nl { color: #C586C0; font-weight: bold } /* Name.Label */
+.md-typeset .nn { color: #DCDCAA } /* Name.Namespace */
+.md-typeset .nx { color: #DCDCAA } /* Name.Other */
+.md-typeset .py { color: #C586C0; font-weight: bold } /* Name.Property */
+.md-typeset .nt { color: #DCDCAA } /* Name.Tag */
 .md-typeset .nv { color: #9CDCFE } /* Name.Variable */
 .md-typeset .ow { color: #D4D4D4 } /* Operator.Word */
 .md-typeset .pm { color: #D4D4D4 } /* Punctuation.Marker */
@@ -47,6 +59,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .md-typeset .sr { color: #CE9178 } /* Literal.String.Regex */
 .md-typeset .s1 { color: #CE9178 } /* Literal.String.Single */
 .md-typeset .ss { color: #CE9178 } /* Literal.String.Symbol */
+.md-typeset .bp { color: #DCDCAA } /* Name.Builtin.Pseudo */
 .md-typeset .fm { color: #DCDCAA } /* Name.Function.Magic */
 .md-typeset .vc { color: #9CDCFE } /* Name.Variable.Class */
 .md-typeset .vg { color: #9CDCFE } /* Name.Variable.Global */
