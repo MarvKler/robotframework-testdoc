@@ -30,6 +30,8 @@ class CustomTestCase:
     doc: str | None = None
     custom_source: str | None = None
     tags: list[str] | None = field(default_factory=list)
+    setup: CustomTestCaseBody | None = None
+    teardown: CustomTestCaseBody | None = None
 
 
 @dataclass
