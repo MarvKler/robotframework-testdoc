@@ -29,7 +29,7 @@ dependencies = [
     "jinja2",
     "tomli",
     "pydantic",
-    "mkdocs",
+    "mkdocs<2.0.0",
     "mkdocs-macros-plugin",
     "mkdocs-material",
     "mkdocs-include-markdown-plugin",
