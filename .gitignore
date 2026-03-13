@@ -22,3 +22,4 @@ atest/mkdocs_test/**
 atest/mkdocs_test_perf/**
 atest/mkdocs_test_custom/**
 docs/mkdocs/site/**
+.DS_Store
