@@ -845,6 +845,26 @@ body {
     white-space: pre-wrap;
     word-break: break-word;
     overflow-wrap: anywhere;
+    counter-reset: rf-line-num;
+}
+
+.rf-line {
+    display: block;
+    counter-increment: rf-line-num;
+}
+
+.rf-line::before {
+    content: counter(rf-line-num);
+    display: inline-block;
+    width: 2.2em;
+    text-align: right;
+    margin-right: 1.2em;
+    padding-right: 0.7em;
+    border-right: 1px solid rgba(148, 163, 184, 0.2);
+    color: rgba(148, 163, 184, 0.4);
+    user-select: none;
+    pointer-events: none;
+    font-size: 11px;
 }
 
 /* ============================================================

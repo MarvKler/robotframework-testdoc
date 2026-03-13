@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (tpl) {
             block.appendChild(tpl.content.cloneNode(true));
             block.querySelectorAll('pre.rf-code').forEach(highlightRfPre);
+            block.querySelectorAll('pre.robotframework').forEach(addLineNumbers);
             block.dataset.mounted = '1';
             // Restore collapsed state for the newly mounted body container
             if (block.classList.contains('collapsed')) {
@@ -425,6 +426,22 @@ document.addEventListener('DOMContentLoaded', function () {
         pre.dataset.highlighted = '1';
     }
 
-    // Apply to any pre.rf-code elements already in the DOM
+    /** Add line numbers to a Pygments-highlighted pre.robotframework element. */
+    function addLineNumbers(pre) {
+        if (pre.dataset.lineNumbers === '1') return;
+        const codeEl = pre.querySelector('code') || pre;
+        const lines = codeEl.innerHTML.split('\n');
+        // Remove the trailing empty line Pygments appends
+        if (lines.length > 0 && lines[lines.length - 1].trim() === '') {
+            lines.pop();
+        }
+        codeEl.innerHTML = lines.map(function (line) {
+            return '<span class="rf-line">' + line + '</span>';
+        }).join('');
+        pre.dataset.lineNumbers = '1';
+    }
+
+    // Apply to any pre.rf-code / pre.robotframework elements already in the DOM
     document.querySelectorAll('pre.rf-code').forEach(highlightRfPre);
+    document.querySelectorAll('pre.robotframework').forEach(addLineNumbers);
 });
