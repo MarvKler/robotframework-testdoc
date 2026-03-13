@@ -17,9 +17,17 @@ class MyRobotStyle(Style):
         Name.Function: "#DCDCAA",
         # Backup in case of Class
         Name.Class: "#DCDCAA",
+        # Keyword name following [Setup] / [Teardown] / [Template] (tokenised as NAME by RF parser)
+        Name: "#DCDCAA",
         # Variables
         Name.Variable: "#9CDCFE",
         Name.Variable.Instance: "#9CDCFE",
+        # [Setup], [Teardown], [Tags], [Arguments], [Timeout], [Template] inside test/keyword bodies
+        Name.Property: "bold #C586C0",
+        # Setup, Teardown, Library, Resource, … entries in *** Settings *** section
+        Name.Label: "bold #C586C0",
+        # Built-in constants: ${EMPTY}, ${TRUE}, ${FALSE}, ${NONE}
+        Name.Constant: "#569CD6",
         # Strings
         String: "#CE9178",
         # Numbers

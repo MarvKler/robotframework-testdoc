@@ -297,7 +297,7 @@
                                 </div>
                                 <div class="test-subsection">
                                     <div class="kv-label">Body</div>
-                                    {% if test.body %}
+                                    {% if test.body or test.setup or test.teardown %}
                                     <div class="code-wrapper">
                                         <button class="code-toggle">
                                             <span>Show / Hide Code</span>
@@ -306,10 +306,15 @@
                                             </span>
                                         </button>
                                         <div class="code-toggle-body">
+                                        {% set setup_line = [test.setup] | format_test_body | join('') if test.setup else '' %}
+                                        {% set teardown_line = [test.teardown] | format_test_body | join('') if test.teardown else '' %}
                                         {% set code -%}
 *** Test Cases ***
 {{ test.name }}
-    {{ test.body | format_test_body | join('\n    ') }}
+{% if test.setup %}    [Setup]    {{ setup_line }}
+{% endif %}{% if test.body %}    {{ test.body | format_test_body | join('\n    ') }}
+{% endif %}{% if test.teardown %}    [Teardown]    {{ teardown_line }}
+{% endif %}
                                         {%- endset %}
                                         {{ code | highlight_robot_in_pre | safe }}
                                         </div>

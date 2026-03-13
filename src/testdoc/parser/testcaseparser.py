@@ -21,9 +21,22 @@ class TestCaseParser:
                 tags=list(test.tags) if test.tags else None,
                 source=str(test.source),
                 body=self.test_body_parser(test.body),
+                setup=self._parse_fixture(test.setup),
+                teardown=self._parse_fixture(test.teardown),
             )
             suite_info.tests.append(test_info)
         return suite_info
+
+    def _parse_fixture(self, fixture) -> CustomTestCaseBody | None:
+        """Parse a test setup or teardown keyword into a CustomTestCaseBody."""
+        if fixture is None or not getattr(fixture, "name", None):
+            return None
+        return CustomTestCaseBody(
+            id=getattr(fixture, "id", ""),
+            type="KEYWORD",
+            name=fixture.name,
+            args=list(fixture.args) if getattr(fixture, "args", None) else None,
+        )
 
     def test_body_parser(self, body: Body) -> list[CustomTestCaseBody]:
         result = []
