@@ -1,124 +1,168 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ title }}</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' role='img' viewBox='0 0 24 24'><title>Robot Framework</title><path d='M4.9565 10.2246c0-1.8766 1.5257-3.4023 3.4-3.4023 1.8766 0 3.4024 1.5257 3.4024 3.4023 0 .6838-.5526 1.2364-1.2341 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364 0-.513-.4185-.9296-.9338-.9296-.5129 0-.9317.4165-.9317.9296 0 .6838-.5523 1.2364-1.234 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364m14.0868 5.717c0 .6842-.5524 1.2363-1.2341 1.2363H6.3575c-.6818 0-1.2344-.552-1.2344-1.2363 0-.6837.5526-1.2363 1.2344-1.2363h11.4517c.6817 0 1.234.5526 1.234 1.2363m-5.351-5.0244c-.3814-.5657-.2323-1.3328.3334-1.7143l2.8628-1.9334c.5613-.3902 1.3329-.2324 1.7144.3289.3815.5654.2323 1.3329-.3334 1.7144l-2.8628 1.9333c-.5442.3831-1.3348.2379-1.7144-.3289zm7.8393 7.6018a.8815.8815 0 0 1-.258.6227l-2.1277 2.1277a.8822.8822 0 0 1-.623.258H5.4772a.8822.8822 0 0 1-.623-.258l-2.1277-2.1277a.8815.8815 0 0 1-.258-.6227V5.4818a.8797.8797 0 0 1 .258-.6228l2.1277-2.1282a.8816.8816 0 0 1 .623-.2578h13.0456a.8816.8816 0 0 1 .623.2578l2.1277 2.1282a.8797.8797 0 0 1 .258.6228V18.519zm1.811-15.0835L20.5644.6577A2.2454 2.2454 0 0 0 18.9775 0H5.0207A2.2445 2.2445 0 0 0 3.433.658L.657 3.4359A2.2449 2.2449 0 0 0 0 5.0228v13.9547c0 .5953.2366 1.1667.6575 1.5872l2.778 2.7779c.421.421.9918.6573 1.5871.6573h13.9548a2.2448 2.2448 0 0 0 1.5872-.6573l2.7779-2.7779A2.2436 2.2436 0 0 0 24 18.9775V5.023a2.2451 2.2451 0 0 0-.6575-1.5875z'/></svg>">
+    <!-- Flash prevention: apply stored theme before CSS renders -->
+    <script>(function(){var t=localStorage.getItem('clarity-theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.setAttribute('data-theme','dark');}else{document.documentElement.setAttribute('data-theme','light');}})();</script>
     <style>{% include 'style.css' %}</style>
     <style>{{ pygments_css | safe }}</style>
 </head>
 <body>
 {% set suite = suites if suites else None %}
-<div class="layout">
-    <!-- LEFT: NAVIGATION -->
-    <aside class="nav">
-        <div class="nav-header">
-            <div class="nav-title">
-                <div class="nav-title-main">
-                    {% if suite %}{{ suite.name or 'Suite file' }}{% else %}No suite loaded{% endif %}
-                </div>
-                <div class="nav-title-sub">Test Documentation</div>
-            </div>
-            <div class="badge tests">
-                {% if suite %}{{ suite.test_count }} total tests{% else %}0 tests{% endif %}
+
+<!-- ============================================================
+     TOP HEADER BAR
+     ============================================================ -->
+<header class="topbar">
+    <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+        </button>
+        <div class="topbar-brand">
+            <svg class="topbar-logo" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Robot Framework">
+                <path d="M4.9565 10.2246c0-1.8766 1.5257-3.4023 3.4-3.4023 1.8766 0 3.4024 1.5257 3.4024 3.4023 0 .6838-.5526 1.2364-1.2341 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364 0-.513-.4185-.9296-.9338-.9296-.5129 0-.9317.4165-.9317.9296 0 .6838-.5523 1.2364-1.234 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364m14.0868 5.717c0 .6842-.5524 1.2363-1.2341 1.2363H6.3575c-.6818 0-1.2344-.552-1.2344-1.2363 0-.6837.5526-1.2363 1.2344-1.2363h11.4517c.6817 0 1.234.5526 1.234 1.2363m-5.351-5.0244c-.3814-.5657-.2323-1.3328.3334-1.7143l2.8628-1.9334c.5613-.3902 1.3329-.2324 1.7144.3289.3815.5654.2323 1.3329-.3334 1.7144l-2.8628 1.9333c-.5442.3831-1.3348.2379-1.7144-.3289zm7.8393 7.6018a.8815.8815 0 0 1-.258.6227l-2.1277 2.1277a.8822.8822 0 0 1-.623.258H5.4772a.8822.8822 0 0 1-.623-.258l-2.1277-2.1277a.8815.8815 0 0 1-.258-.6227V5.4818a.8797.8797 0 0 1 .258-.6228l2.1277-2.1282a.8816.8816 0 0 1 .623-.2578h13.0456a.8816.8816 0 0 1 .623.2578l2.1277 2.1282a.8797.8797 0 0 1 .258.6228V18.519zm1.811-15.0835L20.5644.6577A2.2454 2.2454 0 0 0 18.9775 0H5.0207A2.2445 2.2445 0 0 0 3.433.658L.657 3.4359A2.2449 2.2449 0 0 0 0 5.0228v13.9547c0 .5953.2366 1.1667.6575 1.5872l2.778 2.7779c.421.421.9918.6573 1.5871.6573h13.9548a2.2448 2.2448 0 0 0 1.5872-.6573l2.7779-2.7779A2.2436 2.2436 0 0 0 24 18.9775V5.023a2.2451 2.2451 0 0 0-.6575-1.5875z"/>
+            </svg>
+            <div class="topbar-title">
+                <div class="topbar-title-main">{{ title }}</div>
+                <div class="topbar-title-sub">Test Documentation</div>
             </div>
         </div>
+    </div>
+    <div class="topbar-right">
+        {% if suite %}
+        <div class="topbar-stat">
+            <span class="topbar-stat-value">{{ suite.test_count }}</span>
+            <span class="topbar-stat-label">Tests</span>
+        </div>
+        {% endif %}
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+        </button>
+    </div>
+</header>
 
+<!-- ============================================================
+     APP BODY: Sidebar + Content
+     ============================================================ -->
+<div class="app-body" id="appBody">
+
+    <!-- SIDEBAR -->
+    <aside class="nav" id="sidebar">
         <div class="nav-tree">
             <ul class="tree-list">
                 {# Root suite entry #}
+                {% if suite %}
                 <li class="tree-item">
-                    <a href="#suite-{{ suite.id }}" class="tree-suite active" data-target="suite-{{ suite.id }}" data-suite-id="{{ suite.id }}">
+                    <a href="#suite-{{ suite.id }}" class="tree-suite active"
+                       data-target="suite-{{ suite.id }}" data-suite-id="{{ suite.id }}">
                         <span class="tree-icon {% if suite.is_folder %}suite-folder{% else %}suite-file{% endif %}">
-                            {% if suite.tests %}
-                                <svg role="img" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><title>Robot Framework</title><path d="M4.9565 10.2246c0-1.8766 1.5257-3.4023 3.4-3.4023 1.8766 0 3.4024 1.5257 3.4024 3.4023 0 .6838-.5526 1.2364-1.2341 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364 0-.513-.4185-.9296-.9338-.9296-.5129 0-.9317.4165-.9317.9296 0 .6838-.5523 1.2364-1.234 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364m14.0868 5.717c0 .6842-.5524 1.2363-1.2341 1.2363H6.3575c-.6818 0-1.2344-.552-1.2344-1.2363 0-.6837.5526-1.2363 1.2344-1.2363h11.4517c.6817 0 1.234.5526 1.234 1.2363m-5.351-5.0244c-.3814-.5657-.2323-1.3328.3334-1.7143l2.8628-1.9334c.5613-.3902 1.3329-.2324 1.7144.3289.3815.5654.2323 1.3329-.3334 1.7144l-2.8628 1.9333c-.5442.3831-1.3348.2379-1.7144-.3289zm7.8393 7.6018a.8815.8815 0 0 1-.258.6227l-2.1277 2.1277a.8822.8822 0 0 1-.623.258H5.4772a.8822.8822 0 0 1-.623-.258l-2.1277-2.1277a.8815.8815 0 0 1-.258-.6227V5.4818a.8797.8797 0 0 1 .258-.6228l2.1277-2.1282a.8816.8816 0 0 1 .623-.2578h13.0456a.8816.8816 0 0 1 .623.2578l2.1277 2.1282a.8797.8797 0 0 1 .258.6228V18.519zm1.811-15.0835L20.5644.6577A2.2454 2.2454 0 0 0 18.9775 0H5.0207A2.2445 2.2445 0 0 0 3.433.658L.657 3.4359A2.2449 2.2449 0 0 0 0 5.0228v13.9547c0 .5953.2366 1.1667.6575 1.5872l2.778 2.7779c.421.421.9918.6573 1.5871.6573h13.9548a2.2448 2.2448 0 0 0 1.5872-.6573l2.7779-2.7779A2.2436 2.2436 0 0 0 24 18.9775V5.023a2.2451 2.2451 0 0 0-.6575-1.5875z"/></svg>
+                            {% if suite.is_folder %}
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7z"/></svg>
                             {% else %}
-                                <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7z" />
-                                </svg>
+                                <svg role="img" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4.9565 10.2246c0-1.8766 1.5257-3.4023 3.4-3.4023 1.8766 0 3.4024 1.5257 3.4024 3.4023 0 .6838-.5526 1.2364-1.2341 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364 0-.513-.4185-.9296-.9338-.9296-.5129 0-.9317.4165-.9317.9296 0 .6838-.5523 1.2364-1.234 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364m14.0868 5.717c0 .6842-.5524 1.2363-1.2341 1.2363H6.3575c-.6818 0-1.2344-.552-1.2344-1.2363 0-.6837.5526-1.2363 1.2344-1.2363h11.4517c.6817 0 1.234.5526 1.234 1.2363m-5.351-5.0244c-.3814-.5657-.2323-1.3328.3334-1.7143l2.8628-1.9334c.5613-.3902 1.3329-.2324 1.7144.3289.3815.5654.2323 1.3329-.3334 1.7144l-2.8628 1.9333c-.5442.3831-1.3348.2379-1.7144-.3289zm7.8393 7.6018a.8815.8815 0 0 1-.258.6227l-2.1277 2.1277a.8822.8822 0 0 1-.623.258H5.4772a.8822.8822 0 0 1-.623-.258l-2.1277-2.1277a.8815.8815 0 0 1-.258-.6227V5.4818a.8797.8797 0 0 1 .258-.6228l2.1277-2.1282a.8816.8816 0 0 1 .623-.2578h13.0456a.8816.8816 0 0 1 .623.2578l2.1277 2.1282a.8797.8797 0 0 1 .258.6228V18.519zm1.811-15.0835L20.5644.6577A2.2454 2.2454 0 0 0 18.9775 0H5.0207A2.2445 2.2445 0 0 0 3.433.658L.657 3.4359A2.2449 2.2449 0 0 0 0 5.0228v13.9547c0 .5953.2366 1.1667.6575 1.5872l2.778 2.7779c.421.421.9918.6573 1.5871.6573h13.9548a2.2448 2.2448 0 0 0 1.5872-.6573l2.7779-2.7779A2.2436 2.2436 0 0 0 24 18.9775V5.023a2.2451 2.2451 0 0 0-.6575-1.5875z"/></svg>
                             {% endif %}
                         </span>
                         <span class="tree-main-label">{{ suite.name }}</span>
                     </a>
 
-                </li>
-
-                {# Recursive tree of sub suites & tests #}
-                {% macro render_suite_tree(current) %}
-                    {% if current.suites or current.tests %}
-                        <ul class="tree-children">
-                            {% for s in current.suites %}
-                                <li class="tree-item">
-                                    <a href="#suite-{{ s.id }}" class="tree-suite" data-target="suite-{{ s.id }}" data-suite-id="{{ s.id }}">
-                                        <span class="tree-icon {% if s.is_folder %}suite-folder{% else %}suite-file{% endif %}">
-                                            {% if s.is_folder %}
-                                                <svg viewBox="0 0 24 24" aria-hidden="true">
-                                                    <path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7z" />
-                                                </svg>
-                                            {% else %}
-                                                <svg role="img" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><title>Robot Framework</title><path d="M4.9565 10.2246c0-1.8766 1.5257-3.4023 3.4-3.4023 1.8766 0 3.4024 1.5257 3.4024 3.4023 0 .6838-.5526 1.2364-1.2341 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364 0-.513-.4185-.9296-.9338-.9296-.5129 0-.9317.4165-.9317.9296 0 .6838-.5523 1.2364-1.234 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364m14.0868 5.717c0 .6842-.5524 1.2363-1.2341 1.2363H6.3575c-.6818 0-1.2344-.552-1.2344-1.2363 0-.6837.5526-1.2363 1.2344-1.2363h11.4517c.6817 0 1.234.5526 1.234 1.2363m-5.351-5.0244c-.3814-.5657-.2323-1.3328.3334-1.7143l2.8628-1.9334c.5613-.3902 1.3329-.2324 1.7144.3289.3815.5654.2323 1.3329-.3334 1.7144l-2.8628 1.9333c-.5442.3831-1.3348.2379-1.7144-.3289zm7.8393 7.6018a.8815.8815 0 0 1-.258.6227l-2.1277 2.1277a.8822.8822 0 0 1-.623.258H5.4772a.8822.8822 0 0 1-.623-.258l-2.1277-2.1277a.8815.8815 0 0 1-.258-.6227V5.4818a.8797.8797 0 0 1 .258-.6228l2.1277-2.1282a.8816.8816 0 0 1 .623-.2578h13.0456a.8816.8816 0 0 1 .623.2578l2.1277 2.1282a.8797.8797 0 0 1 .258.6228V18.519zm1.811-15.0835L20.5644.6577A2.2454 2.2454 0 0 0 18.9775 0H5.0207A2.2445 2.2445 0 0 0 3.433.658L.657 3.4359A2.2449 2.2449 0 0 0 0 5.0228v13.9547c0 .5953.2366 1.1667.6575 1.5872l2.778 2.7779c.421.421.9918.6573 1.5871.6573h13.9548a2.2448 2.2448 0 0 0 1.5872-.6573l2.7779-2.7779A2.2436 2.2436 0 0 0 24 18.9775V5.023a2.2451 2.2451 0 0 0-.6575-1.5875z"/></svg>
-                                            {% endif %}
-                                        </span>
-                                        <span class="tree-main-label">{{ s.name }}</span>
-                                    </a>
-                                    {{ render_suite_tree(s) }}
-                                </li>
-                            {% endfor %}
-
-                            {% if current.tests %}
-                                {% for t in current.tests %}
+                    {# Recursive tree macro #}
+                    {% macro render_suite_tree(current) %}
+                        {% if current.suites or current.tests %}
+                            <ul class="tree-children">
+                                {% for s in current.suites %}
                                     <li class="tree-item">
-                                        <a href="#test-{{ current.id }}-{{ loop.index0 }}" class="tree-test"
-                                           data-target="test-{{ current.id }}-{{ loop.index0 }}" data-suite-id="{{ current.id }}">
-                                            <span class="tree-icon test">T</span>
-                                            <span class="tree-main-label">{{ t.name }}</span>
+                                        <a href="#suite-{{ s.id }}" class="tree-suite"
+                                           data-target="suite-{{ s.id }}" data-suite-id="{{ s.id }}">
+                                            <span class="tree-icon {% if s.is_folder %}suite-folder{% else %}suite-file{% endif %}">
+                                                {% if s.is_folder %}
+                                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7z"/></svg>
+                                                {% else %}
+                                                    <svg role="img" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M4.9565 10.2246c0-1.8766 1.5257-3.4023 3.4-3.4023 1.8766 0 3.4024 1.5257 3.4024 3.4023 0 .6838-.5526 1.2364-1.2341 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364 0-.513-.4185-.9296-.9338-.9296-.5129 0-.9317.4165-.9317.9296 0 .6838-.5523 1.2364-1.234 1.2364-.6818 0-1.2344-.5526-1.2344-1.2364m14.0868 5.717c0 .6842-.5524 1.2363-1.2341 1.2363H6.3575c-.6818 0-1.2344-.552-1.2344-1.2363 0-.6837.5526-1.2363 1.2344-1.2363h11.4517c.6817 0 1.234.5526 1.234 1.2363m-5.351-5.0244c-.3814-.5657-.2323-1.3328.3334-1.7143l2.8628-1.9334c.5613-.3902 1.3329-.2324 1.7144.3289.3815.5654.2323 1.3329-.3334 1.7144l-2.8628 1.9333c-.5442.3831-1.3348.2379-1.7144-.3289zm7.8393 7.6018a.8815.8815 0 0 1-.258.6227l-2.1277 2.1277a.8822.8822 0 0 1-.623.258H5.4772a.8822.8822 0 0 1-.623-.258l-2.1277-2.1277a.8815.8815 0 0 1-.258-.6227V5.4818a.8797.8797 0 0 1 .258-.6228l2.1277-2.1282a.8816.8816 0 0 1 .623-.2578h13.0456a.8816.8816 0 0 1 .623.2578l2.1277 2.1282a.8797.8797 0 0 1 .258.6228V18.519zm1.811-15.0835L20.5644.6577A2.2454 2.2454 0 0 0 18.9775 0H5.0207A2.2445 2.2445 0 0 0 3.433.658L.657 3.4359A2.2449 2.2449 0 0 0 0 5.0228v13.9547c0 .5953.2366 1.1667.6575 1.5872l2.778 2.7779c.421.421.9918.6573 1.5871.6573h13.9548a2.2448 2.2448 0 0 0 1.5872-.6573l2.7779-2.7779A2.2436 2.2436 0 0 0 24 18.9775V5.023a2.2451 2.2451 0 0 0-.6575-1.5875z"/></svg>
+                                                {% endif %}
+                                            </span>
+                                            <span class="tree-main-label">{{ s.name }}</span>
                                         </a>
+                                        {{ render_suite_tree(s) }}
                                     </li>
                                 {% endfor %}
-                            {% endif %}
-                        </ul>
-                    {% endif %}
-                {% endmacro %}
 
-                {{ render_suite_tree(suite) }}
+                                {% if current.tests %}
+                                    {% for t in current.tests %}
+                                        <li class="tree-item">
+                                            <a href="#test-{{ current.id }}-{{ loop.index0 }}" class="tree-test"
+                                               data-target="test-{{ current.id }}-{{ loop.index0 }}" data-suite-id="{{ current.id }}">
+                                                <span class="tree-icon test">T</span>
+                                                <span class="tree-main-label">{{ t.name }}</span>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
+                            </ul>
+                        {% endif %}
+                    {% endmacro %}
+
+                    {{ render_suite_tree(suite) }}
+                </li>
+                {% endif %}
             </ul>
         </div>
     </aside>
 
-    <!-- RIGHT: CONTENT -->
-    <main class="content">
+    <!-- MAIN CONTENT -->
+    <main class="content" id="mainContent">
         {% macro render_suite_block(s, level) %}
         <section class="suite-block" data-suite-id="{{ s.id }}">
-            <!-- Active suite header -->
+
+            <!-- Per-suite sticky header -->
             <header class="content-header" id="suite-{{ s.id }}">
-                <div class="content-title">
-                    <div class="content-title-main">{{ s.name }}</div>
-                    <div class="badge-row">
-                        <span class="badge tests">{{ s.test_count }} Tests in this suite</span>
-                        {% if s.tests %}
-                            <span class="badge">Suite File</span>
-                        {% else %}
-                            <span class="badge">Suite Directory</span>
-                        {% endif %}
+                <div class="content-header-main">
+                    <div class="content-breadcrumb">
+                        <span class="breadcrumb-type">{% if s.is_folder %}Directory{% else %}Suite{% endif %}</span>
                     </div>
+                    <h1 class="content-title-main">{{ s.name }}</h1>
                 </div>
-                <div class="content-meta">
-                    {% if s.metadata %}
-                        <div>Metadata entries: {{ s.metadata|length }}</div>
+                <div class="content-header-meta">
+                    <div class="stat-pill">
+                        <span class="stat-pill-value">{{ s.test_count }}</span>
+                        <span class="stat-pill-label">Total</span>
+                    </div>
+                    {% if s.tests %}
+                    <div class="stat-pill secondary">
+                        <span class="stat-pill-value">{{ s.tests | length }}</span>
+                        <span class="stat-pill-label">Direct</span>
+                    </div>
                     {% endif %}
                 </div>
             </header>
 
             <div class="content-body">
-                <!-- SUITE DETAIL SECTION -->
+
+                <!-- Suite Details -->
                 <section class="section">
                     <div class="section-header">
-                        <div>
-                            <div class="section-title">Suite Details</div>
-                            <div class="section-subtitle">General information about the selected test suite</div>
-                        </div>
+                        <span class="section-title">Suite Details</span>
+                        <span class="section-subtitle">General information about this test suite</span>
                     </div>
-
                     <div class="key-value-grid">
                         <div class="kv-label">Name</div>
                         <div class="kv-value">{{ s.name }}</div>
@@ -140,30 +184,25 @@
                     </div>
                 </section>
 
-                <!-- SUITE DOC SECTION -->
+                <!-- Suite Documentation -->
                 {% if s.doc %}
                 <section class="section">
                     <div class="section-header">
-                        <div>
-                            <div class="section-title">Suite Documentation</div>
-                        </div>
+                        <span class="section-title">Documentation</span>
                     </div>
                     <pre class="rf-doc">{{ s.doc }}</pre>
                 </section>
                 {% endif %}
 
-                <!-- SUITE METADATA -->
+                <!-- Metadata -->
                 {% if s.metadata %}
                 <section class="section">
                     <div class="section-header">
-                        <div>
-                            <div class="section-title">Metadata</div>
-                            <div class="section-subtitle">Additional suite information</div>
-                        </div>
+                        <span class="section-title">Metadata</span>
+                        <span class="section-subtitle">Additional suite information</span>
                     </div>
-
                     <div class="key-value-grid">
-                        <div class="kv-label">Metadata</div>
+                        <div class="kv-label">Entries</div>
                         <div class="kv-value">
                             <div class="metadata">
                                 {% for meta in s.metadata %}
@@ -175,153 +214,134 @@
                 </section>
                 {% endif %}
 
-                <!-- USER KEYWORDS -->
-                 {% if s.user_keywords %}
+                <!-- User Keywords -->
+                {% if s.user_keywords %}
                 <section class="section">
                     <div class="section-header">
-                        <div>
-                            <div class="section-title">User Keywords</div>
-                            <div class="section-subtitle">Defined user keywords in this suite</div>
-                        </div>
+                        <span class="section-title">User Keywords</span>
+                        <span class="section-subtitle">Defined in this suite</span>
                     </div>
-
-                    <div class="test-subsection">
-                        <div class="code-wrapper">
-                            <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
-{% set code -%}
-*** Test Cases ***
+                    <div class="code-wrapper">
+                        <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
+                        {% set code -%}
+*** Keywords ***
 {{ s.user_keywords | join('\n') }}
-{%- endset %}
-
-{{ code | highlight_robot_in_pre | safe }}
-                        </div>
+                        {%- endset %}
+                        {{ code | highlight_robot_in_pre | safe }}
                     </div>
                 </section>
                 {% endif %}
 
                 {% if s.tests %}
-                <!-- TEST CASE OVERVIEW OF CURRENT SUITE -->
+                <!-- Test Case Overview -->
                 <section class="section">
                     <div class="section-header">
-                        <div>
-                            <div class="section-title">Test Case OVERVIEW</div>
-                            <div class="section-subtitle">
-                                Overview about test cases in this suite
-                            </div>
-                        </div>
+                        <span class="section-title">Test Case Overview</span>
+                        <span class="section-subtitle">All {{ s.tests | length }} tests in this suite</span>
                     </div>
-
-                    <div class="test-subsection">
-                        <div class="code-wrapper">
-                            <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
-{% set code -%}
+                    <div class="code-wrapper">
+                        <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
+                        {% set code -%}
 *** Test Cases ***
 {{ s.tests | map(attribute='name') | join('\n') }}
-{%- endset %}
-
-{{ code | highlight_robot_in_pre | safe }}
-                        </div>
+                        {%- endset %}
+                        {{ code | highlight_robot_in_pre | safe }}
                     </div>
                 </section>
 
-                <!-- TEST DETAILS OF CURRENT SUITE -->
+                <!-- Test Case Details -->
                 <section class="section">
                     <div class="section-header">
-                        <div>
-                            <div class="section-title">Test Case Details</div>
-                            <div class="section-subtitle">
-                                Details for each test case in this suite
-                            </div>
-                        </div>
+                        <span class="section-title">Test Case Details</span>
+                        <span class="section-subtitle">Per-test documentation and steps</span>
                     </div>
-
-                        <div class="tests-list">
-                            {% for test in s.tests %}
-                                <section id="test-{{ s.id }}-{{ loop.index0 }}" class="test-block">
-                                    <div class="test-subsection">
-                                        <div class="kv-label">{{ test.name }}</div>
+                    <div class="tests-list">
+                        {% for test in s.tests %}
+                        <section id="test-{{ s.id }}-{{ loop.index0 }}" class="test-block">
+                            <div class="test-subsection">
+                                <div class="test-name">{{ test.name }}</div>
+                            </div>
+                            <div class="test-subsection">
+                                <div class="kv-label">Documentation</div>
+                                {% if test.doc %}
+                                    <pre class="rf-doc">{{ test.doc }}</pre>
+                                {% else %}
+                                    <span class="empty">No documentation.</span>
+                                {% endif %}
+                            </div>
+                            <div class="test-subsection">
+                                <div class="kv-label">Tags</div>
+                                {% if test.tags %}
+                                    <div class="tag-row">
+                                        {% for tag in test.tags %}
+                                            {% if tag is mapping %}
+                                                <span class="tag">{{ tag.name or tag }}</span>
+                                            {% else %}
+                                                <span class="tag">{{ tag }}</span>
+                                            {% endif %}
+                                        {% endfor %}
                                     </div>
-                                    <div class="test-subsection">
-                                        <div class="kv-label">Documentation</div>
-                                        {% if test.doc %}
-                                            <pre class="rf-doc">{{ test.doc }}</pre>
-                                        {% else %}
-                                            <span class="empty">No description.</span>
-                                        {% endif %}
-                                    </div>
-                                    <div class="test-subsection">
-                                        <div class="kv-label">Tags</div>
-                                        {% if test.tags %}
-                                            <div class="tag-row">
-                                                {% for tag in test.tags %}
-                                                    {% if tag is mapping %}
-                                                        <span class="tag">{{ tag.name or tag }}</span>
-                                                    {% else %}
-                                                        <span class="tag">{{ tag }}</span>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </div>
-                                        {% else %}
-                                            <span class="empty">No tags.</span>
-                                        {% endif %}
-                                    </div>
-                                    <div class="test-subsection">
-                                        <div class="kv-label">Test Case Body</div>
-                                        {% if test.body %}
-<div class="code-wrapper">
-    <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
-    {% set code -%}
+                                {% else %}
+                                    <span class="empty">No tags.</span>
+                                {% endif %}
+                            </div>
+                            <div class="test-subsection">
+                                <div class="kv-label">Body</div>
+                                {% if test.body %}
+                                <div class="code-wrapper">
+                                    <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
+                                    {% set code -%}
 *** Test Cases ***
 {{ test.name }}
     {{ test.body | format_test_body | join('\n    ') }}
-{%- endset %}
-
-{{ code | highlight_robot_in_pre | safe }}
-</div>
-                                        {% else %}
-                                            <span class="empty">No keywords.</span>
-                                        {% endif %}
-                                    </div>
-                                </section>
-                            {% endfor %}
-                        </div>
+                                    {%- endset %}
+                                    {{ code | highlight_robot_in_pre | safe }}
+                                </div>
+                                {% else %}
+                                    <span class="empty">No keywords.</span>
+                                {% endif %}
+                            </div>
+                        </section>
+                        {% endfor %}
+                    </div>
                 </section>
                 {% endif %}
 
-                <!-- SUB SUITES OVERVIEW -->
+                <!-- Sub-suites -->
                 {% if s.suites %}
                 <section class="section">
                     <div class="section-header">
-                        <div>
-                            <div class="section-title">Sub-suites</div>
-                            <div class="section-subtitle">Structure of nested suites</div>
-                        </div>
+                        <span class="section-title">Sub-Suites</span>
+                        <span class="section-subtitle">Nested suite structure</span>
                     </div>
 
-                        {% macro render_suite_details(s2, level2) %}
-                            <div id="suite-{{ s2.id }}" style="margin-left: {{ level2 * 10 }}px; margin-bottom: 8px; padding: 7px 9px; border-radius: 10px; border: 1px solid rgba(31, 41, 55, 0.9); background: rgba(15, 23, 42, 0.95);">
-                                <div style="display:flex;justify-content:space-between;align-items:center; gap:8px;">
-                                    <div>
-                                        <strong>{{ s2.name }}</strong>
-                                        <span style="font-size:11px; color: var(--muted); margin-left:6px;">
-                                            ({{ s2.test_count }} tests)
-                                        </span>
-                                    </div>
-                                    <div class="badge-row">
-                                        <span class="badge">{{ s2.source }}</span>
-                                    </div>
+                    {% macro render_suite_details(s2, level2) %}
+                        <div class="subsuite-row" style="--indent: {{ level2 }}">
+                            <div class="subsuite-row-inner">
+                                <div class="subsuite-info">
+                                    <span class="subsuite-icon">
+                                        {% if s2.is_folder %}
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7z"/></svg>
+                                        {% else %}
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+                                        {% endif %}
+                                    </span>
+                                    <span class="subsuite-name">{{ s2.name }}</span>
+                                    <span class="subsuite-count">{{ s2.test_count }} tests</span>
                                 </div>
+                                <span class="subsuite-source mono">{{ s2.source }}</span>
                             </div>
+                        </div>
+                        {% for child in s2.suites %}
+                            {{ render_suite_details(child, level2 + 1) }}
+                        {% endfor %}
+                    {% endmacro %}
 
-                            {% for child in s2.suites %}
-                                {{ render_suite_details(child, level2 + 1) }}
-                            {% endfor %}
-                        {% endmacro %}
-
-                        {{ render_suite_details(s, 0) }}
+                    {{ render_suite_details(s, 0) }}
                 </section>
                 {% endif %}
-            </div>
+
+            </div>{# /content-body #}
         </section>
 
         {% for child in s.suites %}
@@ -329,30 +349,55 @@
         {% endfor %}
         {% endmacro %}
 
-        <div>
-            {% if suites %}
-                {{ render_suite_block(suites, 0) }}
-            {% else %}
-                <p class="empty" style="padding: 12px 16px;">
-                    No suites available.
-                </p>
+        {% if suites %}
+            {{ render_suite_block(suites, 0) }}
+        {% else %}
+            <div class="content-body">
+                <p class="empty">No suites available.</p>
+            </div>
+        {% endif %}
+
+        <!-- Inline footer -->
+        <footer class="content-footer">
+            <span>Generated at: {{ generated_at }}</span>
+            <span class="content-footer-sep">·</span>
+            <a href="https://marvkler.github.io/robotframework-testdoc/" target="_blank" rel="noopener noreferrer">robotframework-testdoc</a>
+            <span class="content-footer-sep">·</span>
+            <a href="https://github.com/MarvKler/robotframework-testdoc" target="_blank" rel="noopener noreferrer">Contribute on GitHub</a>
+            {% if contact_mail %}
+            <span class="content-footer-sep">·</span>
+            <a href="mailto:{{ contact_mail }}">{{ contact_mail }}</a>
             {% endif %}
-        </div>
+        </footer>
     </main>
 </div>
 
-<footer class="footer-fixed">
-    <div>
-        <a href="https://marvkler.github.io/robotframework-testdoc/" target="_blank" rel="noopener noreferrer">Visit the tool at: robotframework-testdoc</a>
-    </div>
-    <div>
-        <a href="https://github.com/MarvKler/robotframework-testdoc" target="_blank" rel="noopener noreferrer">Contribute!</a>
-    </div>
-    <div>
-        Generated at: {{ generated_at }}
-    </div>
-</footer>
-
 <script>{% include 'script.js' %}</script>
+<script>
+    // Theme toggle
+    (function () {
+        var btn = document.getElementById('themeToggle');
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+            var html = document.documentElement;
+            var isDark = html.getAttribute('data-theme') === 'dark';
+            var next = isDark ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            try { localStorage.setItem('clarity-theme', next); } catch (e) {}
+        });
+    })();
+
+    // Sidebar toggle
+    (function () {
+        var btn = document.getElementById('sidebarToggle');
+        var sidebar = document.getElementById('sidebar');
+        var body = document.getElementById('appBody');
+        if (!btn || !sidebar) return;
+        btn.addEventListener('click', function () {
+            sidebar.classList.toggle('collapsed');
+            if (body) body.classList.toggle('sidebar-collapsed');
+        });
+    })();
+</script>
 </body>
 </html>
