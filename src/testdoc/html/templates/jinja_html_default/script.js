@@ -37,6 +37,11 @@ document.addEventListener('DOMContentLoaded', function () {
             block.appendChild(tpl.content.cloneNode(true));
             block.querySelectorAll('pre.rf-code').forEach(highlightRfPre);
             block.dataset.mounted = '1';
+            // Restore collapsed state for the newly mounted body container
+            if (block.classList.contains('collapsed')) {
+                const body = block.querySelector('.test-body-collapsible');
+                if (body) body.style.display = 'none';
+            }
         }
     }
 
@@ -69,14 +74,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // Move heavy sub-sections into a <template> for deferred rendering
-            const heavySections = Array.from(block.querySelectorAll('.test-subsection'));
-            if (heavySections.length > 0) {
+            // Move the collapsible body container into a <template> for deferred rendering
+            const collapsibleBody = block.querySelector('.test-body-collapsible');
+            if (collapsibleBody) {
                 const tpl = document.createElement('template');
                 tpl.classList.add('lazy-tpl');
-                const frag = document.createDocumentFragment();
-                heavySections.forEach(function (sec) { frag.appendChild(sec); });
-                tpl.content.appendChild(frag);
+                tpl.content.appendChild(collapsibleBody);
                 block.appendChild(tpl);
             }
             block.dataset.prepared = '1';

@@ -764,14 +764,50 @@ body {
     box-shadow: 0 0 0 3px var(--accent-soft), var(--shadow-sm);
 }
 
+.test-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--surface-sunken);
+    transition: background 0.12s ease;
+}
+
+.test-header:hover {
+    background: var(--accent-soft);
+}
+
+.test-collapse-icon {
+    display: flex;
+    align-items: center;
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.test-collapse-icon svg {
+    width: 15px;
+    height: 15px;
+    display: block;
+}
+
+.test-block.collapsed .test-collapse-icon {
+    transform: rotate(-90deg);
+}
+
+.test-body-collapsible {
+    display: block;
+}
+
+.test-block.collapsed .test-body-collapsible {
+    display: none;
+}
+
 .test-subsection {
     padding: 10px 14px;
     border-top: 1px solid var(--border);
-}
-
-.test-subsection:first-child {
-    border-top: none;
-    background: var(--surface-sunken);
 }
 
 .test-name {

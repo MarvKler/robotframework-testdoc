@@ -257,49 +257,54 @@
                     </div>
                     <div class="tests-list">
                         {% for test in s.tests %}
-                        <section id="test-{{ s.id }}-{{ loop.index0 }}" class="test-block">
-                            <div class="test-subsection">
+                        <section id="test-{{ s.id }}-{{ loop.index0 }}" class="test-block collapsed">
+                            <div class="test-header">
                                 <div class="test-name">{{ test.name }}</div>
+                                <span class="test-collapse-icon" aria-hidden="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                </span>
                             </div>
-                            <div class="test-subsection">
-                                <div class="kv-label">Documentation</div>
-                                {% if test.doc %}
-                                    <pre class="rf-doc">{{ test.doc }}</pre>
-                                {% else %}
-                                    <span class="empty">No documentation.</span>
-                                {% endif %}
-                            </div>
-                            <div class="test-subsection">
-                                <div class="kv-label">Tags</div>
-                                {% if test.tags %}
-                                    <div class="tag-row">
-                                        {% for tag in test.tags %}
-                                            {% if tag is mapping %}
-                                                <span class="tag">{{ tag.name or tag }}</span>
-                                            {% else %}
-                                                <span class="tag">{{ tag }}</span>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    <span class="empty">No tags.</span>
-                                {% endif %}
-                            </div>
-                            <div class="test-subsection">
-                                <div class="kv-label">Body</div>
-                                {% if test.body %}
-                                <div class="code-wrapper">
-                                    <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
-                                    {% set code -%}
+                            <div class="test-body-collapsible">
+                                <div class="test-subsection">
+                                    <div class="kv-label">Documentation</div>
+                                    {% if test.doc %}
+                                        <pre class="rf-doc">{{ test.doc }}</pre>
+                                    {% else %}
+                                        <span class="empty">No documentation.</span>
+                                    {% endif %}
+                                </div>
+                                <div class="test-subsection">
+                                    <div class="kv-label">Tags</div>
+                                    {% if test.tags %}
+                                        <div class="tag-row">
+                                            {% for tag in test.tags %}
+                                                {% if tag is mapping %}
+                                                    <span class="tag">{{ tag.name or tag }}</span>
+                                                {% else %}
+                                                    <span class="tag">{{ tag }}</span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <span class="empty">No tags.</span>
+                                    {% endif %}
+                                </div>
+                                <div class="test-subsection">
+                                    <div class="kv-label">Body</div>
+                                    {% if test.body %}
+                                    <div class="code-wrapper">
+                                        <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
+                                        {% set code -%}
 *** Test Cases ***
 {{ test.name }}
     {{ test.body | format_test_body | join('\n    ') }}
-                                    {%- endset %}
-                                    {{ code | highlight_robot_in_pre | safe }}
+                                        {%- endset %}
+                                        {{ code | highlight_robot_in_pre | safe }}
+                                    </div>
+                                    {% else %}
+                                        <span class="empty">No keywords.</span>
+                                    {% endif %}
                                 </div>
-                                {% else %}
-                                    <span class="empty">No keywords.</span>
-                                {% endif %}
                             </div>
                         </section>
                         {% endfor %}
@@ -411,6 +416,18 @@
             var suiteId = this.dataset.suiteId;
             var treeLink = document.querySelector('.tree-suite[data-suite-id="' + suiteId + '"]');
             if (treeLink) treeLink.click();
+        });
+    });
+
+    // Test case collapse toggle
+    document.querySelectorAll('.test-header').forEach(function (header) {
+        header.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var block = this.closest('.test-block');
+            if (!block) return;
+            var isCollapsed = block.classList.toggle('collapsed');
+            var body = block.querySelector('.test-body-collapsible');
+            if (body) body.style.display = isCollapsed ? 'none' : '';
         });
     });
 </script>
