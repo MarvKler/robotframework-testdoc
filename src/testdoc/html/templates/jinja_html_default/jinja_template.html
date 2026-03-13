@@ -317,7 +317,11 @@
 
                     {% macro render_suite_details(s2, level2) %}
                         <div class="subsuite-row" style="--indent: {{ level2 }}">
-                            <div class="subsuite-row-inner">
+                            <a href="#suite-{{ s2.id }}"
+                               class="subsuite-row-inner subsuite-link"
+                               data-target="suite-{{ s2.id }}"
+                               data-suite-id="{{ s2.id }}"
+                               title="Jump to {{ s2.name }}">
                                 <div class="subsuite-info">
                                     <span class="subsuite-icon">
                                         {% if s2.is_folder %}
@@ -329,8 +333,13 @@
                                     <span class="subsuite-name">{{ s2.name }}</span>
                                     <span class="subsuite-count">{{ s2.test_count }} tests</span>
                                 </div>
-                                <span class="subsuite-source mono">{{ s2.source }}</span>
-                            </div>
+                                <div class="subsuite-row-right">
+                                    <span class="subsuite-source mono">{{ s2.source }}</span>
+                                    <span class="subsuite-chevron" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                                    </span>
+                                </div>
+                            </a>
                         </div>
                         {% for child in s2.suites %}
                             {{ render_suite_details(child, level2 + 1) }}
@@ -364,10 +373,6 @@
             <a href="https://marvkler.github.io/robotframework-testdoc/" target="_blank" rel="noopener noreferrer">robotframework-testdoc</a>
             <span class="content-footer-sep">·</span>
             <a href="https://github.com/MarvKler/robotframework-testdoc" target="_blank" rel="noopener noreferrer">Contribute on GitHub</a>
-            {% if contact_mail %}
-            <span class="content-footer-sep">·</span>
-            <a href="mailto:{{ contact_mail }}">{{ contact_mail }}</a>
-            {% endif %}
         </footer>
     </main>
 </div>
@@ -398,6 +403,16 @@
             if (body) body.classList.toggle('sidebar-collapsed');
         });
     })();
+
+    // Sub-suite rows: delegate click to matching sidebar tree link
+    document.querySelectorAll('.subsuite-link').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+            e.preventDefault();
+            var suiteId = this.dataset.suiteId;
+            var treeLink = document.querySelector('.tree-suite[data-suite-id="' + suiteId + '"]');
+            if (treeLink) treeLink.click();
+        });
+    });
 </script>
 </body>
 </html>

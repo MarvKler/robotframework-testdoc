@@ -876,43 +876,11 @@ body {
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     background: var(--surface-sunken);
-    transition: border-color 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
-    /* anchor reset */
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
+    transition: border-color 0.12s ease;
 }
 
 .subsuite-row-inner:hover {
     border-color: var(--accent-border);
-    background: var(--accent-soft);
-    box-shadow: var(--shadow-sm);
-}
-
-.subsuite-row-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-}
-
-.subsuite-chevron {
-    display: flex;
-    align-items: center;
-    opacity: 0;
-    transition: opacity 0.12s ease, transform 0.12s ease;
-    color: var(--accent);
-}
-
-.subsuite-chevron svg {
-    width: 14px;
-    height: 14px;
-    display: block;
-}
-
-.subsuite-row-inner:hover .subsuite-chevron {
-    opacity: 1;
-    transform: translateX(2px);
 }
 
 .subsuite-info {
