@@ -38,11 +38,20 @@ document.addEventListener('DOMContentLoaded', function () {
             block.querySelectorAll('pre.rf-code').forEach(highlightRfPre);
             block.querySelectorAll('pre.robotframework').forEach(addLineNumbers);
             block.dataset.mounted = '1';
-            // Restore collapsed state for the newly mounted body container
+            // Restore collapsed state on the body container
             if (block.classList.contains('collapsed')) {
                 const body = block.querySelector('.test-body-collapsible');
                 if (body) body.style.display = 'none';
             }
+            // Collapse all code sections inside the newly mounted block
+            block.querySelectorAll('.code-wrapper').forEach(function (wrapper) {
+                wrapper.classList.add('collapsed');
+                const codeBody = wrapper.querySelector('.code-toggle-body');
+                if (codeBody) codeBody.style.display = 'none';
+            });
+            block.querySelectorAll('.code-toggle').forEach(function (toggle) {
+                toggle.classList.add('collapsed');
+            });
         }
     }
 
@@ -298,6 +307,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Collapse all code sections by default
     document.querySelectorAll('.code-wrapper').forEach(function (wrapper) {
         wrapper.classList.add('collapsed');
+        const body = wrapper.querySelector('.code-toggle-body');
+        if (body) body.style.display = 'none';
     });
     document.querySelectorAll('.code-toggle').forEach(function (toggle) {
         toggle.classList.add('collapsed');
@@ -310,8 +321,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const wrapper = toggle.closest('.code-wrapper');
         if (wrapper) {
-            wrapper.classList.toggle('collapsed');
-            toggle.classList.toggle('collapsed');
+            const isCollapsed = wrapper.classList.toggle('collapsed');
+            toggle.classList.toggle('collapsed', isCollapsed);
+            const body = wrapper.querySelector('.code-toggle-body');
+            if (body) body.style.display = isCollapsed ? 'none' : '';
         }
     });
 

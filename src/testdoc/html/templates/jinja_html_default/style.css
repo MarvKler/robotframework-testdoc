@@ -872,39 +872,61 @@ body {
    ============================================================ */
 .code-wrapper {
     position: relative;
-    padding: 12px 16px;
 }
 
 .code-toggle {
-    display: inline-flex;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 6px;
-    margin-bottom: 8px;
-    padding: 5px 12px;
+    width: 100%;
+    padding: 10px 14px;
     background: var(--surface-sunken);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--accent);
-    font-size: 11px;
+    border: none;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    color: var(--text-2);
+    font-size: 12px;
     font-weight: 600;
+    text-align: left;
     cursor: pointer;
-    transition: background 0.12s ease, border-color 0.12s ease;
     user-select: none;
+    transition: background 0.12s ease;
+    box-sizing: border-box;
 }
 
 .code-toggle:hover {
     background: var(--accent-soft);
-    border-color: var(--accent-border);
+    color: var(--text);
 }
 
 .code-toggle-icon {
-    font-size: 12px;
-    transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
     color: var(--muted);
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.code-toggle-icon svg {
+    width: 15px;
+    height: 15px;
+    display: block;
 }
 
 .code-toggle.collapsed .code-toggle-icon {
     transform: rotate(-90deg);
+}
+
+.code-toggle-body {
+    padding: 12px 16px;
+}
+
+.code-always-visible {
+    padding: 12px 16px;
+}
+
+.code-wrapper.collapsed .code-toggle-body {
+    display: none;
 }
 
 .code-wrapper.collapsed .robotframework,

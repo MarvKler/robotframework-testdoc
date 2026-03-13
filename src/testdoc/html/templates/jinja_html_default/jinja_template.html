@@ -222,12 +222,19 @@
                         <span class="section-subtitle">Defined in this suite</span>
                     </div>
                     <div class="code-wrapper">
-                        <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
+                        <button class="code-toggle">
+                            <span>Show / Hide Code</span>
+                            <span class="code-toggle-icon" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                            </span>
+                        </button>
+                        <div class="code-toggle-body">
                         {% set code -%}
 *** Keywords ***
 {{ s.user_keywords | join('\n') }}
                         {%- endset %}
                         {{ code | highlight_robot_in_pre | safe }}
+                        </div>
                     </div>
                 </section>
                 {% endif %}
@@ -239,8 +246,7 @@
                         <span class="section-title">Test Case Overview</span>
                         <span class="section-subtitle">All {{ s.tests | length }} tests in this suite</span>
                     </div>
-                    <div class="code-wrapper">
-                        <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
+                    <div class="code-always-visible">
                         {% set code -%}
 *** Test Cases ***
 {{ s.tests | map(attribute='name') | join('\n') }}
@@ -293,13 +299,20 @@
                                     <div class="kv-label">Body</div>
                                     {% if test.body %}
                                     <div class="code-wrapper">
-                                        <button class="code-toggle"><span class="code-toggle-icon">▼</span> Show/Hide Code</button>
+                                        <button class="code-toggle">
+                                            <span>Show / Hide Code</span>
+                                            <span class="code-toggle-icon" aria-hidden="true">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                            </span>
+                                        </button>
+                                        <div class="code-toggle-body">
                                         {% set code -%}
 *** Test Cases ***
 {{ test.name }}
     {{ test.body | format_test_body | join('\n    ') }}
                                         {%- endset %}
                                         {{ code | highlight_robot_in_pre | safe }}
+                                        </div>
                                     </div>
                                     {% else %}
                                         <span class="empty">No keywords.</span>
