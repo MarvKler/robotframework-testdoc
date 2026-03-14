@@ -13,13 +13,13 @@
     --surface-sunken:    #f1f5f9;
 
     /* Sidebar */
-    --nav-bg:            #111827;
-    --nav-bg-hover:      rgba(2,132,199,0.14);
-    --nav-bg-active:     rgba(2,132,199,0.24);
-    --nav-text:          #9ca3af;
-    --nav-text-active:   #f9fafb;
-    --nav-border:        rgba(255,255,255,0.06);
-    --nav-tree-line:     rgba(255,255,255,0.10);
+    --nav-bg:            #ffffff;
+    --nav-bg-hover:      rgba(2,132,199,0.08);
+    --nav-bg-active:     rgba(2,132,199,0.14);
+    --nav-text:          #64748b;
+    --nav-text-active:   #0f172a;
+    --nav-border:        #e2e8f0;
+    --nav-tree-line:     rgba(15,23,42,0.12);
 
     /* Top bar */
     --topbar-bg:         #ffffff;
@@ -137,6 +137,25 @@
         --tag-bg:            rgba(56,189,248,0.12);
         --tag-text:          #7dd3fc;
         --tag-border:        rgba(56,189,248,0.35);
+    }
+}
+
+/* Tree-icon dark overrides for OS auto-detect (no data-theme attr) */
+@media (prefers-color-scheme: dark) {
+    html:not([data-theme]) .tree-icon.suite-folder {
+        background: rgba(2,132,199,0.2);
+        color: #7dd3fc;
+        box-shadow: 0 0 0 1px rgba(2,132,199,0.45);
+    }
+    html:not([data-theme]) .tree-icon.suite-file {
+        background: rgba(14,165,233,0.18);
+        color: #93c5fd;
+        box-shadow: 0 0 0 1px rgba(14,165,233,0.45);
+    }
+    html:not([data-theme]) .tree-icon.test {
+        background: rgba(16,185,129,0.2);
+        color: #6ee7b7;
+        box-shadow: 0 0 0 1px rgba(16,185,129,0.5);
     }
 }
 
@@ -356,11 +375,11 @@ body {
     overflow-x: hidden;
     padding: 10px 6px 16px;
     scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.12) transparent;
+    scrollbar-color: var(--border) transparent;
 }
 
 .nav-tree::-webkit-scrollbar { width: 4px; }
-.nav-tree::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+.nav-tree::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
 /* ============================================================
    Tree Items
@@ -400,7 +419,7 @@ body {
 .tree-suite.active,
 .tree-test.active {
     background: var(--nav-bg-active);
-    border-color: rgba(2,132,199,0.55);
+    border-color: var(--accent-border);
     color: var(--nav-text-active);
 }
 
@@ -424,18 +443,36 @@ body {
 }
 
 .tree-icon.suite-folder {
+    background: rgba(2,132,199,0.12);
+    color: #0284c7;
+    box-shadow: 0 0 0 1px rgba(2,132,199,0.3);
+}
+
+.tree-icon.suite-file {
+    background: rgba(14,165,233,0.10);
+    color: #0369a1;
+    box-shadow: 0 0 0 1px rgba(14,165,233,0.3);
+}
+
+.tree-icon.test {
+    background: rgba(16,185,129,0.12);
+    color: #059669;
+    box-shadow: 0 0 0 1px rgba(16,185,129,0.35);
+}
+
+[data-theme="dark"] .tree-icon.suite-folder {
     background: rgba(2,132,199,0.2);
     color: #7dd3fc;
     box-shadow: 0 0 0 1px rgba(2,132,199,0.45);
 }
 
-.tree-icon.suite-file {
+[data-theme="dark"] .tree-icon.suite-file {
     background: rgba(14,165,233,0.18);
     color: #93c5fd;
     box-shadow: 0 0 0 1px rgba(14,165,233,0.45);
 }
 
-.tree-icon.test {
+[data-theme="dark"] .tree-icon.test {
     background: rgba(16,185,129,0.2);
     color: #6ee7b7;
     box-shadow: 0 0 0 1px rgba(16,185,129,0.5);

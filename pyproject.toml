@@ -28,7 +28,6 @@ dependencies = [
     "robotframework",
     "jinja2",
     "tomli",
-    "pydantic",
     "mkdocs<2.0.0",
     "mkdocs-macros-plugin",
     "mkdocs-material",
