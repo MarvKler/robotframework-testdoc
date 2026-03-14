@@ -157,6 +157,9 @@ class RobotFrameworkLocalLexer(Lexer):
         if v and v.upper() in CONTROL_WORDS:
             return Token.Keyword
 
+        if token.type == "ARGUMENT" and v == "AND":
+            return Token.Name.Function
+
         if token.type == "VARIABLE":
             if re.match(r"[$&@%]\{(EMPTY|TRUE|FALSE|NONE)}", token.value, re.IGNORECASE):
                 return Token.Name.Constant
