@@ -23,7 +23,13 @@ Suite A - TC-001 - ${SUITE_VAR}
     GROUP    Print Suite Var
         Log    ${SUITE_VAR}
     END
-    
+
+Suite A - AND Statement
+    [Documentation]    This test case demonstrates the use of AND statement in Robot Framework.
+    Run Keywords
+    ...    Log    First
+    ...    AND
+    ...    Log    Second
 
 Suite A - TC002
     [Tags]    CompA    Smoke
