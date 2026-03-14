@@ -7,7 +7,7 @@
 
 {% if suite.custom_source != "" %}
 !!! note "GitLab Source Code"
-    You can directly visit the suite directory: [Navigate to GitLab]({{ suite.custom_source }})
+    You can directly visit the suite directory: [Navigate to Source]({{ suite.custom_source }})
 {% endif %}
 
 ## **Available Sub-Suites**
@@ -24,7 +24,7 @@
 
 {% if suite.custom_source %}
 !!! note "GitLab Source Code"
-    You can directly visit the suite source code: [Navigate to GitLab]({{ suite.custom_source }})
+    You can directly visit the suite source code: [Navigate to Source]({{ suite.custom_source }})
 {% endif %}
 
 {% if suite.doc %}
@@ -77,7 +77,7 @@ Below you can find a list of all user keywords defined in this suite.
 
 {% if test.custom_source %}
 !!! note "GitLab Source Code"
-    You can directly visit the test source code: [Navigate to GitLab]({{ test.custom_source }})
+    You can directly visit the test source code: [Navigate to Source]({{ test.custom_source }})
 {% endif %}
 
 
