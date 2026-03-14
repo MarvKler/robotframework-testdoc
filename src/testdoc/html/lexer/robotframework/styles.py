@@ -3,6 +3,8 @@ from pygments.token import Comment, Keyword, Name, Number, Operator, Punctuation
 
 
 class MyRobotStyle(Style):
+    """Dark-mode Robot Framework style (VS Code Dark+ palette)."""
+
     background_color = ""
     default_style = ""
 
@@ -32,4 +34,39 @@ class MyRobotStyle(Style):
         String: "#CE9178",
         # Numbers
         Number: "#B5CEA8",
+    }
+
+
+class MyRobotStyleLight(Style):
+    """Light-mode Robot Framework style (VS Code Light+ palette)."""
+
+    background_color = ""
+    default_style = ""
+
+    styles = {  # noqa: RUF012
+        Text: "#1E1E1E",
+        Punctuation: "#1E1E1E",
+        Operator: "#1E1E1E",
+        Comment: "italic #008000",
+        Keyword.Namespace: "bold underline #0000FF",
+        Keyword: "bold #AF00DB",
+        # Test case names / user keywords
+        Name.Function: "#795E26",
+        # Backup in case of Class
+        Name.Class: "#795E26",
+        # Keyword name following [Setup] / [Teardown] / [Template] (tokenised as NAME by RF parser)
+        Name: "#795E26",
+        # Variables
+        Name.Variable: "#001080",
+        Name.Variable.Instance: "#001080",
+        # [Setup], [Teardown], [Tags], [Arguments], [Timeout], [Template] inside test/keyword bodies
+        Name.Property: "bold #AF00DB",
+        # Setup, Teardown, Library, Resource, … entries in *** Settings *** section
+        Name.Label: "bold #AF00DB",
+        # Built-in constants: ${EMPTY}, ${TRUE}, ${FALSE}, ${NONE}
+        Name.Constant: "#0000FF",
+        # Strings
+        String: "#A31515",
+        # Numbers
+        Number: "#098658",
     }
