@@ -1,8 +1,6 @@
 __pycache__/**
 src/robotframework_testdoc.egg-info/**
 **/__pycache__/**.pyc
-.vscode/launch.json
-.vscode/
 dist/
 *.egg-info/
 output_doc.html
@@ -23,3 +21,5 @@ atest/mkdocs_test_perf/**
 atest/mkdocs_test_custom/**
 docs/mkdocs/site/**
 .DS_Store
+.vscode/mcp.json
+.vscode/settings.json

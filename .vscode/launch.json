@@ -1,0 +1,31 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "testdoc.cli",
+      "args": [
+        "-s", "github::https://github.com/MarvKler/robotframework-testdoc",
+        // "--mkdocs",
+        // "--mkdocs-template-dir", "docs/mkdocs", 
+        "atest/testdata/acceptance",
+        "atest/output.html"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+    },
+    {
+      "name": "Run",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "python -m testdoc.cli atest/testdata/acceptance atest/output.html",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
