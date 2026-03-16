@@ -2,15 +2,14 @@ import textwrap
 from pathlib import Path
 from typing import Any
 
-from robot.api.parsing import get_model
 from robot.api import TestSuite
+from robot.api.parsing import get_model
 from robot.libdoc import LibraryDocumentation
 from robot.running.model import Body
 from robot.utils import normalize
 
 from ..helper.cliargs import CommandLineArguments
 from .models import CustomTestCase, CustomTestCaseBody, CustomTestSuite
-
 
 KeywordDocEntry = tuple[str, str]
 KeywordDocIndex = dict[str, list[KeywordDocEntry]]
