@@ -13,11 +13,34 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     /* =========================================================
+       Small UI toggles (theme + sidebar)
+       ========================================================= */
+
+    (function setupThemeToggle() {
+        const btn = document.getElementById('themeToggle');
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            const next = isDark ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            try { localStorage.setItem('clarity-theme', next); } catch (e) {}
+        });
+    })();
+
+    (function setupSidebarToggle() {
+        const btn = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        if (!btn || !sidebar) return;
+        btn.addEventListener('click', function () {
+            sidebar.classList.toggle('collapsed');
+        });
+    })();
+
+    /* =========================================================
        Element references
        ========================================================= */
-    const suiteLinks  = document.querySelectorAll('.tree-suite');
-    const testLinks   = document.querySelectorAll('.tree-test');
-    const allLinks    = document.querySelectorAll('.tree-suite, .tree-test');
+    const navRoot     = document.querySelector('.nav-tree');
     const suiteBlocks = document.querySelectorAll('.suite-block');
 
     // test blocks are re-queried after each suite change (lazy rendering updates the DOM)
@@ -104,59 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* =========================================================
-       Suite tree helpers
-       ========================================================= */
-
-    /**
-     * Build a map of { suiteId -> [childSuiteIds] } from the rendered tree,
-     * without relying on :scope for broader browser compatibility.
-     */
-    function buildSuiteTree() {
-        const tree = {};
-        document.querySelectorAll('.tree-suite').forEach(function (link) {
-            const suiteId = link.dataset.suiteId;
-            const parentLi = link.closest('li');
-            let childUl = null;
-
-            if (parentLi) {
-                childUl = Array.from(parentLi.children).find(function (el) {
-                    return el.classList && el.classList.contains('tree-children');
-                }) || null;
-
-                // Root-level case: children UL is a sibling of the LI
-                if (!childUl) {
-                    const sib = parentLi.nextElementSibling;
-                    if (sib && sib.classList && sib.classList.contains('tree-children')) {
-                        childUl = sib;
-                    }
-                }
-            }
-
-            const subLinks = childUl
-                ? Array.from(childUl.children)
-                      .map(function (li) { return li.querySelector('.tree-suite'); })
-                      .filter(Boolean)
-                : [];
-
-            tree[suiteId] = subLinks.map(function (l) { return l.dataset.suiteId; });
-        });
-        return tree;
-    }
-
-    /** Recursively collect a suite ID and all its descendant suite IDs. */
-    function getAllDescendantSuites(tree, suiteId) {
-        let ids = [suiteId];
-        if (tree[suiteId]) {
-            tree[suiteId].forEach(function (childId) {
-                ids = ids.concat(getAllDescendantSuites(tree, childId));
-            });
-        }
-        return ids;
-    }
-
-    const suiteTree = buildSuiteTree();
-
-    /* =========================================================
        Suite filtering & navigation
        ========================================================= */
 
@@ -205,6 +175,26 @@ document.addEventListener('DOMContentLoaded', function () {
         return null;
     }
 
+    function setActiveTreeLink(activeLink) {
+        if (!navRoot) return;
+        navRoot.querySelectorAll('.tree-suite.active, .tree-test.active').forEach(function (l) {
+            l.classList.remove('active');
+        });
+        if (activeLink) activeLink.classList.add('active');
+    }
+
+    function setBranchExpanded(link, expanded) {
+        const li = link.closest('li');
+        if (!li) return;
+
+        const childUl = findChildUl(link);
+        if (!childUl) return;
+
+        li.classList.toggle('expanded', expanded);
+        childUl.hidden = !expanded;
+        link.setAttribute('aria-expanded', String(!!expanded));
+    }
+
     /* =========================================================
        Highlight helpers
        ========================================================= */
@@ -217,87 +207,96 @@ document.addEventListener('DOMContentLoaded', function () {
        Initialisation
        ========================================================= */
 
-    // Collapse all tree branches on load
+    // Hide all branches by default (CSS already does, but hidden improves a11y)
     document.querySelectorAll('.tree-children').forEach(function (ul) {
-        const li = ul.closest('li');
-        if (li) li.classList.remove('expanded');
-        ul.style.display = 'none';
+        ul.hidden = true;
     });
 
     // Show the suite that is initially active (or the first suite)
-    const initiallyActive = document.querySelector('.tree-suite.active') || suiteLinks[0];
+    const initiallyActive = document.querySelector('.tree-suite.active') || document.querySelector('.tree-suite');
     if (initiallyActive) {
         applySuiteFilter(initiallyActive.dataset.suiteId);
+        // Expand its immediate children to avoid an empty-looking tree on load.
+        setBranchExpanded(initiallyActive, true);
     }
     prepareLazyRenderingForCurrentSuite();
 
     /* =========================================================
-       Suite link click handler
+       Tree navigation (delegated)
        ========================================================= */
-    suiteLinks.forEach(function (link) {
-        link.addEventListener('click', function (e) {
+
+    if (navRoot) {
+        navRoot.addEventListener('click', function (e) {
+            const link = e.target.closest('.tree-suite, .tree-test');
+            if (!link) return;
             e.preventDefault();
 
-            // Toggle expand / collapse the branch
-            const childUl = findChildUl(this);
-            if (childUl) {
-                const li = this.closest('li');
-                const isCollapsed = childUl.style.display === 'none' || getComputedStyle(childUl).display === 'none';
-                if (isCollapsed) {
-                    if (li) li.classList.add('expanded');
-                    childUl.style.display = 'block';
-                } else {
-                    if (li) li.classList.remove('expanded');
-                    childUl.style.display = 'none';
-                }
+            const isSuite = link.classList.contains('tree-suite');
+            const targetId = link.dataset.target;
+            const suiteId  = link.dataset.suiteId;
+
+            // Toggle expand/collapse only for suite links that actually have children
+            if (isSuite && findChildUl(link)) {
+                const li = link.closest('li');
+                const expandedNow = !(li && li.classList.contains('expanded'));
+                setBranchExpanded(link, expandedNow);
             }
 
-            const targetId = this.dataset.target;
-            const suiteId  = this.dataset.suiteId;
-
-            allLinks.forEach(function (l) { l.classList.remove('active'); });
-            this.classList.add('active');
+            setActiveTreeLink(link);
 
             applySuiteFilter(suiteId);
             prepareLazyRenderingForCurrentSuite();
-            scrollToTarget(targetId, false);
+            scrollToTarget(targetId, !isSuite);
         });
-    });
+    }
 
     /* =========================================================
-       Test link click handler
+       Main content interactions (delegated)
        ========================================================= */
-    testLinks.forEach(function (link) {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
 
-            const targetId = this.dataset.target;
-            const suiteId  = this.dataset.suiteId;
-
-            allLinks.forEach(function (l) { l.classList.remove('active'); });
-            this.classList.add('active');
-
-            applySuiteFilter(suiteId);
-            prepareLazyRenderingForCurrentSuite();
-            scrollToTarget(targetId, true);
-        });
+    // Sub-suite rows: delegate click to matching sidebar tree link
+    document.addEventListener('click', function (e) {
+        const el = e.target.closest('.subsuite-link');
+        if (!el) return;
+        e.preventDefault();
+        const suiteId = el.dataset.suiteId;
+        if (!suiteId) return;
+        const treeLink = document.querySelector('.tree-suite[data-suite-id="' + suiteId + '"]');
+        if (treeLink) treeLink.click();
     });
 
-    /* =========================================================
-       Test block click → sync sidebar
-       ========================================================= */
-    testBlocks.forEach(function (block) {
-        block.addEventListener('click', function () {
-            clearTestHighlight();
-            this.classList.add('highlighted');
+    // Test case collapse toggle (only affects header/body, not sidebar selection)
+    document.addEventListener('click', function (e) {
+        const header = e.target.closest('.test-header');
+        if (!header) return;
 
-            allLinks.forEach(function (l) { l.classList.remove('active'); });
-            const matchingLink = document.querySelector('.tree-test[data-target="' + this.id + '"]');
-            if (matchingLink) {
-                matchingLink.classList.add('active');
-                matchingLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-        });
+        // Prevent the click from also triggering the test-block selection handler.
+        e.stopPropagation();
+
+        const block = header.closest('.test-block');
+        if (!block) return;
+        const isCollapsed = block.classList.toggle('collapsed');
+        const body = block.querySelector('.test-body-collapsible');
+        if (body) body.style.display = isCollapsed ? 'none' : '';
+    });
+
+    // Test block click → highlight + sync sidebar (ignore clicks on interactive controls)
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('.test-header')) return;
+        if (e.target.closest('.kw-info-btn')) return;
+        if (e.target.closest('.code-toggle')) return;
+
+        const block = e.target.closest('.test-block[id^="test-"]');
+        if (!block) return;
+
+        clearTestHighlight();
+        block.classList.add('highlighted');
+
+        const matchingLink = document.querySelector('.tree-test[data-target="' + block.id + '"]');
+        if (matchingLink) {
+            setActiveTreeLink(matchingLink);
+            matchingLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
     });
 
     /* =========================================================

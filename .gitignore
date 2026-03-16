@@ -22,3 +22,4 @@ atest/mkdocs_test_custom/**
 docs/mkdocs/site/**
 .DS_Store
 .vscode/mcp.json
+.vscode/settings.json
