@@ -452,7 +452,201 @@ document.addEventListener('DOMContentLoaded', function () {
             return '<span class="rf-line">' + line + '</span>';
         }).join('');
         pre.dataset.lineNumbers = '1';
+
+        // PoC: enrich keyword call lines with an info button (if metadata exists)
+        enhanceKeywordInfo(pre);
     }
+
+    /* =========================================================
+       PoC: Keyword documentation (info buttons + dialog)
+       ========================================================= */
+
+    function getKwDocIndexForPre(pre) {
+        const testBlock = pre.closest('.test-block');
+        if (!testBlock) return null;
+        if (testBlock._kwDocIndex instanceof Map) return testBlock._kwDocIndex;
+
+        const ndjsonEl = testBlock.querySelector('script.kw-doc-ndjson');
+        if (!ndjsonEl) return null;
+
+        const map = new Map();
+        // Be tolerant: if JSON objects were concatenated ("}{"), split them.
+        const text = (ndjsonEl.textContent || '').replace(/}\s*{/g, '}\n{');
+        const raw = text.split(/\r?\n/);
+        raw.forEach(function (line) {
+            const trimmed = (line || '').trim();
+            if (!trimmed) return;
+            try {
+                const obj = JSON.parse(trimmed);
+                if (obj && obj.name && !map.has(obj.name)) {
+                    map.set(obj.name, obj);
+                }
+            } catch (e) {
+                // Ignore malformed lines; NDJSON is best-effort.
+            }
+        });
+        testBlock._kwDocIndex = map;
+        return map;
+    }
+
+    function extractKeywordInfoFromLine(lineEl) {
+        if (!lineEl) return null;
+
+        // Regular keyword call line: Pygments uses .nf for KEYWORD tokens.
+        const nf = lineEl.querySelector('span.nf');
+        if (nf) {
+            const name = (nf.textContent || '').trim();
+            if (!name) return null;
+            return { name: name, anchor: nf };
+        }
+
+        // Setup/Teardown lines: keyword may be tokenised as .n following a .py [Setup]/[Teardown]
+        const py = lineEl.querySelector('span.py');
+        if (py) {
+            const label = (py.textContent || '').trim();
+            if (label === '[Setup]' || label === '[Teardown]') {
+                const spans = Array.from(lineEl.querySelectorAll('span'));
+                const startIdx = spans.indexOf(py);
+                for (let i = startIdx + 1; i < spans.length; i++) {
+                    const s = spans[i];
+                    if (!s || !s.classList) continue;
+                    if (s.classList.contains('nf') || s.classList.contains('n')) {
+                        const name = (s.textContent || '').trim();
+                        if (!name) return null;
+                        return { name: name, anchor: s };
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    function enhanceKeywordInfo(pre) {
+        if (!pre || pre.dataset.kwInfo === '1') return;
+        const index = getKwDocIndexForPre(pre);
+        if (!index || index.size === 0) {
+            pre.dataset.kwInfo = '1';
+            return;
+        }
+
+        const codeEl = pre.querySelector('code') || pre;
+        const lineEls = codeEl.querySelectorAll('.rf-line');
+        lineEls.forEach(function (lineEl) {
+            // Avoid duplicating buttons on reruns.
+            if (lineEl.querySelector('.kw-info-btn')) return;
+
+            const info = extractKeywordInfoFromLine(lineEl);
+            if (!info || !info.name) return;
+
+            const meta = index.get(info.name);
+            if (!meta || !meta.doc) return;
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'kw-info-btn';
+            btn.dataset.kwName = info.name;
+            btn.setAttribute('aria-label', 'Show keyword documentation: ' + info.name);
+            btn.title = 'Show Keyword Documentation';
+            btn.textContent = 'Show Keyword Documentation';
+
+            // Append to the line and let CSS place it on the far right.
+            lineEl.appendChild(btn);
+        });
+
+        pre.dataset.kwInfo = '1';
+    }
+
+    function ensureKwDialog() {
+        let dlg = document.getElementById('kwDocDialog');
+        if (dlg) return dlg;
+
+        dlg = document.createElement('dialog');
+        dlg.id = 'kwDocDialog';
+        dlg.className = 'kw-doc-dialog';
+        dlg.innerHTML =
+            '<form method="dialog" class="kw-doc-dialog-inner">'
+                + '<header class="kw-doc-dialog-header">'
+                    + '<div class="kw-doc-dialog-title">'
+                        + '<div class="kw-doc-name" id="kwDocName"></div>'
+                        + '<div class="kw-doc-owner" id="kwDocOwner"></div>'
+                    + '</div>'
+                    + '<button class="kw-doc-close" value="close" aria-label="Close">'
+                        + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+                            + '<line x1="18" y1="6" x2="6" y2="18"></line>'
+                            + '<line x1="6" y1="6" x2="18" y2="18"></line>'
+                        + '</svg>'
+                    + '</button>'
+                + '</header>'
+                + '<section class="kw-doc-dialog-body">'
+                    + '<div class="kw-doc-args" id="kwDocArgs"></div>'
+                    + '<pre class="kw-doc-text" id="kwDocText"></pre>'
+                + '</section>'
+            + '</form>';
+
+        document.body.appendChild(dlg);
+        return dlg;
+    }
+
+    function openKwDialog(meta, triggerBtn) {
+        const dlg = ensureKwDialog();
+        dlg._kwTriggerBtn = triggerBtn || null;
+
+        const nameEl = dlg.querySelector('#kwDocName');
+        const ownerEl = dlg.querySelector('#kwDocOwner');
+        const argsEl = dlg.querySelector('#kwDocArgs');
+        const textEl = dlg.querySelector('#kwDocText');
+
+        const kwName = (meta && meta.name) ? meta.name : '';
+        const owner = (meta && meta.owner) ? meta.owner : '';
+        const doc = (meta && meta.doc) ? meta.doc : '';
+        const args = (meta && meta.args) ? meta.args : [];
+
+        if (nameEl) nameEl.textContent = kwName;
+        if (ownerEl) ownerEl.textContent = owner ? ('Owner: ' + owner) : '';
+
+        if (textEl) textEl.textContent = doc;
+
+        try {
+            if (!dlg.open) dlg.showModal();
+        } catch (e) {
+            // If <dialog> is unsupported, fall back to toggling the open attribute.
+            dlg.setAttribute('open', '');
+        }
+    }
+
+    // Close behavior: return focus to the triggering info button.
+    document.addEventListener('close', function (e) {
+        const dlg = e.target;
+        if (!dlg || dlg.id !== 'kwDocDialog') return;
+        const btn = dlg._kwTriggerBtn;
+        dlg._kwTriggerBtn = null;
+        if (btn && typeof btn.focus === 'function') {
+            try { btn.focus(); } catch (err) {}
+        }
+    }, true);
+
+    // Delegate info button clicks.
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.kw-info-btn');
+        if (!btn) return;
+
+        // Prevent test-block click handlers from triggering.
+        e.preventDefault();
+        e.stopPropagation();
+
+        const pre = btn.closest('pre.robotframework');
+        if (!pre) return;
+        const index = getKwDocIndexForPre(pre);
+        if (!index) return;
+
+        const kwName = btn.dataset.kwName;
+        if (!kwName) return;
+        const meta = index.get(kwName);
+        if (!meta) return;
+
+        openKwDialog(meta, btn);
+    });
 
     // Apply to any pre.rf-code / pre.robotframework elements already in the DOM
     document.querySelectorAll('pre.rf-code').forEach(highlightRfPre);

@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
@@ -28,6 +29,9 @@ class JinjaIntegration:
 
         env.filters["format_test_body"] = TestCaseParser()._keyword_parser
         env.filters["highlight_robot_in_pre"] = highlight_robot_in_pre
+        # Additive helper: embed structured metadata (e.g., keyword docs) as JSON.
+        # Kept separate from lexer/highlighting so the existing output remains intact.
+        env.filters["dump_json"] = lambda obj: json.dumps(obj, ensure_ascii=False)
 
         template = env.get_template(jinja_template_file.name)
 

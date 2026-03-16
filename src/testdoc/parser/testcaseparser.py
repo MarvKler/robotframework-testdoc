@@ -23,6 +23,25 @@ class TestCaseParser:
         self.args = CommandLineArguments()
         self._keyword_docs_cache: dict[str, KeywordDocIndex] = {}
 
+    def _first_doc_line(self, doc: str) -> str:
+        """Return only the first (meaningful) documentation line.
+
+        Keyword documentation can be multi-line (e.g. Python docstrings). The UI
+        info dialog should display only the first line and ignore everything
+        after the first line break.
+
+        Note: Some doc sources may contain leading empty lines. We therefore
+        return the first non-empty line.
+        """
+        if not doc:
+            return ""
+
+        for line in doc.splitlines():
+            stripped = line.strip()
+            if stripped:
+                return stripped
+        return ""
+
     def parse_test(self, suite: TestSuite, suite_info: CustomTestSuite) -> CustomTestSuite:
         suite_source_path = self._to_path(getattr(suite, "source", None))
         suite_keyword_docs = self._get_keyword_docs_for_source(suite_source_path)
@@ -326,6 +345,7 @@ class TestCaseParser:
         keyword_owner: str,
         keyword_doc: str,
     ) -> None:
+        keyword_doc = self._first_doc_line(keyword_doc)
         if not keyword_name or not keyword_doc:
             return
 

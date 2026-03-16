@@ -75,3 +75,5 @@ def test_keyword_documentation_is_resolved_for_aliased_python_library_keyword():
     assert custom_keyword.keyword_owner == "MyLib"
     assert custom_keyword.keyword_doc is not None
     assert "Keyword in my custom python keyword library." in custom_keyword.keyword_doc
+    assert "Second line in this docstring." not in custom_keyword.keyword_doc
+    assert "\n" not in custom_keyword.keyword_doc
