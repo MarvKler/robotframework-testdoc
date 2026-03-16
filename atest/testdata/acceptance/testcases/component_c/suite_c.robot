@@ -5,19 +5,18 @@ Metadata         component=C
 Metadata         owner=testdoc-team
 Suite Setup      Suite C - Initialize Environment
 Suite Teardown   Suite C - Cleanup Environment
+Test Tags        CompC
 
 
 *** Variables ***
 ${BASE_URL} =       https://example.com
-${TIMEOUT} =        30s
-${DB_CONNECTION} =  None
 
 
 *** Test Cases ***
 Suite C - TC001 - Login With Valid Credentials
     [Documentation]    Verifies that a user can log in with valid credentials.
     ...                Expects a successful session after authentication.
-    [Tags]    CompC    Smoke    Authentication
+    [Tags]    Smoke    Authentication
     [Setup]    Suite C - Open Browser Session    ${BASE_URL}
     Log    Navigating to login page
     Log    Entering credentials
@@ -26,7 +25,7 @@ Suite C - TC001 - Login With Valid Credentials
 
 Suite C - TC002 - Login With Invalid Credentials
     [Documentation]    Verifies that an error is shown for invalid credentials.
-    [Tags]    CompC    Regression    Authentication
+    [Tags]    Regression    Authentication
     [Setup]    Suite C - Open Browser Session    ${BASE_URL}
     Log    Entering invalid credentials
     Log    Verifying error message is displayed
@@ -34,7 +33,7 @@ Suite C - TC002 - Login With Invalid Credentials
 
 Suite C - TC003 - Fetch User Data From API
     [Documentation]    Verifies that user data can be fetched via the REST API.
-    [Tags]    CompC    Regression    API
+    [Tags]    Regression    API
     [Setup]    Suite C - Prepare API Headers    Authorization=Bearer token123
     Log    Sending GET /api/users/1
     Log    Verifying response status is 200
@@ -42,7 +41,7 @@ Suite C - TC003 - Fetch User Data From API
 
 Suite C - TC004 - Create New User Via API
     [Documentation]    Verifies that a new user can be created via POST endpoint.
-    [Tags]    CompC    Smoke    API
+    [Tags]    Smoke    API
     [Setup]    Suite C - Prepare API Headers    Authorization=Bearer token123
     Log    Sending POST /api/users with user payload
     Log    Verifying response status is 201
@@ -51,7 +50,7 @@ Suite C - TC004 - Create New User Via API
 
 Suite C - TC005 - Database Record Integrity Check
     [Documentation]    Verifies that records written to the DB are consistent.
-    [Tags]    CompC    Regression    Database
+    [Tags]    Regression    Database
     [Setup]    Suite C - Connect To Database    host=localhost    port=5432
     Log    Inserting test record
     Log    Querying record back
@@ -61,7 +60,7 @@ Suite C - TC005 - Database Record Integrity Check
 Suite C - TC006 - No Fixtures Test
     [Documentation]    Basic smoke test without any setup or teardown.
     ...                Verifies a standalone utility function.
-    [Tags]    CompC    Smoke
+    [Tags]    Smoke
     Log    Running standalone utility check
     Log    Utility returned expected result
 

@@ -43,6 +43,7 @@ dev = [
     "pre-commit",
     "mypy",
     "robotframework-robocop",
+    "robotframework-tablelibrary",
     "rf-mcp"
 ]
 

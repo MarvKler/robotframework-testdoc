@@ -47,3 +47,5 @@ class CustomTestCaseBody:
     patterns: list | None = field(default_factory=list)
     assign: list | None = field(default_factory=list)
     body: list[CustomTestCaseBody] = field(default_factory=list)
+    keyword_doc: str | None = None
+    keyword_owner: str | None = None
