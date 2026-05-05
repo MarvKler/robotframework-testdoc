@@ -72,6 +72,10 @@ class CommandLineArguments:
         return self._args.get("verbose_mode", False)
 
     @property
+    def output_format(self):
+        return self._args.get("output_format", "html")
+
+    @property
     def suite_file(self):
         return self._args.get("suite_file", None)
 

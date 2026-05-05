@@ -44,6 +44,20 @@ testdoc [OPTIONS] suite_directory output.html
 > [!TIP]
 > **Included Help:** Visit the [CLI Documentation](https://marvkler.github.io/robotframework-testdoc/cli/cli/) for further arguments & details.
 
+### Output Formats
+
+By default testdoc generates an HTML file. Use `-f` / `--output-format` to choose a different format:
+
+```shell
+# HTML (default)
+testdoc tests/ TestDocumentation.html
+
+# JSON — machine-readable suite tree
+testdoc -f json tests/ TestDocumentation.json
+```
+
+Available values: `html` (default), `json`.
+
 ### Plugin Usage
 
 You can use the testdoc tool also as plugin integration.  

@@ -2,6 +2,7 @@ from testdoc.parser.models import CustomTestSuite
 
 from ...helper.cliargs import CommandLineArguments
 from .jinja2 import JinjaIntegration
+from .json_renderer import JsonRenderer
 from .mkdocs import MkdocsIntegration
 
 
@@ -11,9 +12,10 @@ class TestDocHtmlRendering:
 
     def render_testdoc(self, suites: CustomTestSuite, output_file):
         if self.args.mkdocs_usage:
-            mkdocs = MkdocsIntegration()
-            mkdocs.render_mkdocs_page(suites)
+            MkdocsIntegration().render_mkdocs_page(suites)
             return
 
-        j2 = JinjaIntegration()
-        j2.render_jinja2_page(suites, output_file)
+        if self.args.output_format.lower() == "json":
+            JsonRenderer().render(suites, output_file)
+        else:
+            JinjaIntegration().render_jinja2_page(suites, output_file)
