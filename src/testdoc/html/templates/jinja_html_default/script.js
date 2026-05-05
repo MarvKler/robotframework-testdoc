@@ -196,6 +196,118 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* =========================================================
+       Tag filter
+       ========================================================= */
+
+    let activeTags = new Set();
+
+    /** Hide/show test blocks in the currently visible suite based on activeTags. */
+    function applyTagFilter() {
+        const visibleTests = document.querySelectorAll(
+            '.suite-block:not([style*="display: none"]) .test-block[id^="test-"]'
+        );
+        let shown = 0;
+        const total = visibleTests.length;
+
+        visibleTests.forEach(function (block) {
+            if (activeTags.size === 0) {
+                block.style.display = '';
+                shown++;
+                return;
+            }
+            let testTagSet;
+            try { testTagSet = new Set(JSON.parse(block.dataset.tags || '[]')); } catch (e) { testTagSet = new Set(); }
+            const hasMatch = Array.from(activeTags).some(function (t) { return testTagSet.has(t); });
+            block.style.display = hasMatch ? '' : 'none';
+            if (hasMatch) shown++;
+        });
+
+        const statusEl  = document.getElementById('tagFilterStatus');
+        const clearBtn  = document.getElementById('tagFilterClear');
+
+        if (statusEl) {
+            if (activeTags.size > 0 && total > 0) {
+                statusEl.textContent = 'Showing ' + shown + ' of ' + total + ' tests';
+                statusEl.style.display = '';
+            } else {
+                statusEl.style.display = 'none';
+            }
+        }
+        if (clearBtn) {
+            clearBtn.style.display = activeTags.size > 0 ? '' : 'none';
+        }
+
+        // Empty state inside the tests-list
+        const visibleSuite = document.querySelector('.suite-block:not([style*="display: none"])');
+        if (visibleSuite) {
+            let emptyEl = visibleSuite.querySelector('.tag-filter-empty');
+            if (shown === 0 && total > 0 && activeTags.size > 0) {
+                if (!emptyEl) {
+                    emptyEl = document.createElement('div');
+                    emptyEl.className = 'tag-filter-empty';
+                    emptyEl.textContent = 'No tests match the selected tags.';
+                    const testsList = visibleSuite.querySelector('.tests-list');
+                    if (testsList) testsList.appendChild(emptyEl);
+                }
+                emptyEl.style.display = '';
+            } else if (emptyEl) {
+                emptyEl.style.display = 'none';
+            }
+        }
+    }
+
+    /** Collect all unique tags from all test blocks and render the filter panel. */
+    function setupTagFilter() {
+        const listEl = document.getElementById('tagFilterList');
+        const panel  = document.getElementById('tagFilterPanel');
+        if (!listEl || !panel) return;
+
+        const allTags = new Set();
+        document.querySelectorAll('.test-block[data-tags]').forEach(function (block) {
+            try {
+                JSON.parse(block.dataset.tags || '[]').forEach(function (t) { if (t) allTags.add(t); });
+            } catch (e) {}
+        });
+
+        if (allTags.size === 0) {
+            panel.style.display = 'none';
+            return;
+        }
+
+        Array.from(allTags).sort().forEach(function (tag) {
+            const btn = document.createElement('button');
+            btn.className = 'tag-filter-btn';
+            btn.textContent = tag;
+            btn.dataset.tag = tag;
+            btn.addEventListener('click', function () {
+                if (activeTags.has(tag)) {
+                    activeTags.delete(tag);
+                    btn.classList.remove('active');
+                } else {
+                    activeTags.add(tag);
+                    btn.classList.add('active');
+                }
+                applyTagFilter();
+            });
+            listEl.appendChild(btn);
+        });
+
+        const clearBtn = document.getElementById('tagFilterClear');
+        if (clearBtn) {
+            clearBtn.style.display = 'none';
+            clearBtn.addEventListener('click', function () {
+                activeTags.clear();
+                listEl.querySelectorAll('.tag-filter-btn.active').forEach(function (b) {
+                    b.classList.remove('active');
+                });
+                applyTagFilter();
+            });
+        }
+        const statusEl = document.getElementById('tagFilterStatus');
+        if (statusEl) statusEl.style.display = 'none';
+    }
+
+    /* =========================================================
        Highlight helpers
        ========================================================= */
 
@@ -220,6 +332,8 @@ document.addEventListener('DOMContentLoaded', function () {
         setBranchExpanded(initiallyActive, true);
     }
     prepareLazyRenderingForCurrentSuite();
+    setupTagFilter();
+    applyTagFilter();
 
     /* =========================================================
        Tree navigation (delegated)
@@ -246,6 +360,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             applySuiteFilter(suiteId);
             prepareLazyRenderingForCurrentSuite();
+            applyTagFilter();
             scrollToTarget(targetId, !isSuite);
         });
     }

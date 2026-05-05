@@ -129,6 +129,15 @@
                 {% endif %}
             </ul>
         </div>
+        <!-- TAG FILTER PANEL -->
+        <div class="tag-filter-panel" id="tagFilterPanel">
+            <div class="tag-filter-header">
+                <span class="tag-filter-title">Filter by Tag</span>
+                <button class="tag-filter-clear-btn" id="tagFilterClear">Clear all</button>
+            </div>
+            <div class="tag-filter-tags" id="tagFilterList"></div>
+            <div class="tag-filter-status" id="tagFilterStatus"></div>
+        </div>
     </aside>
 
     <!-- MAIN CONTENT -->
@@ -285,7 +294,9 @@
                     </div>
                     <div class="tests-list">
                         {% for test in s.tests %}
-                        <section id="test-{{ s.id }}-{{ loop.index0 }}" class="test-block collapsed">
+                        {%- set _test_tags = [] -%}
+                        {%- for _t in (test.tags or []) -%}{%- if _test_tags.append((_t.name if _t is mapping else _t) | string) -%}{%- endif -%}{%- endfor -%}
+                        <section id="test-{{ s.id }}-{{ loop.index0 }}" class="test-block collapsed" data-tags="{{ _test_tags | dump_json | e }}">
                             <div class="test-header">
                                 <div class="test-name">{{ test.name }}</div>
                                 <span class="test-collapse-icon" aria-hidden="true">
