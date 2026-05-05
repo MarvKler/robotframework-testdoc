@@ -698,7 +698,7 @@ document.addEventListener('DOMContentLoaded', function () {
        ========================================================= */
 
     function getKwDocIndexForPre(pre) {
-        const testBlock = pre.closest('.test-block');
+        const testBlock = pre.closest('.test-block') || pre.closest('.suite-fixture-block');
         if (!testBlock) return null;
         if (testBlock._kwDocIndex instanceof Map) return testBlock._kwDocIndex;
 

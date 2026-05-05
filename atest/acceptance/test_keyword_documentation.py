@@ -77,3 +77,54 @@ def test_keyword_documentation_is_resolved_for_aliased_python_library_keyword():
     assert "Keyword in my custom python keyword library." in custom_keyword.keyword_doc
     assert "Second line in this docstring." not in custom_keyword.keyword_doc
     assert "\n" not in custom_keyword.keyword_doc
+
+
+def test_suite_setup_is_parsed():
+    suite_path = Path(__file__).parent.parent / "testdata" / "acceptance" / "testcases" / "component_a" / "suite_a.robot"
+    suite = RobotSuiteBuilder(process_curdir=False).build(str(suite_path))
+
+    parsed_suite = RobotSuiteParser().get_customized_suite_model(suite)
+
+    assert parsed_suite.setup is not None
+    assert parsed_suite.setup.name == "Log"
+    assert parsed_suite.setup.keyword_owner == "BuiltIn"
+    assert parsed_suite.setup.keyword_doc is not None
+    assert "Logs the given message" in parsed_suite.setup.keyword_doc
+
+
+def test_suite_teardown_is_parsed():
+    suite_path = Path(__file__).parent.parent / "testdata" / "acceptance" / "testcases" / "component_a" / "suite_a.robot"
+    suite = RobotSuiteBuilder(process_curdir=False).build(str(suite_path))
+
+    parsed_suite = RobotSuiteParser().get_customized_suite_model(suite)
+
+    assert parsed_suite.teardown is not None
+    assert parsed_suite.teardown.name == "Log"
+    assert parsed_suite.teardown.keyword_owner == "BuiltIn"
+    assert parsed_suite.teardown.keyword_doc is not None
+    assert "Logs the given message" in parsed_suite.teardown.keyword_doc
+
+
+def test_suite_without_setup_teardown_has_none_fields():
+    suite_path = Path(__file__).parent.parent / "testdata" / "acceptance" / "testcases" / "component_a" / "suite_without_tags.robot"
+    suite = RobotSuiteBuilder(process_curdir=False).build(str(suite_path))
+
+    parsed_suite = RobotSuiteParser().get_customized_suite_model(suite)
+
+    assert parsed_suite.setup is None
+    assert parsed_suite.teardown is None
+
+
+def test_test_setup_with_run_keywords_is_parsed():
+    suite_path = Path(__file__).parent.parent / "testdata" / "acceptance" / "testcases" / "component_a" / "suite_run_keywords_setup.robot"
+    suite = RobotSuiteBuilder(process_curdir=False).build(str(suite_path))
+
+    parsed_suite = RobotSuiteParser().get_customized_suite_model(suite)
+
+    test = _find_test_by_name(parsed_suite, "Test With Run Keywords Setup")
+    assert test is not None
+    assert test.setup is not None
+    assert test.setup.name == "Run Keywords"
+    assert test.setup.keyword_owner == "BuiltIn"
+    assert test.setup.keyword_doc is not None
+    assert test.setup.args == ["Log", "Setup Step One", "AND", "Log", "Setup Step Two"]

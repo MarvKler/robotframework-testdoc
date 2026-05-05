@@ -32,6 +32,16 @@
 {{ suite.doc | indent(4, true) }}
 {% endif %}
 
+{% if suite.setup or suite.teardown %}
+!!! info "Suite Setup & Teardown"
+    {% if suite.setup %}
+    **Suite Setup:** `{{ [suite.setup] | format_test_body | join('') }}`
+    {% endif %}
+    {% if suite.teardown %}
+    **Suite Teardown:** `{{ [suite.teardown] | format_test_body | join('') }}`
+    {% endif %}
+{% endif %}
+
 ## Test Case Overview
 
 {% if suite.tests %}

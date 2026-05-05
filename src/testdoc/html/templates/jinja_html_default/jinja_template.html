@@ -235,6 +235,43 @@
                 </section>
                 {% endif %}
 
+                <!-- Suite Setup / Teardown -->
+                {% if s.setup or s.teardown %}
+                <section class="section suite-fixture-block" data-suite-id="{{ s.id }}">
+                    <div class="section-header">
+                        <span class="section-title">Suite Setup &amp; Teardown</span>
+                        <span class="section-subtitle">Lifecycle keywords for this suite</span>
+                    </div>
+                    <script type="application/x-ndjson" class="kw-doc-ndjson" data-test-target="suite-fixture-{{ s.id }}">
+{% if s.setup and s.setup.keyword_doc %}
+{{ {'name': s.setup.name, 'owner': s.setup.keyword_owner, 'doc': s.setup.keyword_doc, 'args': s.setup.args, 'fixture': 'setup'} | dump_json }}
+{% endif %}
+{% if s.teardown and s.teardown.keyword_doc %}
+{{ {'name': s.teardown.name, 'owner': s.teardown.keyword_owner, 'doc': s.teardown.keyword_doc, 'args': s.teardown.args, 'fixture': 'teardown'} | dump_json }}
+{% endif %}
+                    </script>
+                    <div class="code-wrapper">
+                        <button class="code-toggle">
+                            <span>Show / Hide Code</span>
+                            <span class="code-toggle-icon" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                            </span>
+                        </button>
+                        <div class="code-toggle-body">
+                        {% set setup_line = [s.setup] | format_test_body | join('') if s.setup else '' %}
+                        {% set teardown_line = [s.teardown] | format_test_body | join('') if s.teardown else '' %}
+                        {% set code -%}
+*** Settings ***
+{% if s.setup %}Suite Setup    {{ setup_line }}
+{% endif %}{% if s.teardown %}Suite Teardown    {{ teardown_line }}
+{% endif %}
+                        {%- endset %}
+                        {{ code | highlight_robot_in_pre | safe }}
+                        </div>
+                    </div>
+                </section>
+                {% endif %}
+
                 <!-- Metadata -->
                 {% if s.metadata %}
                 <section class="section">
