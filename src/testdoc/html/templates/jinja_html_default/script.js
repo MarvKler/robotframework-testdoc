@@ -196,6 +196,127 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* =========================================================
+       Statistics Dashboard
+       ========================================================= */
+
+    function escHtml(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+
+    function dbCard(label, value, colorClass, tooltip) {
+        var hintHtml = tooltip
+            ? ' <span class="db-card-hint" aria-label="' + escHtml(tooltip) + '" data-tooltip="' + escHtml(tooltip) + '">?</span>'
+            : '';
+        return '<div class="db-card db-card-' + colorClass + '">' +
+            '<div class="db-card-value">' + value + '</div>' +
+            '<div class="db-card-label">' + label + hintHtml + '</div>' +
+            '</div>';
+    }
+
+    function buildDashboard() {
+        const panel = document.getElementById('dashboardPanel');
+        if (!panel) return;
+
+        // Collect all test blocks across all suites
+        const allTests = Array.from(document.querySelectorAll('.test-block[id^="test-"]'));
+        const total    = allTests.length;
+        const docCount = allTests.filter(function (b) { return b.dataset.hasDoc === '1'; }).length;
+        const docPct   = total > 0 ? Math.round(docCount / total * 100) : 0;
+
+        // Tag frequency from data-tags attributes
+        var tagFreq = Object.create(null);
+        allTests.forEach(function (b) {
+            try {
+                JSON.parse(b.dataset.tags || '[]').forEach(function (t) {
+                    if (t) tagFreq[t] = (tagFreq[t] || 0) + 1;
+                });
+            } catch (e) {}
+        });
+        var sortedTags     = Object.entries(tagFreq).sort(function (a, b) { return b[1] - a[1]; }).slice(0, 20);
+        var uniqueTagCount = Object.keys(tagFreq).length;
+
+        // Suite breakdown — only depth-1 suites (direct children of root)
+        var allSuiteBlocks  = Array.from(document.querySelectorAll('.suite-block[data-suite-depth]'));
+        var depth1Suites    = allSuiteBlocks.filter(function (b) { return parseInt(b.dataset.suiteDepth, 10) === 1; });
+        var totalSuiteCount = allSuiteBlocks.filter(function (b) { return parseInt(b.dataset.suiteDepth, 10) >= 1; }).length;
+
+        // ── Build HTML ───────────────────────────────────────────────
+        var html = '<div class="db-header">' +
+            '<h2 class="db-title">Statistics Dashboard</h2>' +
+            '<p class="db-subtitle">High-level overview of the entire test documentation</p>' +
+            '</div>';
+
+        // Stat cards
+        html += '<div class="db-cards">' +
+            dbCard('Total Tests',     String(total),     'accent') +
+            dbCard('Documented',      docCount + ' <small>(' + docPct + '%)</small>', docPct >= 80 ? 'success' : 'accent',
+                'Number of tests that contain a [Documentation] tag in their definition. Tests without documentation may be harder to understand at a glance.') +
+            dbCard('Unique Tags',     String(uniqueTagCount), 'accent') +
+            dbCard('Suites',          String(totalSuiteCount), 'accent') +
+            '</div>';
+
+        // Tag distribution bars
+        if (sortedTags.length > 0) {
+            var maxCount = sortedTags[0][1];
+            html += '<div class="db-section">' +
+                '<div class="db-section-title">Tag Distribution</div>' +
+                '<div class="db-tag-bars">';
+            sortedTags.forEach(function (entry) {
+                var pct = Math.max(3, Math.round(entry[1] / maxCount * 100));
+                html += '<div class="db-tag-row">' +
+                    '<span class="db-tag-name">' + escHtml(entry[0]) + '</span>' +
+                    '<div class="db-tag-bar-wrap"><div class="db-tag-bar" style="width:' + pct + '%"></div></div>' +
+                    '<span class="db-tag-count">' + entry[1] + '</span>' +
+                    '</div>';
+            });
+            html += '</div></div>';
+        }
+
+        // Suite breakdown table (only when there are sub-suites)
+        if (depth1Suites.length > 0) {
+            html += '<div class="db-section">' +
+                '<div class="db-section-title">Tests per Suite</div>' +
+                '<table class="db-table"><thead><tr><th>Suite</th><th class="db-table-num">Tests</th></tr></thead><tbody>';;
+            depth1Suites.forEach(function (b) {
+                html += '<tr><td>' + escHtml(b.dataset.suiteName || '—') + '</td>' +
+                    '<td class="db-table-num">' + escHtml(b.dataset.testCount || '0') + '</td></tr>';
+            });
+            html += '</tbody></table></div>';
+        }
+
+        panel.innerHTML = html;
+    }
+
+    function setupDashboardToggle() {
+        var btn          = document.getElementById('dashboardToggle');
+        var panel        = document.getElementById('dashboardPanel');
+        var suiteContent = document.getElementById('suiteContent');
+        var navTree      = document.querySelector('.nav-tree');
+        var tagFilter    = document.getElementById('tagFilterPanel');
+        if (!btn || !panel || !suiteContent) return;
+
+        btn.addEventListener('click', function () {
+            var isActive = btn.classList.contains('active');
+            if (isActive) {
+                btn.classList.remove('active');
+                panel.style.display = 'none';
+                suiteContent.style.display = '';
+                if (navTree)   { navTree.removeAttribute('inert');   navTree.classList.remove('sidebar-disabled'); }
+                if (tagFilter) { tagFilter.removeAttribute('inert'); tagFilter.classList.remove('sidebar-disabled'); }
+            } else {
+                buildDashboard();
+                btn.classList.add('active');
+                panel.style.display = '';
+                suiteContent.style.display = 'none';
+                if (navTree)   { navTree.setAttribute('inert', '');   navTree.classList.add('sidebar-disabled'); }
+                if (tagFilter) { tagFilter.setAttribute('inert', ''); tagFilter.classList.add('sidebar-disabled'); }
+            }
+        });
+    }
+
+    /* =========================================================
        Tag filter
        ========================================================= */
 
@@ -334,6 +455,7 @@ document.addEventListener('DOMContentLoaded', function () {
     prepareLazyRenderingForCurrentSuite();
     setupTagFilter();
     applyTagFilter();
+    setupDashboardToggle();
 
     /* =========================================================
        Tree navigation (delegated)

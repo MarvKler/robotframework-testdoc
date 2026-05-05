@@ -53,6 +53,16 @@
             <span class="topbar-stat-label">Tests</span>
         </div>
         {% endif %}
+        {% if suite %}
+        <button class="dashboard-toggle" id="dashboardToggle" aria-label="Statistics Dashboard" title="Statistics Dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <rect x="2" y="12" width="4" height="9" rx="1"/>
+                <rect x="9" y="7" width="4" height="14" rx="1"/>
+                <rect x="16" y="3" width="4" height="18" rx="1"/>
+            </svg>
+            <span>Statistics</span>
+        </button>
+        {% endif %}
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
             <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <circle cx="12" cy="12" r="5"/>
@@ -162,7 +172,7 @@
         {% endmacro %}
 
         {% macro render_suite_block(s, level) %}
-        <section class="suite-block" data-suite-id="{{ s.id }}">
+        <section class="suite-block" data-suite-id="{{ s.id }}" data-suite-name="{{ s.name }}" data-suite-depth="{{ level }}" data-test-count="{{ s.test_count }}">
 
             <!-- Per-suite sticky header -->
             <header class="content-header" id="suite-{{ s.id }}">
@@ -296,7 +306,7 @@
                         {% for test in s.tests %}
                         {%- set _test_tags = [] -%}
                         {%- for _t in (test.tags or []) -%}{%- if _test_tags.append((_t.name if _t is mapping else _t) | string) -%}{%- endif -%}{%- endfor -%}
-                        <section id="test-{{ s.id }}-{{ loop.index0 }}" class="test-block collapsed" data-tags="{{ _test_tags | dump_json | e }}">
+                        <section id="test-{{ s.id }}-{{ loop.index0 }}" class="test-block collapsed" data-tags="{{ _test_tags | dump_json | e }}" data-has-doc="{{ '1' if test.doc else '0' }}">
                             <div class="test-header">
                                 <div class="test-name">{{ test.name }}</div>
                                 <span class="test-collapse-icon" aria-hidden="true">
@@ -423,6 +433,10 @@
         {% endfor %}
         {% endmacro %}
 
+        <!-- Statistics Dashboard (hidden by default, built by JS) -->
+        <div id="dashboardPanel" class="dashboard-panel" style="display:none" role="region" aria-label="Statistics Dashboard"></div>
+
+        <div id="suiteContent">
         {% if suites %}
             {{ render_suite_block(suites, 0) }}
         {% else %}
@@ -439,6 +453,7 @@
             <span class="content-footer-sep">·</span>
             <a href="https://github.com/MarvKler/robotframework-testdoc" target="_blank" rel="noopener noreferrer">Contribute on GitHub</a>
         </footer>
+        </div>{# /suiteContent #}
     </main>
 </div>
 
