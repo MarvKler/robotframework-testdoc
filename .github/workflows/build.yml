@@ -59,7 +59,7 @@ jobs:
     - name: Install dependencies
       run: hatch env create dev
 
-    - name: Run ruff lint
+    - name: Run acceptance tests
       run: hatch run dev:atest
 
   test-python-compatibility:
