@@ -10,6 +10,17 @@ Visit the project at [GitHub - robotframework-testdoc](https://github.com/MarvKl
 
 Visit the official documentation for more details: [Documentation - robotframework-testdoc](https://marvkler.github.io/robotframework-testdoc/)
 
+## VS Code Extension
+
+Generate test documentation directly from the VS Code Explorer — no terminal required.  
+Download the latest `.vsix` from [GitHub Releases](https://github.com/MarvKler/robotframework-testdoc/releases) and install it locally.
+
+```bash
+code --install-extension testdoc-vscode-<version>.vsix
+```
+
+See the [VS Code Extension documentation](https://marvkler.github.io/robotframework-testdoc/usage/vscode-extension/) for details.
+
 ## Statistics
 
 [![Release Pipeline](https://github.com/MarvKler/robotframework-testdoc/actions/workflows/release.yml/badge.svg)](https://github.com/MarvKler/robotframework-testdoc/actions/workflows/release.yml)  

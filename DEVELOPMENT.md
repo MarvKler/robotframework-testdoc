@@ -1,6 +1,6 @@
 # Development
 
-## Release Creation
+## Python Package Release Creation
 
 ### Precondition
 
@@ -68,6 +68,66 @@ After pushing the new tag, three pipeline jobs are getting triggered automatical
 1. First job creates a new ``Release`` in github with the name of the created ``Tag``.
 2. Second job uploads the new wheel package to ``PyPi`` with the ``__version__`` from the ``__about__.py`` file.
 3. Third job generates a new keyword documentation via ``libdoc`` on the main branch, but pushes it to the ``gh_pages`` where it is available as public ``GitHub Page``.
+
+---
+
+## VS Code Extension Release
+
+The VS Code extension is released **independently** from the Python package via a separate tag prefix (`vsce/v*`), so it does not trigger any PyPI pipelines.
+
+### Precondition
+
+- The extension code in `vscode-extension/` is ready to be released.
+- Your local git configuration must work — check your authentication!
+
+### *Preferred* - Using Shell Script for VSIX Release
+
+In the ``root directory`` of this repository you will find a script called ``create_vsce_release.sh``.
+It expects exactly one argument: the new version in the syntax ``X.X.X``.
+
+Execute the following command to create a new VSIX release:
+```bash
+cd <project-root-directory>
+./create_vsce_release.sh 0.2.0
+```
+
+The script will automatically:
+1. Update `"version"` in **[vscode-extension/package.json](vscode-extension/package.json)**
+2. Commit & push the version bump to the current branch
+3. Create & push the tag `vsce/v0.2.0` to GitHub
+
+After pushing the tag, the pipeline job **Release VS Code Extension** is triggered automatically:
+1. Builds the `.vsix` file via `vsce`
+2. Creates a new GitHub Release tagged `vsce/v0.2.0` with the `.vsix` as downloadable asset and an installation guide
+
+> [!NOTE]
+> The script works from any branch — not only `main`.
+
+### *Backup* - Manual VSIX Release
+
+If the script does not work, follow these steps manually:
+
+#### 1. Update version in package.json
+
+Open **[vscode-extension/package.json](vscode-extension/package.json)** and update the `"version"` field, e.g. `"0.2.0"`.
+
+Commit & push the change:
+```bash
+git add vscode-extension/package.json
+git commit -m "Bump VS Code extension version to 0.2.0"
+git push origin HEAD
+```
+
+#### 2. Create & push the tag
+
+```bash
+git tag -a "vsce/v0.2.0" -m "VS Code Extension Release v0.2.0"
+git push origin "vsce/v0.2.0"
+```
+
+The GitHub Action will then build and publish the release automatically.
+
+---
 
 ## Installing Dev Dependencies
 
