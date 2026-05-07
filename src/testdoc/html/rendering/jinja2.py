@@ -22,26 +22,28 @@ class JinjaIntegration:
             return Path(self.args.custom_jinja_template).expanduser().resolve()
         return Path(__file__).resolve().parent / ".." / "templates" / "jinja_html_default" / "jinja_template.html"
 
-    def render_jinja2_page(self, suites: CustomTestSuite, output_file: Path):
+    def render_to_string(self, suites: CustomTestSuite) -> str:
+        """Render the Jinja2 template and return the resulting HTML as a string."""
         jinja_template_file = self._get_jinja_template_path()
 
         env = Environment(loader=FileSystemLoader(jinja_template_file.parent))
 
         env.filters["format_test_body"] = TestCaseParser()._keyword_parser
         env.filters["highlight_robot_in_pre"] = highlight_robot_in_pre
-        # Additive helper: embed structured metadata (e.g., keyword docs) as JSON.
-        # Kept separate from lexer/highlighting so the existing output remains intact.
         env.filters["dump_json"] = lambda obj: json.dumps(obj, ensure_ascii=False)
 
         template = env.get_template(jinja_template_file.name)
 
-        rendered_html = template.render(
+        return template.render(
             suites=suites,
             generated_at=DateTimeConverter().get_generated_datetime(),
             title=self.args.title,
             contact_mail="marvinklerx20@gmail.com",
             pygments_css=pygments_css(),
         )
+
+    def render_jinja2_page(self, suites: CustomTestSuite, output_file: Path):
+        rendered_html = self.render_to_string(suites)
         with output_file.open("w", encoding="utf-8") as f:
             f.write(rendered_html)
         Logger().log_key_value("Generated Test Documentation File: ", output_file)

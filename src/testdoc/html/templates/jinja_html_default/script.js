@@ -196,6 +196,239 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* =========================================================
+       Statistics Dashboard
+       ========================================================= */
+
+    function escHtml(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+
+    function dbCard(label, value, colorClass, tooltip) {
+        var hintHtml = tooltip
+            ? ' <span class="db-card-hint" aria-label="' + escHtml(tooltip) + '" data-tooltip="' + escHtml(tooltip) + '">?</span>'
+            : '';
+        return '<div class="db-card db-card-' + colorClass + '">' +
+            '<div class="db-card-value">' + value + '</div>' +
+            '<div class="db-card-label">' + label + hintHtml + '</div>' +
+            '</div>';
+    }
+
+    function buildDashboard() {
+        const panel = document.getElementById('dashboardPanel');
+        if (!panel) return;
+
+        // Collect all test blocks across all suites
+        const allTests = Array.from(document.querySelectorAll('.test-block[id^="test-"]'));
+        const total    = allTests.length;
+        const docCount = allTests.filter(function (b) { return b.dataset.hasDoc === '1'; }).length;
+        const docPct   = total > 0 ? Math.round(docCount / total * 100) : 0;
+
+        // Tag frequency from data-tags attributes
+        var tagFreq = Object.create(null);
+        allTests.forEach(function (b) {
+            try {
+                JSON.parse(b.dataset.tags || '[]').forEach(function (t) {
+                    if (t) tagFreq[t] = (tagFreq[t] || 0) + 1;
+                });
+            } catch (e) {}
+        });
+        var sortedTags     = Object.entries(tagFreq).sort(function (a, b) { return b[1] - a[1]; }).slice(0, 20);
+        var uniqueTagCount = Object.keys(tagFreq).length;
+
+        // Suite breakdown — only depth-1 suites (direct children of root)
+        var allSuiteBlocks  = Array.from(document.querySelectorAll('.suite-block[data-suite-depth]'));
+        var depth1Suites    = allSuiteBlocks.filter(function (b) { return parseInt(b.dataset.suiteDepth, 10) === 1; });
+        var totalSuiteCount = allSuiteBlocks.filter(function (b) { return parseInt(b.dataset.suiteDepth, 10) >= 1; }).length;
+
+        // ── Build HTML ───────────────────────────────────────────────
+        var html = '<div class="db-header">' +
+            '<h2 class="db-title">Statistics Dashboard</h2>' +
+            '<p class="db-subtitle">High-level overview of the entire test documentation</p>' +
+            '</div>';
+
+        // Stat cards
+        html += '<div class="db-cards">' +
+            dbCard('Total Tests',     String(total),     'accent') +
+            dbCard('Documented',      docCount + ' <small>(' + docPct + '%)</small>', docPct >= 80 ? 'success' : 'accent',
+                'Number of tests that contain a [Documentation] tag in their definition. Tests without documentation may be harder to understand at a glance.') +
+            dbCard('Unique Tags',     String(uniqueTagCount), 'accent') +
+            dbCard('Suites',          String(totalSuiteCount), 'accent') +
+            '</div>';
+
+        // Tag distribution bars
+        if (sortedTags.length > 0) {
+            var maxCount = sortedTags[0][1];
+            html += '<div class="db-section">' +
+                '<div class="db-section-title">Tag Distribution</div>' +
+                '<div class="db-tag-bars">';
+            sortedTags.forEach(function (entry) {
+                var pct = Math.max(3, Math.round(entry[1] / maxCount * 100));
+                html += '<div class="db-tag-row">' +
+                    '<span class="db-tag-name">' + escHtml(entry[0]) + '</span>' +
+                    '<div class="db-tag-bar-wrap"><div class="db-tag-bar" style="width:' + pct + '%"></div></div>' +
+                    '<span class="db-tag-count">' + entry[1] + '</span>' +
+                    '</div>';
+            });
+            html += '</div></div>';
+        }
+
+        // Suite breakdown table (only when there are sub-suites)
+        if (depth1Suites.length > 0) {
+            html += '<div class="db-section">' +
+                '<div class="db-section-title">Tests per Suite</div>' +
+                '<table class="db-table"><thead><tr><th>Suite</th><th class="db-table-num">Tests</th></tr></thead><tbody>';;
+            depth1Suites.forEach(function (b) {
+                html += '<tr><td>' + escHtml(b.dataset.suiteName || '—') + '</td>' +
+                    '<td class="db-table-num">' + escHtml(b.dataset.testCount || '0') + '</td></tr>';
+            });
+            html += '</tbody></table></div>';
+        }
+
+        panel.innerHTML = html;
+    }
+
+    function setupDashboardToggle() {
+        var btn          = document.getElementById('dashboardToggle');
+        var panel        = document.getElementById('dashboardPanel');
+        var suiteContent = document.getElementById('suiteContent');
+        var navTree      = document.querySelector('.nav-tree');
+        var tagFilter    = document.getElementById('tagFilterPanel');
+        if (!btn || !panel || !suiteContent) return;
+
+        btn.addEventListener('click', function () {
+            var isActive = btn.classList.contains('active');
+            if (isActive) {
+                btn.classList.remove('active');
+                panel.style.display = 'none';
+                suiteContent.style.display = '';
+                if (navTree)   { navTree.removeAttribute('inert');   navTree.classList.remove('sidebar-disabled'); }
+                if (tagFilter) { tagFilter.removeAttribute('inert'); tagFilter.classList.remove('sidebar-disabled'); }
+            } else {
+                buildDashboard();
+                btn.classList.add('active');
+                panel.style.display = '';
+                suiteContent.style.display = 'none';
+                if (navTree)   { navTree.setAttribute('inert', '');   navTree.classList.add('sidebar-disabled'); }
+                if (tagFilter) { tagFilter.setAttribute('inert', ''); tagFilter.classList.add('sidebar-disabled'); }
+            }
+        });
+    }
+
+    /* =========================================================
+       Tag filter
+       ========================================================= */
+
+    let activeTags = new Set();
+
+    /** Hide/show test blocks in the currently visible suite based on activeTags. */
+    function applyTagFilter() {
+        const visibleTests = document.querySelectorAll(
+            '.suite-block:not([style*="display: none"]) .test-block[id^="test-"]'
+        );
+        let shown = 0;
+        const total = visibleTests.length;
+
+        visibleTests.forEach(function (block) {
+            if (activeTags.size === 0) {
+                block.style.display = '';
+                shown++;
+                return;
+            }
+            let testTagSet;
+            try { testTagSet = new Set(JSON.parse(block.dataset.tags || '[]')); } catch (e) { testTagSet = new Set(); }
+            const hasMatch = Array.from(activeTags).some(function (t) { return testTagSet.has(t); });
+            block.style.display = hasMatch ? '' : 'none';
+            if (hasMatch) shown++;
+        });
+
+        const statusEl  = document.getElementById('tagFilterStatus');
+        const clearBtn  = document.getElementById('tagFilterClear');
+
+        if (statusEl) {
+            if (activeTags.size > 0 && total > 0) {
+                statusEl.textContent = 'Showing ' + shown + ' of ' + total + ' tests';
+                statusEl.style.display = '';
+            } else {
+                statusEl.style.display = 'none';
+            }
+        }
+        if (clearBtn) {
+            clearBtn.style.display = activeTags.size > 0 ? '' : 'none';
+        }
+
+        // Empty state inside the tests-list
+        const visibleSuite = document.querySelector('.suite-block:not([style*="display: none"])');
+        if (visibleSuite) {
+            let emptyEl = visibleSuite.querySelector('.tag-filter-empty');
+            if (shown === 0 && total > 0 && activeTags.size > 0) {
+                if (!emptyEl) {
+                    emptyEl = document.createElement('div');
+                    emptyEl.className = 'tag-filter-empty';
+                    emptyEl.textContent = 'No tests match the selected tags.';
+                    const testsList = visibleSuite.querySelector('.tests-list');
+                    if (testsList) testsList.appendChild(emptyEl);
+                }
+                emptyEl.style.display = '';
+            } else if (emptyEl) {
+                emptyEl.style.display = 'none';
+            }
+        }
+    }
+
+    /** Collect all unique tags from all test blocks and render the filter panel. */
+    function setupTagFilter() {
+        const listEl = document.getElementById('tagFilterList');
+        const panel  = document.getElementById('tagFilterPanel');
+        if (!listEl || !panel) return;
+
+        const allTags = new Set();
+        document.querySelectorAll('.test-block[data-tags]').forEach(function (block) {
+            try {
+                JSON.parse(block.dataset.tags || '[]').forEach(function (t) { if (t) allTags.add(t); });
+            } catch (e) {}
+        });
+
+        if (allTags.size === 0) {
+            panel.style.display = 'none';
+            return;
+        }
+
+        Array.from(allTags).sort().forEach(function (tag) {
+            const btn = document.createElement('button');
+            btn.className = 'tag-filter-btn';
+            btn.textContent = tag;
+            btn.dataset.tag = tag;
+            btn.addEventListener('click', function () {
+                if (activeTags.has(tag)) {
+                    activeTags.delete(tag);
+                    btn.classList.remove('active');
+                } else {
+                    activeTags.add(tag);
+                    btn.classList.add('active');
+                }
+                applyTagFilter();
+            });
+            listEl.appendChild(btn);
+        });
+
+        const clearBtn = document.getElementById('tagFilterClear');
+        if (clearBtn) {
+            clearBtn.style.display = 'none';
+            clearBtn.addEventListener('click', function () {
+                activeTags.clear();
+                listEl.querySelectorAll('.tag-filter-btn.active').forEach(function (b) {
+                    b.classList.remove('active');
+                });
+                applyTagFilter();
+            });
+        }
+        const statusEl = document.getElementById('tagFilterStatus');
+        if (statusEl) statusEl.style.display = 'none';
+    }
+
+    /* =========================================================
        Highlight helpers
        ========================================================= */
 
@@ -220,6 +453,9 @@ document.addEventListener('DOMContentLoaded', function () {
         setBranchExpanded(initiallyActive, true);
     }
     prepareLazyRenderingForCurrentSuite();
+    setupTagFilter();
+    applyTagFilter();
+    setupDashboardToggle();
 
     /* =========================================================
        Tree navigation (delegated)
@@ -246,6 +482,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             applySuiteFilter(suiteId);
             prepareLazyRenderingForCurrentSuite();
+            applyTagFilter();
             scrollToTarget(targetId, !isSuite);
         });
     }
@@ -461,7 +698,7 @@ document.addEventListener('DOMContentLoaded', function () {
        ========================================================= */
 
     function getKwDocIndexForPre(pre) {
-        const testBlock = pre.closest('.test-block');
+        const testBlock = pre.closest('.test-block') || pre.closest('.suite-fixture-block');
         if (!testBlock) return null;
         if (testBlock._kwDocIndex instanceof Map) return testBlock._kwDocIndex;
 

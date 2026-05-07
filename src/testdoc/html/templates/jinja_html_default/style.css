@@ -245,6 +245,57 @@ body {
     opacity: 0.85;
 }
 
+/* Dashboard toggle button (topbar) */
+.dashboard-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 34px;
+    padding: 0 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-raised);
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: inherit;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    flex-shrink: 0;
+}
+
+.dashboard-toggle:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent-border);
+    color: var(--accent);
+}
+
+.dashboard-toggle.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+[data-theme="dark"] .dashboard-toggle.active {
+    color: #0f172a;
+}
+
+.dashboard-toggle svg {
+    width: 15px;
+    height: 15px;
+    display: block;
+    flex-shrink: 0;
+}
+
+/* Sidebar sections disabled while dashboard is active */
+.sidebar-disabled {
+    opacity: 0.35;
+    pointer-events: none;
+    user-select: none;
+    filter: grayscale(0.4);
+    transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
 .theme-toggle {
     display: flex;
     align-items: center;
@@ -674,6 +725,108 @@ body {
     gap: 5px;
 }
 
+/* ============================================================
+   Tag Filter Panel (sidebar)
+   ============================================================ */
+.tag-filter-panel {
+    flex-shrink: 0;
+    border-top: 1px solid var(--nav-border);
+    padding: 10px 10px 12px;
+    background: var(--nav-bg);
+}
+
+.tag-filter-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.tag-filter-title {
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+}
+
+.tag-filter-clear-btn {
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    line-height: 1.5;
+    transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+
+.tag-filter-clear-btn:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent-border);
+}
+
+.tag-filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    max-height: 150px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+.tag-filter-tags::-webkit-scrollbar { width: 4px; }
+.tag-filter-tags::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.tag-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    border: 1px solid var(--tag-border);
+    cursor: pointer;
+    line-height: 1.4;
+    transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+
+.tag-filter-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent-border);
+    color: var(--accent);
+}
+
+.tag-filter-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+[data-theme="dark"] .tag-filter-btn.active {
+    color: #0f172a;
+}
+
+.tag-filter-status {
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+/* Empty state shown inside .tests-list when all tests are filtered out */
+.tag-filter-empty {
+    padding: 24px 16px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+}
+
 .metadata {
     display: flex;
     flex-wrap: wrap;
@@ -711,6 +864,273 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
+}
+
+/* ============================================================
+   Statistics Dashboard Panel
+   ============================================================ */
+.dashboard-panel {
+    padding: 24px 28px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.db-header { margin-bottom: 4px; }
+
+.db-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+}
+
+.db-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 3px;
+}
+
+/* Stat cards row */
+.db-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+}
+
+.db-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 16px 18px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xs);
+}
+
+.db-card-value {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent);
+}
+
+.db-card-value small {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+}
+
+.db-card-success .db-card-value { color: var(--success); }
+
+.db-card-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.db-card-hint {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-sunken);
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 700;
+    font-style: normal;
+    cursor: default;
+    flex-shrink: 0;
+    position: relative;
+    text-transform: none;
+    letter-spacing: 0;
+    line-height: 1;
+    transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+
+.db-card-hint:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent-border);
+    color: var(--accent);
+}
+
+/* Tooltip bubble */
+.db-card-hint::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 7px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    padding: 8px 10px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--text-2);
+    text-transform: none;
+    letter-spacing: 0;
+    white-space: normal;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease, visibility 0.15s ease;
+    z-index: 100;
+}
+
+/* Small arrow pointing down toward the hint icon */
+.db-card-hint::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 1px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--border-strong);
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease, visibility 0.15s ease;
+    z-index: 101;
+}
+
+.db-card-hint:hover::after,
+.db-card-hint:focus::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+.db-card-hint:hover::before,
+.db-card-hint:focus::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Section cards */
+.db-section {
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xs);
+    overflow: hidden;
+    transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.db-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    padding: 12px 16px 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+/* Tag distribution */
+.db-tag-bars {
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.db-tag-row {
+    display: grid;
+    grid-template-columns: 150px 1fr 36px;
+    align-items: center;
+    gap: 10px;
+}
+
+.db-tag-name {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--tag-text);
+    background: var(--tag-bg);
+    border: 1px solid var(--tag-border);
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+.db-tag-bar-wrap {
+    background: var(--surface-sunken);
+    border-radius: 999px;
+    height: 10px;
+    overflow: hidden;
+}
+
+.db-tag-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 999px;
+    min-width: 3%;
+    transition: width 0.4s ease;
+}
+
+.db-tag-count {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Suite breakdown table */
+.db-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.db-table thead th {
+    text-align: left;
+    padding: 8px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+}
+
+.db-table tbody td {
+    padding: 9px 16px;
+    color: var(--text-2);
+    border-bottom: 1px solid var(--border);
+}
+
+.db-table tbody tr:last-child td { border-bottom: none; }
+
+.db-table tbody tr:hover td { background: var(--surface-sunken); }
+
+.db-table thead th.db-table-num {
+    text-align: right;
+}
+
+.db-table-num {
+    text-align: right;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
 }
 
 /* ============================================================

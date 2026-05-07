@@ -4,6 +4,18 @@ from dataclasses import dataclass, field
 
 
 @dataclass
+class CustomKeywordCall:
+    """A single keyword invocation used as a fixture (test/suite setup or teardown)."""
+
+    id: str
+    name: str
+    type: str = "KEYWORD"
+    args: list | None = field(default_factory=list)
+    keyword_doc: str | None = None
+    keyword_owner: str | None = None
+
+
+@dataclass
 class CustomTestSuite:
     id: str
     name: str
@@ -15,6 +27,8 @@ class CustomTestSuite:
     doc: str | None = None
     custom_source: str | None = None
     test_count: int = 0
+    setup: CustomKeywordCall | None = None
+    teardown: CustomKeywordCall | None = None
     tests: list[CustomTestCase] = field(default_factory=list)
     suites: list[CustomTestSuite] = field(default_factory=list)
     user_keywords: list[str] = field(default_factory=list)
@@ -30,8 +44,8 @@ class CustomTestCase:
     doc: str | None = None
     custom_source: str | None = None
     tags: list[str] | None = field(default_factory=list)
-    setup: CustomTestCaseBody | None = None
-    teardown: CustomTestCaseBody | None = None
+    setup: CustomKeywordCall | None = None
+    teardown: CustomKeywordCall | None = None
 
 
 @dataclass

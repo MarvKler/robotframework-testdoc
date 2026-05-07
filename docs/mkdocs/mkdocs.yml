@@ -50,8 +50,9 @@ nav:
     - api/api.md
   - Usage: 
     - usage/index.md
-    - Jinja2: usage/jinja2.md
+    - HTML (Jinja2): usage/jinja2.md
     - Mkdocs: usage/mkdocs.md
+    - Output Formats (JSON): usage/output_formats.md
   - Advanced Usage:
     - advanced_usage/index.md
     - advanced_usage/mkdocs.md

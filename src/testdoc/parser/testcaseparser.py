@@ -9,7 +9,7 @@ from robot.running.model import Body
 from robot.utils import normalize
 
 from ..helper.cliargs import CommandLineArguments
-from .models import CustomTestCase, CustomTestCaseBody, CustomTestSuite
+from .models import CustomKeywordCall, CustomTestCase, CustomTestCaseBody, CustomTestSuite
 
 KeywordDocEntry = tuple[str, str]
 KeywordDocIndex = dict[str, list[KeywordDocEntry]]
@@ -47,9 +47,7 @@ class TestCaseParser:
 
         for test in suite.tests:
             test_source_path = self._to_path(getattr(test, "source", None)) or suite_source_path
-            keyword_docs = (
-                self._get_keyword_docs_for_source(test_source_path) if test_source_path != suite_source_path else suite_keyword_docs
-            )
+            keyword_docs = self._get_keyword_docs_for_source(test_source_path) if test_source_path != suite_source_path else suite_keyword_docs
 
             test_info: CustomTestCase = CustomTestCase(
                 id=test.id,
@@ -64,16 +62,23 @@ class TestCaseParser:
             suite_info.tests.append(test_info)
         return suite_info
 
-    def _parse_fixture(self, fixture, keyword_docs: KeywordDocIndex) -> CustomTestCaseBody | None:
-        """Parse a test setup or teardown keyword into a CustomTestCaseBody."""
+    def parse_suite_fixtures(self, suite: TestSuite, suite_info: CustomTestSuite) -> CustomTestSuite:
+        """Parse suite-level Setup and Teardown into CustomTestSuite."""
+        suite_source_path = self._to_path(getattr(suite, "source", None))
+        keyword_docs = self._get_keyword_docs_for_source(suite_source_path)
+        suite_info.setup = self._parse_fixture(getattr(suite, "setup", None), keyword_docs)
+        suite_info.teardown = self._parse_fixture(getattr(suite, "teardown", None), keyword_docs)
+        return suite_info
+
+    def _parse_fixture(self, fixture, keyword_docs: KeywordDocIndex) -> CustomKeywordCall | None:
+        """Parse a test/suite setup or teardown keyword into a CustomKeywordCall."""
         if fixture is None or not getattr(fixture, "name", None):
             return None
 
         keyword_doc, keyword_owner = self._get_keyword_details(fixture.name, keyword_docs)
 
-        return CustomTestCaseBody(
+        return CustomKeywordCall(
             id=getattr(fixture, "id", ""),
-            type="KEYWORD",
             name=fixture.name,
             args=list(fixture.args) if getattr(fixture, "args", None) else None,
             keyword_doc=keyword_doc,
@@ -240,7 +245,7 @@ class TestCaseParser:
                 break
         return kw
 
-    def _get_value(self, obj: CustomTestCaseBody | dict, key: str, default=None) -> Any:
+    def _get_value(self, obj: CustomTestCaseBody | CustomKeywordCall | dict, key: str, default=None) -> Any:
         """
         TBD
         """
@@ -299,11 +304,7 @@ class TestCaseParser:
 
     def _resolve_import_target(self, import_name: str, base_dir: Path) -> str:
         import_path = Path(import_name)
-        should_resolve = (
-            import_path.is_absolute()
-            or any(sep in import_name for sep in ("/", "\\"))
-            or import_name.endswith((".py", ".robot"))
-        )
+        should_resolve = import_path.is_absolute() or any(sep in import_name for sep in ("/", "\\")) or import_name.endswith((".py", ".robot"))
         if not should_resolve:
             return import_name
 

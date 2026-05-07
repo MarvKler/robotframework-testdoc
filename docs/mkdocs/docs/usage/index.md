@@ -2,10 +2,11 @@
 
 This section will provide you details about using different static site generator in combination with ``robotframework-testdoc``.
 
-The following site generators are currently supported:
+The following output formats and site generators are currently supported:
 
-1. [Jinja2](jinja2.md) (Default)
+1. [HTML via Jinja2](jinja2.md) (Default)
 2. [Mkdocs](mkdocs.md)
+3. [JSON](output_formats.md)
 
 !!! warning "Plugin Usage is Mutual Exclusive"
     The CLI arguments for the plugins are mutually exclusive - you cannot combine them or use them in the same command. 
@@ -17,8 +18,11 @@ The following site generators are currently supported:
 See some examples how to use ``testdoc``:
 
 ```shell
-# Generating docu without option
+# Generating docu without option (HTML default)
 testdoc tests/ TestDocumentation.html
+
+# Generating docu as JSON
+testdoc -f json tests/ TestDocumentation.json
 
 # Generating docu with new title, new root suite name, new root suite documentation text & new metadata
 testdoc -t "Robot Framework Test Automation" -n "System Tests" -d "Root Suite Documentation" -m "Root Suite Metadata" tests/ TestDocumentation.html

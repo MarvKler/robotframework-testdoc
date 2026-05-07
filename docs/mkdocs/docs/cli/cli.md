@@ -14,6 +14,7 @@
 | ``--mkdocs-template-dir`` | Define a custom mkdocs template from your local path | - | :x: |
 | ``--include``, ``-i`` | Define Robot Framework tags to include only specific tests | Can be used multiple times | :x: |
 | ``--exclude``, ``-e`` | Define Robot Framework tags to exclude specific tests | Can be used multiple times | :x: |
+| ``--output-format``, ``-f`` | Choose the output format: ``html`` or ``json`` | Default: ``html``. See [Output Formats](../usage/output_formats.md) | :x: |
 | ``--configfile``, ``-c`` | Define a path to a ``.toml`` configuration file | - | :x: |
 | ``--verbose``, ``-v`` | Print debug output | - | :x: |
 | ``PATH`` | Define path to a suite directory or suite file | - | :white_check_mark: |

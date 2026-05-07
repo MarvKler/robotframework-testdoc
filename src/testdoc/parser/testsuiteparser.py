@@ -77,8 +77,10 @@ class RobotSuiteParser(SuiteVisitor):
             type=suite.type,
         )
 
-        # Parse Test Cases
-        suite_info = TestCaseParser().parse_test(suite, suite_info)
+        # Parse Test Cases and suite-level fixtures
+        _tc_parser = TestCaseParser()
+        suite_info = _tc_parser.parse_test(suite, suite_info)
+        suite_info = _tc_parser.parse_suite_fixtures(suite, suite_info)
 
         if not suite_info.is_folder:
             # visit suite model to check if user keywords got created

@@ -4,6 +4,8 @@ Library    Tables
 Library    ../../resources/keyword_library.py    AS    MyLib
 Documentation    This is a suite documentation
 Metadata    name=marvin
+Suite Setup    Log    Suite is starting
+Suite Teardown    Log    Suite has finished
 
 
 *** Variables ***

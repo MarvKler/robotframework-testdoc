@@ -34,6 +34,14 @@ CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 )
 @click.option("-i", "--include", multiple=True, required=False, help="Include test cases with given tags")
 @click.option("-e", "--exclude", multiple=True, required=False, help="Exclude test cases with given tags")
+@click.option(
+    "-f",
+    "--output-format",
+    type=click.Choice(["html", "json"], case_sensitive=False),
+    default="html",
+    show_default=True,
+    help="Output format for the test documentation",
+)
 @click.option("-c", "--configfile", required=False, help="Optional .toml configuration file (includes all cmd-args)")
 @click.option("-v", "--verbose", is_flag=True, required=False, help="More precise debugging into shell")
 @click.version_option(package_name="robotframework-testdoc")
@@ -50,6 +58,7 @@ def main(  # noqa
     mkdocs_template_dir,
     include,
     exclude,
+    output_format,
     configfile,
     verbose,
     path,
@@ -84,6 +93,7 @@ def main(  # noqa
         "mkdocs_template_dir": mkdocs_template_dir,
         "include": list(include),
         "exclude": list(exclude),
+        "output_format": output_format,
         "config_file": configfile,
         "verbose_mode": verbose,
         "suite_file": list(path),
