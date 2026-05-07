@@ -1,0 +1,51 @@
+name: Release VS Code Extension
+
+on:
+  push:
+    tags:
+      - 'vsce/v*.*.*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#vsce/v}" >> "$GITHUB_OUTPUT"
+
+      - name: Package VSIX
+        run: |
+          cd vscode-extension
+          npx @vscode/vsce package --no-dependencies
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: VS Code Extension v${{ steps.version.outputs.version }}
+          tag_name: ${{ github.ref_name }}
+          generate_release_notes: false
+          body: |
+            ## VS Code Extension v${{ steps.version.outputs.version }}
+
+            ### Installation
+            1. Download `testdoc-vscode-${{ steps.version.outputs.version }}.vsix` below
+            2. In VS Code: `Ctrl+Shift+P` → **Extensions: Install from VSIX...**
+
+            Or via terminal:
+            ```bash
+            code --install-extension testdoc-vscode-${{ steps.version.outputs.version }}.vsix
+            ```
+          files: vscode-extension/testdoc-vscode-${{ steps.version.outputs.version }}.vsix
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

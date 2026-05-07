@@ -3,6 +3,11 @@
   "displayName": "testdoc – Generate Robot Framework Test Documentation",
   "description": "Right-click a folder in the explorer to generate Robot Framework test documentation via robotframework-testdoc.",
   "version": "0.1.0",
+  "publisher": "marvinklerx",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marvinklerx/robotframework-testdoc"
+  },
   "engines": { "vscode": "^1.85.0" },
   "categories": ["Other"],
   "activationEvents": [],
