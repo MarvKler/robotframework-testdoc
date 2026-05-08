@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             } catch (e) {}
         });
-        var sortedTags     = Object.entries(tagFreq).sort(function (a, b) { return b[1] - a[1]; }).slice(0, 20);
+        var sortedTags     = Object.entries(tagFreq).sort(function (a, b) { return b[1] - a[1]; });
         var uniqueTagCount = Object.keys(tagFreq).length;
 
         // Suite breakdown — only depth-1 suites (direct children of root)
