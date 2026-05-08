@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             } catch (e) {}
         });
-        var sortedTags     = Object.entries(tagFreq).sort(function (a, b) { return b[1] - a[1]; }).slice(0, 20);
+        var sortedTags     = Object.entries(tagFreq).sort(function (a, b) { return b[1] - a[1]; });
         var uniqueTagCount = Object.keys(tagFreq).length;
 
         // Suite breakdown — only depth-1 suites (direct children of root)
@@ -267,8 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var pct = Math.max(3, Math.round(entry[1] / maxCount * 100));
                 html += '<div class="db-tag-row">' +
                     '<span class="db-tag-name">' + escHtml(entry[0]) + '</span>' +
-                    '<div class="db-tag-bar-wrap"><div class="db-tag-bar" style="width:' + pct + '%"></div></div>' +
-                    '<span class="db-tag-count">' + entry[1] + '</span>' +
+                    '<div class="db-tag-bar-wrap"><div class="db-tag-bar" style="width:' + pct + '%"><span class="db-tag-count">' + entry[1] + '</span></div></div>' +
                     '</div>';
             });
             html += '</div></div>';
