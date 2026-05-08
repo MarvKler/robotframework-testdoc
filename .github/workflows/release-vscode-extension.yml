@@ -22,7 +22,9 @@ jobs:
 
       - name: Extract version from tag
         id: version
-        run: echo "version=${GITHUB_REF_NAME#vsce/v}" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "version=${GITHUB_REF_NAME#vsce/v}" >> "$GITHUB_OUTPUT"
+          echo "url_tag=${GITHUB_REF_NAME//\//%2F}" >> "$GITHUB_OUTPUT"
 
       - name: Package VSIX
         run: |
@@ -45,6 +47,18 @@ jobs:
             Or via terminal:
             ```bash
             code --install-extension testdoc-vscode-${{ steps.version.outputs.version }}.vsix
+            ```
+
+            ### One-Command Installation (Download & Install)
+
+            **Linux / macOS:**
+            ```bash
+            curl -L -o testdoc-vscode-${{ steps.version.outputs.version }}.vsix https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.url_tag }}/testdoc-vscode-${{ steps.version.outputs.version }}.vsix && code --install-extension testdoc-vscode-${{ steps.version.outputs.version }}.vsix
+            ```
+
+            **Windows (PowerShell):**
+            ```powershell
+            curl.exe -L -o testdoc-vscode-${{ steps.version.outputs.version }}.vsix https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.url_tag }}/testdoc-vscode-${{ steps.version.outputs.version }}.vsix; code --install-extension testdoc-vscode-${{ steps.version.outputs.version }}.vsix
             ```
           files: vscode-extension/testdoc-vscode-${{ steps.version.outputs.version }}.vsix
         env:
