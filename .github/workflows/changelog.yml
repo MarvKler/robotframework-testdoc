@@ -1,0 +1,107 @@
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch base branch
+        run: |
+          git fetch origin "${{ github.event.pull_request.base.ref }}":"origin/${{ github.event.pull_request.base.ref }}"
+
+      - name: Compute commit range + changed files
+        id: changes
+        run: |
+          BASE="origin/${{ github.event.pull_request.base.ref }}"
+          HEAD="${{ github.sha }}"
+
+          echo "base=$BASE" >> $GITHUB_OUTPUT
+          echo "head=$HEAD" >> $GITHUB_OUTPUT
+
+          git log --no-merges --pretty=format:"- %s (%h)" "$BASE..$HEAD" > /tmp/commits.txt
+          git diff --name-status "$BASE...$HEAD" > /tmp/files.txt
+          git diff "$BASE...$HEAD" > /tmp/diff.patch
+
+      - name: Generate CHANGELOG.md (LLM)
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }} # optional (for Azure/enterprise gateways)
+          OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}       # e.g. gpt-4o-mini
+        run: |
+          python3 - << 'PY'
+          import os, json, pathlib, textwrap, urllib.request
+
+          commits = pathlib.Path("/tmp/commits.txt").read_text(errors="ignore")
+          files = pathlib.Path("/tmp/files.txt").read_text(errors="ignore")
+          diff  = pathlib.Path("/tmp/diff.patch").read_text(errors="ignore")
+
+          # Safety: avoid sending enormous diffs
+          MAX_DIFF_CHARS = 120_000
+          if len(diff) > MAX_DIFF_CHARS:
+            diff = diff[:MAX_DIFF_CHARS] + "\n\n[diff truncated]\n"
+
+          system = """You are a release-notes assistant.
+          Produce a concise, developer-friendly CHANGELOG entry in Markdown.
+          Group changes into: Added, Changed, Fixed, Docs, Tests, Chore (only include sections that have items).
+          Use bullet points. Prefer user-impact phrasing, but stay accurate to the diff.
+          Do NOT invent changes. If uncertain, omit."""
+          user = f"""Generate a CHANGELOG.md update for this PR compared to base branch.
+
+          Commits:
+          {commits}
+
+          Changed files (name-status):
+          {files}
+
+          Unified diff:
+          {diff}
+          """
+
+          base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
+          api_key = os.environ["OPENAI_API_KEY"]
+          model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+
+          payload = {
+            "model": model,
+            "messages": [
+              {"role":"system","content": system},
+              {"role":"user","content": user},
+            ],
+            "temperature": 0.2
+          }
+
+          req = urllib.request.Request(
+            base_url + "/chat/completions",
+            data=json.dumps(payload).encode("utf-8"),
+            headers={
+              "Authorization": f"Bearer {api_key}",
+              "Content-Type": "application/json",
+            },
+            method="POST"
+          )
+          with urllib.request.urlopen(req) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+
+          md = data["choices"][0]["message"]["content"].strip() + "\n"
+          pathlib.Path("CHANGELOG.md").write_text(md, encoding="utf-8")
+          print("Wrote CHANGELOG.md")
+          PY
+
+      - name: Commit CHANGELOG.md back to PR branch
+        run: |
+          git config user.name "changelog-bot"
+          git config user.email "changelog-bot@users.noreply.github.com"
+          git add CHANGELOG.md
+          git diff --cached --quiet && echo "No changelog changes to commit." && exit 0
+          git commit -m "Update CHANGELOG.md"
+          git push
