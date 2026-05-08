@@ -1052,7 +1052,7 @@ body {
 
 .db-tag-row {
     display: grid;
-    grid-template-columns: 150px 1fr 36px;
+    grid-template-columns: 150px 1fr;
     align-items: center;
     gap: 10px;
 }
@@ -1074,7 +1074,7 @@ body {
 .db-tag-bar-wrap {
     background: var(--surface-sunken);
     border-radius: 999px;
-    height: 10px;
+    height: 20px;
     overflow: hidden;
 }
 
@@ -1084,14 +1084,20 @@ body {
     border-radius: 999px;
     min-width: 3%;
     transition: width 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
 }
 
 .db-tag-count {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--muted);
-    text-align: right;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    padding-left: 8px;
+    white-space: nowrap;
     font-variant-numeric: tabular-nums;
+    line-height: 1;
 }
 
 /* Suite breakdown table */
