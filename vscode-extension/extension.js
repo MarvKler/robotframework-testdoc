@@ -26,21 +26,15 @@ async function getPythonPath(resourceUri) {
 /**
  * Derives the testdoc executable path from the resolved Python interpreter.
  * For a venv at /foo/.venv/bin/python the executable is /foo/.venv/bin/testdoc.
- * Falls back to bare 'testdoc' (i.e. PATH lookup) when the sibling does not exist.
+ * Returns null when pythonPath is not absolute (no venv configured).
  * @param {string} pythonPath  Absolute path to the Python interpreter.
- * @returns {Promise<string>}
+ * @returns {string|null}
  */
-async function getTestdocPath(pythonPath) {
-  const fs = require('fs');
-  // Resolve symlinks so we always get the real bin directory
-  const realPython = await fs.promises.realpath(pythonPath).catch(() => pythonPath);
-  const siblingTestdoc = path.join(path.dirname(realPython), 'testdoc');
-  try {
-    await fs.promises.access(siblingTestdoc, fs.constants.X_OK);
-    return siblingTestdoc;
-  } catch {
-    return 'testdoc';
+function getTestdocPath(pythonPath) {
+  if (path.isAbsolute(pythonPath)) {
+    return path.join(path.dirname(pythonPath), 'testdoc');
   }
+  return null; // fall back to python -m testdoc
 }
 
 /**
@@ -73,14 +67,17 @@ async function runTestdoc(folderUri, format) {
 
   const outputPath = saveUri.fsPath;
   const pythonPath = await getPythonPath(folderUri);
-  const testdocPath = await getTestdocPath(pythonPath);
+  const testdocExe = getTestdocPath(pythonPath);
+  const testdocCmd = testdocExe
+    ? `"${testdocExe}"`
+    : `"${pythonPath}" -m testdoc`;
 
   const terminal = vscode.window.createTerminal({
     name: `testdoc (${folderName})`,
     cwd: path.dirname(folderPath),
   });
   terminal.show();
-  terminal.sendText(`"${testdocPath}" -f ${format} "${folderPath}" "${outputPath}"`);
+  terminal.sendText(`${testdocCmd} -f ${format} "${folderPath}" "${outputPath}"`);
 }
 
 /**
@@ -107,14 +104,17 @@ async function runTestdocMkdocs(folderUri) {
 
   const outputPath = outputUris[0].fsPath;
   const pythonPath = await getPythonPath(folderUri);
-  const testdocPath = await getTestdocPath(pythonPath);
+  const testdocExe = getTestdocPath(pythonPath);
+  const testdocCmd = testdocExe
+    ? `"${testdocExe}"`
+    : `"${pythonPath}" -m testdoc`;
 
   const terminal = vscode.window.createTerminal({
     name: `testdoc mkdocs (${folderName})`,
     cwd: path.dirname(folderPath),
   });
   terminal.show();
-  terminal.sendText(`"${testdocPath}" --mkdocs "${folderPath}" "${outputPath}"`);
+  terminal.sendText(`${testdocCmd} --mkdocs "${folderPath}" "${outputPath}"`);
 }
 
 /**

@@ -8,12 +8,18 @@
     "type": "git",
     "url": "https://github.com/marvinklerx/robotframework-testdoc"
   },
-  "engines": { "vscode": "^1.85.0" },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
   "icon": "testdoc_logo.png",
-  "categories": ["Other"],
+  "categories": [
+    "Other"
+  ],
   "activationEvents": [],
   "main": "./extension.js",
-  "extensionDependencies": ["ms-python.python"],
+  "extensionDependencies": [
+    "ms-python.python"
+  ],
   "contributes": {
     "commands": [
       {
@@ -48,5 +54,8 @@
         }
       ]
     }
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.9.1"
   }
 }
