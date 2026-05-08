@@ -19,7 +19,7 @@ Download the latest `.vsix` from [GitHub Releases](https://github.com/MarvKler/r
 code --install-extension testdoc-vscode-<version>.vsix
 ```
 
-See the [VS Code Extension documentation](https://marvkler.github.io/robotframework-testdoc/usage/vscode-extension/) for details.
+See the [VS Code Extension documentation](https://marvkler.github.io/robotframework-testdoc/usage/vscode-extension.html) for details.
 
 ## Statistics
 
