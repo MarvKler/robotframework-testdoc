@@ -1,3 +1,5 @@
+name: Generate CHANGELOG.md
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]
