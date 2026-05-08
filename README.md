@@ -13,7 +13,7 @@ Visit the official documentation for more details: [Documentation - robotframewo
 ## VS Code Extension
 
 Generate test documentation directly from the VS Code Explorer — no terminal required.  
-Download the latest `.vsix` from [GitHub Releases](https://github.com/MarvKler/robotframework-testdoc/releases) and install it locally.
+Download the latest `.vsix` from [GitHub Releases](https://github.com/MarvKler/robotframework-testdoc/releases?q=VS+Code+Extension&expanded=true) and install it locally.
 
 ```bash
 code --install-extension testdoc-vscode-<version>.vsix
