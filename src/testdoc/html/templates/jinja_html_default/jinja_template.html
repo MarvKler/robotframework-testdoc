@@ -150,6 +150,18 @@
         </div>
     </aside>
 
+    <!-- TAG FILTER RESULTS PANEL (non-modal, floats above content) -->
+    <div id="tagResultBackdrop" class="tag-result-backdrop" style="display:none"></div>
+    <div id="tagResultPanel" class="tag-result-panel" aria-label="Tag filter results" style="display:none">
+        <div class="tag-result-header">
+            <span class="tag-result-title" id="tagResultTitle">Matching Tests</span>
+            <button class="tag-result-close" id="tagResultClose" aria-label="Close filter results">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="tag-result-body" id="tagResultBody"></div>
+    </div>
+
     <!-- MAIN CONTENT -->
     <main class="content" id="mainContent">
         {# ------------------------------------------------------------
@@ -343,7 +355,7 @@
                         {% for test in s.tests %}
                         {%- set _test_tags = [] -%}
                         {%- for _t in (test.tags or []) -%}{%- if _test_tags.append((_t.name if _t is mapping else _t) | string) -%}{%- endif -%}{%- endfor -%}
-                        <section id="test-{{ s.id }}-{{ loop.index0 }}" class="test-block collapsed" data-tags="{{ _test_tags | dump_json | e }}" data-has-doc="{{ '1' if test.doc else '0' }}">
+                        <section id="test-{{ s.id }}-{{ loop.index0 }}" class="test-block collapsed" data-tags="{{ _test_tags | dump_json | e }}" data-has-doc="{{ '1' if test.doc else '0' }}" data-suite-name="{{ s.name }}" data-test-name="{{ test.name }}">
                             <div class="test-header">
                                 <div class="test-name">{{ test.name }}</div>
                                 <span class="test-collapse-icon" aria-hidden="true">

@@ -321,59 +321,80 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let activeTags = new Set();
 
-    /** Hide/show test blocks in the currently visible suite based on activeTags. */
+    /** Build and show/update the results panel with all tests matching activeTags. */
     function applyTagFilter() {
-        const visibleTests = document.querySelectorAll(
-            '.suite-block:not([style*="display: none"]) .test-block[id^="test-"]'
-        );
-        let shown = 0;
-        const total = visibleTests.length;
+        const resultPanel = document.getElementById('tagResultPanel');
+        const resultBody  = document.getElementById('tagResultBody');
+        const resultTitle = document.getElementById('tagResultTitle');
+        const statusEl    = document.getElementById('tagFilterStatus');
+        const clearBtn    = document.getElementById('tagFilterClear');
 
-        visibleTests.forEach(function (block) {
-            if (activeTags.size === 0) {
-                block.style.display = '';
-                shown++;
-                return;
-            }
+        if (clearBtn) clearBtn.style.display = activeTags.size > 0 ? '' : 'none';
+        if (statusEl) statusEl.style.display = 'none';
+
+        const backdrop = document.getElementById('tagResultBackdrop');
+
+        if (activeTags.size === 0) {
+            if (resultPanel) resultPanel.style.display = 'none';
+            if (backdrop) backdrop.style.display = 'none';
+            return;
+        }
+
+        // Collect all matching tests across ALL suites, grouped by suite name
+        const allTests = Array.from(document.querySelectorAll('.test-block[id^="test-"]'));
+        const groups   = Object.create(null); // suiteName -> [{name, id}]
+
+        allTests.forEach(function (block) {
             let testTagSet;
             try { testTagSet = new Set(JSON.parse(block.dataset.tags || '[]')); } catch (e) { testTagSet = new Set(); }
             const hasMatch = Array.from(activeTags).some(function (t) { return testTagSet.has(t); });
-            block.style.display = hasMatch ? '' : 'none';
-            if (hasMatch) shown++;
+            if (!hasMatch) return;
+            const suite = block.dataset.suiteName || '—';
+            if (!groups[suite]) groups[suite] = [];
+            groups[suite].push({ name: block.dataset.testName || block.id, id: block.id });
         });
 
-        const statusEl  = document.getElementById('tagFilterStatus');
-        const clearBtn  = document.getElementById('tagFilterClear');
+        const matchCount = Object.values(groups).reduce(function (s, arr) { return s + arr.length; }, 0);
 
-        if (statusEl) {
-            if (activeTags.size > 0 && total > 0) {
-                statusEl.textContent = 'Showing ' + shown + ' of ' + total + ' tests';
-                statusEl.style.display = '';
+        if (resultTitle) {
+            resultTitle.textContent = matchCount + ' test' + (matchCount !== 1 ? 's' : '') +
+                ' matching ' + activeTags.size + ' selected tag' + (activeTags.size !== 1 ? 's' : '');
+        }
+
+        if (resultBody) {
+            var html = '';
+            if (matchCount === 0) {
+                html = '<div class="tag-result-empty">No tests match the selected tags.</div>';
             } else {
-                statusEl.style.display = 'none';
+                Object.keys(groups).sort().forEach(function (suiteName) {
+                    html += '<div class="tag-result-group">' +
+                        '<div class="tag-result-group-name">' + escHtml(suiteName) + '</div>' +
+                        '<ul class="tag-result-list">';
+                    groups[suiteName].forEach(function (test) {
+                        html += '<li><a class="tag-result-link" href="#' + escHtml(test.id) + '">' +
+                            escHtml(test.name) + '</a></li>';
+                    });
+                    html += '</ul></div>';
+                });
             }
-        }
-        if (clearBtn) {
-            clearBtn.style.display = activeTags.size > 0 ? '' : 'none';
+            resultBody.innerHTML = html;
+
+            // Clicking a link navigates to the test block (and closes the panel)
+            resultBody.querySelectorAll('.tag-result-link').forEach(function (a) {
+                a.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.getElementById(a.getAttribute('href').slice(1));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        target.classList.add('highlighted');
+                        setTimeout(function () { target.classList.remove('highlighted'); }, 2000);
+                    }
+                });
+            });
         }
 
-        // Empty state inside the tests-list
-        const visibleSuite = document.querySelector('.suite-block:not([style*="display: none"])');
-        if (visibleSuite) {
-            let emptyEl = visibleSuite.querySelector('.tag-filter-empty');
-            if (shown === 0 && total > 0 && activeTags.size > 0) {
-                if (!emptyEl) {
-                    emptyEl = document.createElement('div');
-                    emptyEl.className = 'tag-filter-empty';
-                    emptyEl.textContent = 'No tests match the selected tags.';
-                    const testsList = visibleSuite.querySelector('.tests-list');
-                    if (testsList) testsList.appendChild(emptyEl);
-                }
-                emptyEl.style.display = '';
-            } else if (emptyEl) {
-                emptyEl.style.display = 'none';
-            }
-        }
+        if (resultPanel) resultPanel.style.display = '';
+        if (document.getElementById('tagResultBackdrop')) document.getElementById('tagResultBackdrop').style.display = '';
     }
 
     /** Collect all unique tags from all test blocks and render the filter panel. */
@@ -425,6 +446,38 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         const statusEl = document.getElementById('tagFilterStatus');
         if (statusEl) statusEl.style.display = 'none';
+
+        // Close button for the results panel
+        const closeBtn = document.getElementById('tagResultClose');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function () {
+                const resultPanel = document.getElementById('tagResultPanel');
+                if (resultPanel) resultPanel.style.display = 'none';
+                const backdrop = document.getElementById('tagResultBackdrop');
+                if (backdrop) backdrop.style.display = 'none';
+                // also deselect all active tags
+                activeTags.clear();
+                listEl.querySelectorAll('.tag-filter-btn.active').forEach(function (b) {
+                    b.classList.remove('active');
+                });
+                if (clearBtn) clearBtn.style.display = 'none';
+            });
+        }
+
+        // Clicking the backdrop also closes the panel
+        const backdropEl = document.getElementById('tagResultBackdrop');
+        if (backdropEl) {
+            backdropEl.addEventListener('click', function () {
+                const resultPanel = document.getElementById('tagResultPanel');
+                if (resultPanel) resultPanel.style.display = 'none';
+                backdropEl.style.display = 'none';
+                activeTags.clear();
+                listEl.querySelectorAll('.tag-filter-btn.active').forEach(function (b) {
+                    b.classList.remove('active');
+                });
+                if (clearBtn) clearBtn.style.display = 'none';
+            });
+        }
     }
 
     /* =========================================================

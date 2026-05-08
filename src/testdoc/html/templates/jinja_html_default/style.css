@@ -356,6 +356,8 @@ body {
     height: 100%;
     overflow: hidden;
     transition: width 0.25s ease, opacity 0.25s ease;
+    position: relative;
+    z-index: 301;
 }
 
 .nav.collapsed {
@@ -772,7 +774,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
-    max-height: 150px;
+    max-height: 35vh;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
@@ -825,6 +827,141 @@ body {
     font-size: 13px;
     color: var(--muted);
     font-style: italic;
+}
+
+/* ============================================================
+   Tag filter results panel (non-modal floating dialog)
+   ============================================================ */
+.tag-result-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 299;
+}
+
+.tag-result-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 720px;
+    max-width: calc(100vw - 40px);
+    max-height: calc(100vh - 80px);
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 12px 48px rgba(0,0,0,0.35);
+    display: flex;
+    flex-direction: column;
+    z-index: 300;
+    overflow: hidden;
+}
+
+.tag-result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px 10px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    gap: 8px;
+}
+
+.tag-result-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-1);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tag-result-close {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: background 0.12s ease, color 0.12s ease;
+}
+
+.tag-result-close:hover {
+    background: var(--surface-sunken);
+    color: var(--text-1);
+}
+
+.tag-result-close svg {
+    width: 14px;
+    height: 14px;
+}
+
+.tag-result-body {
+    overflow-y: auto;
+    flex: 1;
+    padding: 8px 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+.tag-result-body::-webkit-scrollbar { width: 4px; }
+.tag-result-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.tag-result-empty {
+    padding: 24px 16px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+}
+
+.tag-result-group {
+    margin-bottom: 4px;
+}
+
+.tag-result-group-name {
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    padding: 6px 14px 4px;
+}
+
+.tag-result-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.tag-result-list li {
+    padding: 0;
+}
+
+.tag-result-link {
+    display: block;
+    padding: 5px 14px 5px 22px;
+    font-size: 13px;
+    color: var(--text-1);
+    text-decoration: none;
+    border-radius: 0;
+    transition: background 0.1s ease, color 0.1s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tag-result-link:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
 }
 
 .metadata {
