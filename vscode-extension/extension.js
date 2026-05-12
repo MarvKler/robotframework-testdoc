@@ -32,9 +32,39 @@ async function getPythonPath(resourceUri) {
  */
 function getTestdocPath(pythonPath) {
   if (path.isAbsolute(pythonPath)) {
-    return path.join(path.dirname(pythonPath), 'testdoc');
+    const exe = process.platform === 'win32' ? 'testdoc.exe' : 'testdoc';
+    return path.join(path.dirname(pythonPath), exe);
   }
   return null; // fall back to python -m testdoc
+}
+
+/**
+ * Waits for shell integration to become active on a terminal.
+ * Mirrors the approach used by the robotcode extension.
+ * @param {vscode.Terminal} terminal
+ * @param {number} timeout  Milliseconds to wait before giving up.
+ * @returns {Promise<boolean>}
+ */
+async function waitForShellIntegration(terminal, timeout = 3000) {
+  const config = vscode.workspace.getConfiguration('terminal.integrated.shellIntegration');
+  if (!config.get('enabled', false)) {
+    return false;
+  }
+  if (terminal.shellIntegration) {
+    return true;
+  }
+  return new Promise((resolve) => {
+    const listener = vscode.window.onDidChangeTerminalShellIntegration((event) => {
+      if (event.terminal === terminal) {
+        listener.dispose();
+        resolve(true);
+      }
+    });
+    setTimeout(() => {
+      listener.dispose();
+      resolve(false);
+    }, timeout);
+  });
 }
 
 /**
@@ -68,16 +98,24 @@ async function runTestdoc(folderUri, format) {
   const outputPath = saveUri.fsPath;
   const pythonPath = await getPythonPath(folderUri);
   const testdocExe = getTestdocPath(pythonPath);
-  const testdocCmd = testdocExe
-    ? `"${testdocExe}"`
-    : `"${pythonPath}" -m testdoc`;
+  const exe = testdocExe || pythonPath;
+  const cmdArgs = testdocExe
+    ? ['-f', format, folderPath, outputPath]
+    : ['-m', 'testdoc', '-f', format, folderPath, outputPath];
 
   const terminal = vscode.window.createTerminal({
     name: `testdoc (${folderName})`,
     cwd: path.dirname(folderPath),
   });
   terminal.show();
-  terminal.sendText(`${testdocCmd} -f ${format} "${folderPath}" "${outputPath}"`);
+
+  const shellIntegrationActive = await waitForShellIntegration(terminal);
+  if (shellIntegrationActive) {
+    terminal.shellIntegration.executeCommand(exe, cmdArgs);
+  } else {
+    const quotedArgs = cmdArgs.map(a => `"${a.replace(/"/g, '\\"')}"`).join(' ');
+    terminal.sendText(`"${exe}" ${quotedArgs}`);
+  }
 }
 
 /**
@@ -105,16 +143,24 @@ async function runTestdocMkdocs(folderUri) {
   const outputPath = outputUris[0].fsPath;
   const pythonPath = await getPythonPath(folderUri);
   const testdocExe = getTestdocPath(pythonPath);
-  const testdocCmd = testdocExe
-    ? `"${testdocExe}"`
-    : `"${pythonPath}" -m testdoc`;
+  const exe = testdocExe || pythonPath;
+  const cmdArgs = testdocExe
+    ? ['--mkdocs', folderPath, outputPath]
+    : ['-m', 'testdoc', '--mkdocs', folderPath, outputPath];
 
   const terminal = vscode.window.createTerminal({
     name: `testdoc mkdocs (${folderName})`,
     cwd: path.dirname(folderPath),
   });
   terminal.show();
-  terminal.sendText(`${testdocCmd} --mkdocs "${folderPath}" "${outputPath}"`);
+
+  const shellIntegrationActive = await waitForShellIntegration(terminal);
+  if (shellIntegrationActive) {
+    terminal.shellIntegration.executeCommand(exe, cmdArgs);
+  } else {
+    const quotedArgs = cmdArgs.map(a => `"${a.replace(/"/g, '\\"')}"`).join(' ');
+    terminal.sendText(`"${exe}" ${quotedArgs}`);
+  }
 }
 
 /**
