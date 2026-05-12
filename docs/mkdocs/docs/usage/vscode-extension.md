@@ -29,6 +29,16 @@ The extension is not published on the VS Code Marketplace. Download the latest `
 code --install-extension testdoc-vscode-<version>.vsix
 ```
 
+**Option C - One-Line-Command**
+
+In the description for the [VS Code Extension GitHub Release](https://github.com/MarvKler/robotframework-testdoc/releases?q=VS+Code+Extension&expanded=true) you can find a ``one-line-command`` which can be used for the download and installation.
+
+Here is an example for Linux, but please visit the GitHub Releases Page to figure out the exact command for the latest available version:
+**Linux / macOS:**
+```bash
+curl -L -o testdoc-vscode-{{ version }}.vsix https://github.com/MarvKler/robotframework-testdoc/releases/download/vsce%2Fv{{ version }}/testdoc-vscode-{{ version }}.vsix && code --install-extension testdoc-vscode-{{ version }}.vsix
+```
+
 ## :material-test-tube: Usage
 
 Right-click any folder in the **Explorer** panel that contains your `.robot` files:
