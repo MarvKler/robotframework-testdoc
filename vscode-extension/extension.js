@@ -32,7 +32,8 @@ async function getPythonPath(resourceUri) {
  */
 function getTestdocPath(pythonPath) {
   if (path.isAbsolute(pythonPath)) {
-    return path.join(path.dirname(pythonPath), 'testdoc');
+    const exe = process.platform === 'win32' ? 'testdoc.exe' : 'testdoc';
+    return path.join(path.dirname(pythonPath), exe);
   }
   return null; // fall back to python -m testdoc
 }
