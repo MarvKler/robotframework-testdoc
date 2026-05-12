@@ -7,6 +7,7 @@ on:
       - '!v*.*.*a*'
       - '!v*.*.*b*'
       - '!v*.*.*rc*'
+      - 'vsce/v*.*.*'
 
 permissions:
   contents: write
