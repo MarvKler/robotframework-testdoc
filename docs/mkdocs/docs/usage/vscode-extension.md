@@ -15,7 +15,7 @@ pip install robotframework-testdoc
 
 ## :material-download: Installation
 
-The extension is not published on the VS Code Marketplace. Download the latest `.vsix` from the [GitHub Releases](https://github.com/MarvKler/robotframework-testdoc/releases) page (look for releases tagged `vsce/v*`).
+The extension is not published on the VS Code Marketplace. Download the latest `.vsix` from the [GitHub Releases](https://github.com/MarvKler/robotframework-testdoc/releases?q=VS+Code+Extension&expanded=true) page (look for releases tagged `vsce/v*`).
 
 **Option A – VS Code UI:**
 
