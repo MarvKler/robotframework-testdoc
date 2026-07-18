@@ -298,9 +298,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         btn.addEventListener('click', function () {
             var isActive = btn.classList.contains('active');
+            var testDetailPanel = document.getElementById('testDetailPanel');
             if (isActive) {
                 btn.classList.remove('active');
                 panel.style.display = 'none';
+                if (testDetailPanel) testDetailPanel.style.display = 'none';
                 suiteContent.style.display = '';
                 if (navTree)   { navTree.removeAttribute('inert');   navTree.classList.remove('sidebar-disabled'); }
                 if (tagFilter) { tagFilter.removeAttribute('inert'); tagFilter.classList.remove('sidebar-disabled'); }
@@ -309,10 +311,112 @@ document.addEventListener('DOMContentLoaded', function () {
                 btn.classList.add('active');
                 panel.style.display = '';
                 suiteContent.style.display = 'none';
+                if (testDetailPanel) testDetailPanel.style.display = 'none';
                 if (navTree)   { navTree.setAttribute('inert', '');   navTree.classList.add('sidebar-disabled'); }
                 if (tagFilter) { tagFilter.setAttribute('inert', ''); tagFilter.classList.add('sidebar-disabled'); }
             }
         });
+    }
+
+    /* =========================================================
+       Test detail view (single-page per test case)
+       ========================================================= */
+
+    function showTestDetail(testBlock) {
+        // Ensure the block is mounted before we try to clone it
+        mountBlock(testBlock);
+
+        var panel        = document.getElementById('testDetailPanel');
+        var suiteContent = document.getElementById('suiteContent');
+        var dashBtn      = document.getElementById('dashboardToggle');
+        var dashPanel    = document.getElementById('dashboardPanel');
+        if (!panel) return;
+
+        // Deactivate dashboard if it was open
+        if (dashBtn && dashBtn.classList.contains('active')) {
+            dashBtn.classList.remove('active');
+            if (dashPanel) dashPanel.style.display = 'none';
+            var navTree   = document.querySelector('.nav-tree');
+            var tagFilter = document.getElementById('tagFilterPanel');
+            if (navTree)   { navTree.removeAttribute('inert');   navTree.classList.remove('sidebar-disabled'); }
+            if (tagFilter) { tagFilter.removeAttribute('inert'); tagFilter.classList.remove('sidebar-disabled'); }
+        }
+
+        var testName  = testBlock.dataset.testName  || testBlock.id;
+        var suiteName = testBlock.dataset.suiteName || '';
+        var suiteId   = testBlock.dataset.suiteId   || '';
+
+        // ── Build header ────────────────────────────────────────────
+        var backBtn = suiteId
+            ? '<button class="back-to-suite-btn" data-suite-target="' + escHtml(suiteId) + '" aria-label="Back to suite">'
+                + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>'
+                + 'Back to Suite'
+                + '</button>'
+            : '';
+
+        var headerHtml = '<header class="content-header">'
+            + '<div class="content-header-main">'
+            + '<div class="content-breadcrumb">'
+            + '<span class="breadcrumb-type">Test Case</span>';
+        if (suiteName) {
+            headerHtml += '<span class="breadcrumb-sep">in</span>'
+                + '<span class="breadcrumb-suite">' + escHtml(suiteName) + '</span>';
+        }
+        headerHtml += '</div>'
+            + '<h1 class="content-title-main">' + escHtml(testName) + '</h1>'
+            + '</div>'
+            + (backBtn ? '<div class="content-header-meta">' + backBtn + '</div>' : '')
+            + '</header>';
+
+        // ── Build wrapper (needs test-block class so kw-info buttons work) ──
+        panel.innerHTML = '<div class="test-detail-inner test-block">' + headerHtml + '</div>';
+        var wrapper = panel.querySelector('.test-detail-inner');
+
+        // ── Clone the collapsible body sections ─────────────────────
+        var collapsibleBody = testBlock.querySelector('.test-body-collapsible');
+        if (collapsibleBody) {
+            var bodyClone = collapsibleBody.cloneNode(true);
+            bodyClone.style.display = '';
+
+            // Remove the collapse toggle — show code directly in the detail view
+            bodyClone.querySelectorAll('.code-wrapper').forEach(function (w) {
+                var body = w.querySelector('.code-toggle-body');
+                if (body) {
+                    body.style.display = '';
+                    w.parentNode.replaceChild(body, w);
+                }
+            });
+
+            wrapper.appendChild(bodyClone);
+        }
+
+        if (suiteContent) suiteContent.style.display = 'none';
+        panel.style.display = '';
+        panel.scrollTop = 0;
+
+        // ── Wire up the back-to-suite button ─────────────────────────
+        var backBtnEl = panel.querySelector('.back-to-suite-btn');
+        if (backBtnEl) {
+            backBtnEl.addEventListener('click', function () {
+                var target = this.dataset.suiteTarget;
+                hideTestDetail();
+                if (target) {
+                    var link = document.querySelector('.tree-suite[data-suite-id="' + target + '"]');
+                    if (link) link.click();
+                }
+            });
+        }
+    }
+
+    function hideTestDetail() {
+        var panel        = document.getElementById('testDetailPanel');
+        var suiteContent = document.getElementById('suiteContent');
+        var dashBtn      = document.getElementById('dashboardToggle');
+        if (panel) panel.style.display = 'none';
+        // Only restore suiteContent if the dashboard is not currently active
+        if (!dashBtn || !dashBtn.classList.contains('active')) {
+            if (suiteContent) suiteContent.style.display = '';
+        }
     }
 
     /* =========================================================
@@ -532,10 +636,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
             setActiveTreeLink(link);
 
-            applySuiteFilter(suiteId);
-            prepareLazyRenderingForCurrentSuite();
-            applyTagFilter();
-            scrollToTarget(targetId, !isSuite);
+            if (isSuite) {
+                // Suite selected: hide test detail, show suite content
+                hideTestDetail();
+                applySuiteFilter(suiteId);
+                prepareLazyRenderingForCurrentSuite();
+                applyTagFilter();
+                scrollToTarget(targetId, false);
+            } else {
+                // Test selected: show dedicated single-page detail view
+                const block = document.getElementById(targetId);
+                if (block) showTestDetail(block);
+            }
         });
     }
 
@@ -554,38 +666,17 @@ document.addEventListener('DOMContentLoaded', function () {
         if (treeLink) treeLink.click();
     });
 
-    // Test case collapse toggle (only affects header/body, not sidebar selection)
+    // Test list row click → open single-page detail view
     document.addEventListener('click', function (e) {
-        const header = e.target.closest('.test-header');
-        if (!header) return;
-
-        // Prevent the click from also triggering the test-block selection handler.
-        e.stopPropagation();
-
-        const block = header.closest('.test-block');
+        const row = e.target.closest('.test-list-row');
+        if (!row) return;
+        const targetId = row.dataset.target;
+        if (!targetId) return;
+        const block = document.getElementById(targetId);
         if (!block) return;
-        const isCollapsed = block.classList.toggle('collapsed');
-        const body = block.querySelector('.test-body-collapsible');
-        if (body) body.style.display = isCollapsed ? 'none' : '';
-    });
-
-    // Test block click → highlight + sync sidebar (ignore clicks on interactive controls)
-    document.addEventListener('click', function (e) {
-        if (e.target.closest('.test-header')) return;
-        if (e.target.closest('.kw-info-btn')) return;
-        if (e.target.closest('.code-toggle')) return;
-
-        const block = e.target.closest('.test-block[id^="test-"]');
-        if (!block) return;
-
-        clearTestHighlight();
-        block.classList.add('highlighted');
-
-        const matchingLink = document.querySelector('.tree-test[data-target="' + block.id + '"]');
-        if (matchingLink) {
-            setActiveTreeLink(matchingLink);
-            matchingLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
+        const treeLink = document.querySelector('.tree-test[data-target="' + targetId + '"]');
+        if (treeLink) setActiveTreeLink(treeLink);
+        showTestDetail(block);
     });
 
     /* =========================================================
