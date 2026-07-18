@@ -330,38 +330,19 @@
                 {% endif %}
 
                 {% if s.tests %}
-                <!-- Test Case Overview -->
+                <!-- Test Cases -->
                 <section class="section">
                     <div class="section-header">
-                        <span class="section-title">Test Case Overview</span>
-                        <span class="section-subtitle">All {{ s.tests | length }} tests in this suite</span>
-                    </div>
-                    <div class="code-always-visible">
-                        {% set code -%}
-*** Test Cases ***
-{{ s.tests | map(attribute='name') | join('\n') }}
-                        {%- endset %}
-                        {{ code | highlight_robot_in_pre | safe }}
-                    </div>
-                </section>
-
-                <!-- Test Case Details -->
-                <section class="section">
-                    <div class="section-header">
-                        <span class="section-title">Test Case Details</span>
-                        <span class="section-subtitle">Per-test documentation and steps</span>
+                        <span class="section-title">Test Cases</span>
+                        <span class="section-subtitle">{{ s.tests | length }} test{% if s.tests | length != 1 %}s{% endif %} — click to view details</span>
                     </div>
                     <div class="tests-list">
                         {% for test in s.tests %}
                         {%- set _test_tags = [] -%}
                         {%- for _t in (test.tags or []) -%}{%- if _test_tags.append((_t.name if _t is mapping else _t) | string) -%}{%- endif -%}{%- endfor -%}
-                        <section id="test-{{ s.id }}-{{ loop.index0 }}" class="test-block collapsed" data-tags="{{ _test_tags | dump_json | e }}" data-has-doc="{{ '1' if test.doc else '0' }}" data-suite-name="{{ s.name }}" data-test-name="{{ test.name }}">
-                            <div class="test-header">
-                                <div class="test-name">{{ test.name }}</div>
-                                <span class="test-collapse-icon" aria-hidden="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-                                </span>
-                            </div>
+
+                        {# Hidden data container used by showTestDetail #}
+                        <section id="test-{{ s.id }}-{{ loop.index0 }}" class="test-block" data-tags="{{ _test_tags | dump_json | e }}" data-has-doc="{{ '1' if test.doc else '0' }}" data-suite-name="{{ s.name }}" data-test-name="{{ test.name }}" data-suite-id="{{ s.id }}" hidden>
                             <div class="test-body-collapsible">
                                 <div class="test-subsection">
                                     <div class="kv-label">Documentation</div>
@@ -426,6 +407,26 @@
                                 </div>
                             </div>
                         </section>
+
+                        {# Visible clickable row #}
+                        <button class="test-list-row" data-target="test-{{ s.id }}-{{ loop.index0 }}" type="button">
+                            <span class="tree-icon test">T</span>
+                            <div class="test-list-main">
+                                <span class="test-list-name">{{ test.name }}</span>
+                                {% if test.doc %}
+                                <span class="test-list-doc">{{ test.doc | truncate(100) }}</span>
+                                {% endif %}
+                            </div>
+                            {% if _test_tags %}
+                            <div class="test-list-tags">
+                                {% for tag in _test_tags[:3] %}<span class="tag">{{ tag }}</span>{% endfor %}
+                                {% if _test_tags | length > 3 %}<span class="tag tag-more">+{{ _test_tags | length - 3 }} more</span>{% endif %}
+                            </div>
+                            {% endif %}
+                            <span class="test-list-chevron" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                            </span>
+                        </button>
                         {% endfor %}
                     </div>
                 </section>
@@ -484,6 +485,9 @@
 
         <!-- Statistics Dashboard (hidden by default, built by JS) -->
         <div id="dashboardPanel" class="dashboard-panel" style="display:none" role="region" aria-label="Statistics Dashboard"></div>
+
+        <!-- Test Case Detail View (single-page per test case) -->
+        <div id="testDetailPanel" class="test-detail-panel" style="display:none" role="region" aria-label="Test Case Detail"></div>
 
         <div id="suiteContent">
         {% if suites %}

@@ -513,6 +513,94 @@ body {
 .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
 /* ============================================================
+   Test Detail Panel
+   ============================================================ */
+.test-detail-panel {
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: var(--surface-base);
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+    transition: background 0.25s ease;
+}
+
+.test-detail-panel::-webkit-scrollbar { width: 6px; }
+.test-detail-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* The inner wrapper reuses .test-block only for kw-info DOM traversal;
+   strip the card appearance so it looks like a regular content page. */
+.test-detail-panel .test-detail-inner.test-block {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    cursor: default;
+    overflow: visible;
+}
+
+.test-detail-panel .test-detail-inner.test-block:hover {
+    border-color: transparent;
+    box-shadow: none;
+}
+
+/* Expand test-body-collapsible display rule reset (it is always shown here) */
+.test-detail-panel .test-body-collapsible {
+    display: block !important;
+}
+
+/* Subsections in the detail view get a bit more breathing room */
+.test-detail-panel .test-subsection {
+    padding: 16px 28px;
+}
+
+/* Breadcrumb suite name */
+.breadcrumb-sep {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* Back-to-suite button inside the test detail header */
+.back-to-suite-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-raised);
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.back-to-suite-btn svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+.back-to-suite-btn:hover {
+    background: var(--surface-highlight);
+    border-color: var(--accent);
+    box-shadow: 0 2px 6px var(--shadow-md);
+}
+.back-to-suite-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.breadcrumb-suite {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 280px;
+}
+
+/* ============================================================
    Content Header
    ============================================================ */
 .content-header {
@@ -1284,10 +1372,96 @@ body {
 .tests-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
     padding: 12px 16px;
     background: var(--surface-sunken);
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+/* ============================================================
+   Test case clickable list rows (suite view)
+   ============================================================ */
+.test-list-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xs);
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+    color: var(--text);
+    transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.test-list-row:hover {
+    border-color: var(--accent-border);
+    box-shadow: var(--shadow-sm);
+    background: var(--surface);
+}
+
+.test-list-row:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.test-list-row .tree-icon.test {
+    flex-shrink: 0;
+}
+
+.test-list-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.test-list-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.test-list-doc {
+    font-size: 11.5px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.test-list-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.test-list-chevron {
+    display: flex;
+    align-items: center;
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: transform 0.15s ease;
+}
+
+.test-list-chevron svg {
+    width: 15px;
+    height: 15px;
+    display: block;
+}
+
+.test-list-row:hover .test-list-chevron {
+    transform: translateX(2px);
+    color: var(--accent);
 }
 
 .test-block {

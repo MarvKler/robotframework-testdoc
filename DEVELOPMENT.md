@@ -134,6 +134,7 @@ The GitHub Action will then build and publish the release automatically.
 Contributing to this project & working with it locally, requires you to install some ``dev dependencies`` - use the following command in the project root directory:
 ```
 pip install -e .[dev]
+uv sync --extra dev
 ```
 
 Afterwards, the library gets installed in ``editable mode`` & you will have a ``dev dependencies`` installed.
