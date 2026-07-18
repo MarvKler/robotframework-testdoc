@@ -20,6 +20,8 @@ class BrandedPdf(FPDF):
 
 
 class PdfRenderer:
+    MIN_TITLE_FONT_SIZE = 18
+
     def __init__(self) -> None:
         self.args = CommandLineArguments()
 
@@ -119,7 +121,7 @@ class PdfRenderer:
         max_width = pdf.w - (2 * pdf.l_margin)
         title_font_size = 34
         pdf.set_font("Helvetica", "B", title_font_size)
-        while pdf.get_string_width(title) > (max_width * 0.92) and title_font_size > 18:
+        while pdf.get_string_width(title) > (max_width * 0.92) and title_font_size > self.MIN_TITLE_FONT_SIZE:
             title_font_size -= 1
             pdf.set_font("Helvetica", "B", title_font_size)
 
@@ -183,14 +185,14 @@ class PdfRenderer:
     def _to_pdf_text(self, value: str) -> str:
         text = str(value)
         replacements = {
-            "—": "-",
-            "–": "-",
-            "…": "...",
-            "“": '"',
-            "”": '"',
-            "„": '"',
-            "’": "'",
-            "‘": "'",
+            "\u2014": "-",
+            "\u2013": "-",
+            "\u2026": "...",
+            "\u201c": '"',
+            "\u201d": '"',
+            "\u201e": '"',
+            "\u2019": "'",
+            "\u2018": "'",
             "\u00a0": " ",
         }
 
