@@ -52,6 +52,7 @@ nav:
     - usage/index.md
     - HTML (Jinja2): usage/jinja2.md
     - Mkdocs: usage/mkdocs.md
+    - PDF Output: usage/pdf.md
     - Output Formats (JSON): usage/output_formats.md
   - VS Code Extension:
     - usage/vscode-extension.md

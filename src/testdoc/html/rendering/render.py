@@ -4,6 +4,7 @@ from ...helper.cliargs import CommandLineArguments
 from .jinja2 import JinjaIntegration
 from .json_renderer import JsonRenderer
 from .mkdocs import MkdocsIntegration
+from .pdf_renderer import PdfRenderer
 
 
 class TestDocHtmlRendering:
@@ -17,5 +18,7 @@ class TestDocHtmlRendering:
 
         if self.args.output_format.lower() == "json":
             JsonRenderer().render(suites, output_file)
+        elif self.args.output_format.lower() == "pdf":
+            PdfRenderer().render(suites, output_file)
         else:
             JinjaIntegration().render_jinja2_page(suites, output_file)

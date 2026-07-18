@@ -6,7 +6,8 @@ The following output formats and site generators are currently supported:
 
 1. [HTML via Jinja2](jinja2.md) (Default)
 2. [Mkdocs](mkdocs.md)
-3. [JSON](output_formats.md)
+3. [PDF Output](pdf.md)
+4. [JSON](output_formats.md)
 
 !!! warning "Plugin Usage is Mutual Exclusive"
     The CLI arguments for the plugins are mutually exclusive - you cannot combine them or use them in the same command. 

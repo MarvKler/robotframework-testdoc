@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import shutil
+import tempfile
 from click.testing import CliRunner
 from testdoc.cli import main
 
@@ -87,3 +88,72 @@ def test_cli_cmd_verbose():
     assert "output.html" in result.output
     assert "Saving" in result.output
     assert os.path.exists(output)
+
+
+def test_cli_cmd_pdf_output_format():
+    parent_dir = Path(__file__).parent.parent
+    robot = os.path.join(parent_dir, "testdata", "acceptance")
+    output = os.path.join(parent_dir, "output_testdoc.pdf")
+    runner = CliRunner()
+    result = runner.invoke(main, ["-f", "pdf", robot, output])
+    assert result.exit_code == 0
+    assert "Generated Test Documentation PDF" in result.output
+    assert os.path.exists(output)
+
+    with open(output, "rb") as file:
+        header = file.read(4)
+    assert header == b"%PDF"
+
+
+def test_cli_cmd_pdf_output_format_with_custom_template():
+        parent_dir = Path(__file__).parent.parent
+        robot = os.path.join(parent_dir, "testdata", "acceptance")
+        output = os.path.join(parent_dir, "output_testdoc_custom_template.pdf")
+
+        template_content = """
+<html>
+    <body>
+        {% if view == "overview" %}
+            <h2>Custom Overview</h2>
+            <p>Total Suites: {{ suite_count }}</p>
+            <p>Total Tests: {{ test_count }}</p>
+        {% elif view == "suite" %}
+            <h2>{{ suite_name }}</h2>
+            {% if tests %}
+                <table width="100%" border="0" cellspacing="0" cellpadding="2">
+                    {% for test in tests %}
+                        {% if loop.first %}
+                            <tr>
+                                <td width="4%">-</td>
+                                <td width="96%">{{ test.name }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>-</td>
+                                <td>{{ test.name }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            {% endif %}
+        {% endif %}
+    </body>
+</html>
+""".strip()
+
+        with tempfile.NamedTemporaryFile("w", suffix=".html", delete=False, encoding="utf-8") as tf:
+                tf.write(template_content)
+                template_file = tf.name
+
+        runner = CliRunner()
+        result = runner.invoke(main, ["-f", "pdf", "--custom-pdf-template", template_file, robot, output])
+
+        os.unlink(template_file)
+
+        assert result.exit_code == 0
+        assert "Generated Test Documentation PDF" in result.output
+        assert os.path.exists(output)
+
+        with open(output, "rb") as file:
+                header = file.read(4)
+        assert header == b"%PDF"

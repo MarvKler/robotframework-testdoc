@@ -1,0 +1,55 @@
+<html>
+  <body>
+    {% if view == "title" %}
+      <br /><br /><br /><br /><br />
+      <h1 align="center">{{ title }}</h1>
+      <p align="center">{{ generated_date }}</p>
+    {% elif view == "overview" %}
+      <h2 align="center">Overview</h2>
+
+      <table width="100%" border="1" cellspacing="0" cellpadding="7">
+        <tr>
+          <td bgcolor="#e2e8f0">Total .robot suites</td>
+          <td>{{ suite_count }}</td>
+        </tr>
+        <tr>
+          <td bgcolor="#e2e8f0">Total test cases</td>
+          <td>{{ test_count }}</td>
+        </tr>
+      </table>
+
+      <br />
+      <table width="100%" border="0" cellspacing="0" cellpadding="6">
+        <tr>
+          <td bgcolor="#eff6ff">Test Suites</td>
+        </tr>
+      </table>
+    {% else %}
+      <h1>{{ suite_name }}</h1>
+      <h3>Test Cases</h3>
+      {% if tests %}
+        <table width="100%" border="0" cellspacing="0" cellpadding="2">
+          {% for test in tests %}
+            {% if loop.first %}
+              <tr>
+                <td width="4%">-</td>
+                <td width="96%">{{ test.name }}</td>
+              </tr>
+            {% else %}
+              <tr>
+                <td>-</td>
+                <td>{{ test.name }}</td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </table>
+      {% else %}
+        <table width="100%" border="0" cellspacing="0" cellpadding="6">
+          <tr>
+            <td bgcolor="#f1f5f9">No test cases in this suite.</td>
+          </tr>
+        </table>
+      {% endif %}
+    {% endif %}
+  </body>
+</html>

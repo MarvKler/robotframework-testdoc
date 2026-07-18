@@ -65,9 +65,12 @@ testdoc tests/ TestDocumentation.html
 
 # JSON — machine-readable suite tree
 testdoc -f json tests/ TestDocumentation.json
+
+# PDF — release-ready export (overview + TOC + suites + test cases)
+testdoc -f pdf tests/ TestDocumentation.pdf
 ```
 
-Available values: `html` (default), `json`.
+Available values: `html` (default), `json`, `pdf`.
 
 ### Plugin Usage
 
@@ -77,6 +80,39 @@ You have two option to use it this way:
 2. You can use the ``mkdocs`` integration to define your own mkdcs template as CLI argument and the testdoc tool will internally take care of the mkdocs page generation.
 
 For further details about the usage, please read the [official documentation](https://marvkler.github.io/robotframework-testdoc/usage).
+
+### Custom PDF Template
+
+You can provide your own Jinja2 template for PDF rendering:
+
+```shell
+testdoc -f pdf --custom-pdf-template path/to/pdf_template.html tests/ TestDocumentation.pdf
+```
+
+This works out of the box. No code changes are required.
+
+Required template contract:
+
+1. The template must contain a branch for `view == "overview"`.
+2. The template must contain a branch for `view == "suite"`.
+3. In the `overview` branch, these variables are available:
+	 `title` (string), `generated_at` (string), `suite_count` (int), `test_count` (int).
+4. In the `suite` branch, these variables are available:
+	 `suite_name` (string), `tests` (list of dicts).
+5. Each item in `tests` has:
+	 `name` (string), `tags` (list of strings, can be empty).
+
+Recommended usage pattern:
+
+1. Start with the minimal template above.
+2. Change only markup/styling first.
+3. Keep variable names exactly as documented.
+4. If a section is empty, always handle it with `{% if tests %}` / fallback text.
+
+Notes:
+
+1. Title page and table of contents are rendered by the PDF engine, not by the custom HTML template.
+2. You can also set `custom_pdf_template` in your TOML config file.
 
 #### Use customized Jinja2 HTML Template
 

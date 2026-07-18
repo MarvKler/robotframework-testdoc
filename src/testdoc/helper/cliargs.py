@@ -48,6 +48,10 @@ class CommandLineArguments:
         return self._args.get("custom_jinja_template", None)
 
     @property
+    def custom_pdf_template(self):
+        return self._args.get("custom_pdf_template", None)
+
+    @property
     def mkdocs_usage(self):
         return self._args.get("mkdocs_usage", None)
 
