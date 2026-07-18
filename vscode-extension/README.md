@@ -26,20 +26,57 @@ Download the latest `.vsix` file from the [GitHub Releases](https://github.com/M
 code --install-extension testdoc-vscode-<version>.vsix
 ```
 
+## Build VSIX Locally
+
+You can build the extension package (`.vsix`) on your machine.
+
+### Prerequisites
+
+- Node.js (LTS recommended)
+- npm
+
+### Steps
+
+1. Open a terminal in the extension folder:
+  ```bash
+  cd vscode-extension
+  ```
+2. Install dependencies:
+  ```bash
+  npm install
+  ```
+3. Build the `.vsix` package:
+  ```bash
+  npx @vscode/vsce package
+  ```
+4. The generated file will be in the same folder, for example:
+  ```
+  testdoc-vscode-0.1.7.vsix
+  ```
+
+### Install the locally built package
+
+```bash
+code --install-extension testdoc-vscode-<version>.vsix
+```
+
+If you want a new package version, update `version` in `vscode-extension/package.json` before running the package command.
+
 ## Usage
 
-Right-click any folder in the Explorer and choose one of the three commands:
+Right-click any folder in the Explorer and choose one of the available commands:
 
 | Command | Description |
 |---|---|
 | **testdoc: Generate HTML Documentation** | Generates a self-contained `.html` test documentation file |
 | **testdoc: Generate JSON Documentation** | Generates a machine-readable `.json` suite tree |
+| **testdoc: Generate PDF Documentation** | Generates a release-friendly `.pdf` report |
 | **testdoc: Generate MkDocs Output** | Generates a full MkDocs project into a selected output directory |
 
-### HTML / JSON
+### HTML / JSON / PDF
 
 1. Right-click a folder containing your `.robot` files
-2. Select **testdoc: Generate HTML Documentation** or **testdoc: Generate JSON Documentation**
+2. Select **testdoc: Generate HTML Documentation**, **testdoc: Generate JSON Documentation**, or **testdoc: Generate PDF Documentation**
 3. A save dialog opens — choose the output file location and name
 4. A terminal runs `testdoc` and the file is written to the chosen location
 

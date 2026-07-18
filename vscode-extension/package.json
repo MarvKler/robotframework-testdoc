@@ -31,6 +31,10 @@
         "title": "testdoc: Generate JSON Documentation"
       },
       {
+        "command": "testdoc.generatePdf",
+        "title": "testdoc: Generate PDF Documentation"
+      },
+      {
         "command": "testdoc.generateMkdocs",
         "title": "testdoc: Generate MkDocs Output"
       }
@@ -49,6 +53,11 @@
         },
         {
           "command": "testdoc.generateMkdocs",
+          "when": "explorerResourceIsFolder",
+          "group": "testdoc@4"
+        },
+        {
+          "command": "testdoc.generatePdf",
           "when": "explorerResourceIsFolder",
           "group": "testdoc@3"
         }

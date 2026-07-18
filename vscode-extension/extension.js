@@ -70,11 +70,11 @@ async function waitForShellIntegration(terminal, timeout = 3000) {
 /**
  * Runs testdoc via the testdoc executable resolved from the active Python interpreter.
  * @param {vscode.Uri} folderUri   The folder selected in the Explorer.
- * @param {'html'|'json'} format   Output format.
+ * @param {'html'|'json'|'pdf'} format   Output format.
  */
 async function runTestdoc(folderUri, format) {
   const folderPath = folderUri.fsPath;
-  const ext = format === 'json' ? 'json' : 'html';
+  const ext = format === 'json' ? 'json' : format === 'pdf' ? 'pdf' : 'html';
   const folderName = path.basename(folderPath);
 
   const now = new Date();
@@ -85,9 +85,12 @@ async function runTestdoc(folderUri, format) {
   const defaultUri = vscode.Uri.file(path.join(folderPath, `test_documentation_${timestamp}.${ext}`));
   const saveUri = await vscode.window.showSaveDialog({
     defaultUri,
-    filters: format === 'json'
-      ? { 'JSON': ['json'] }
-      : { 'HTML': ['html'] },
+    filters:
+      format === 'json'
+        ? { JSON: ['json'] }
+        : format === 'pdf'
+          ? { PDF: ['pdf'] }
+          : { HTML: ['html'] },
     title: `Save TestDoc ${format.toUpperCase()} output`,
   });
 
@@ -170,6 +173,7 @@ function activate(context) {
   context.subscriptions.push(
     vscode.commands.registerCommand('testdoc.generateHtml', (uri) => runTestdoc(uri, 'html')),
     vscode.commands.registerCommand('testdoc.generateJson', (uri) => runTestdoc(uri, 'json')),
+    vscode.commands.registerCommand('testdoc.generatePdf', (uri) => runTestdoc(uri, 'pdf')),
     vscode.commands.registerCommand('testdoc.generateMkdocs', (uri) => runTestdocMkdocs(uri)),
   );
 }
