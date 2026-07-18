@@ -22,6 +22,11 @@ CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 )
 @click.option("--custom-jinja-template", required=False, help="Define your own Jinja2 HTML template for your own customized visualization")
 @click.option(
+    "--custom-pdf-template",
+    required=False,
+    help="Define your own Jinja2 HTML template for PDF overview/suite pages",
+)
+@click.option(
     "--mkdocs",
     is_flag=True,
     required=False,
@@ -37,7 +42,7 @@ CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 @click.option(
     "-f",
     "--output-format",
-    type=click.Choice(["html", "json"], case_sensitive=False),
+    type=click.Choice(["html", "json", "pdf"], case_sensitive=False),
     default="html",
     show_default=True,
     help="Output format for the test documentation",
@@ -54,6 +59,7 @@ def main(  # noqa
     metadata,
     sourceprefix,
     custom_jinja_template,
+    custom_pdf_template,
     mkdocs,
     mkdocs_template_dir,
     include,
@@ -89,6 +95,7 @@ def main(  # noqa
         "metadata": dict(item.split("=", 1) for item in metadata) if metadata else None,
         "sourceprefix": sourceprefix,
         "custom_jinja_template": custom_jinja_template,
+        "custom_pdf_template": custom_pdf_template,
         "mkdocs_usage": mkdocs,
         "mkdocs_template_dir": mkdocs_template_dir,
         "include": list(include),

@@ -27,6 +27,7 @@ dependencies = [
     "click",
     "robotframework",
     "jinja2",
+  "fpdf2",
     "tomli",
     "mkdocs<2.0.0",
     "mkdocs-macros-plugin",
