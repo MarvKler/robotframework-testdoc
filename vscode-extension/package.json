@@ -2,7 +2,7 @@
   "name": "testdoc-vscode",
   "displayName": "testdoc – Generate Robot Framework Test Documentation",
   "description": "Right-click a folder in the explorer to generate Robot Framework test documentation via robotframework-testdoc.",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "publisher": "marvink",
   "repository": {
     "type": "git",
