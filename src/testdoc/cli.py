@@ -4,6 +4,8 @@ import click
 
 from .helper.cliargs import CommandLineArguments
 from .helper.toml_reader import TOMLReader
+from .management.manager import ManagementTool
+from .parser.testsuiteparser import RobotSuiteParser
 from .testdoc import TestDoc
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
@@ -129,7 +131,7 @@ def _collect_common_args(  # noqa
     }
 
 
-def _run_testdoc(args_to_set: dict, configfile):
+def _expose_cli_args(args_to_set: dict, configfile):
     # Expose CLI args
     args_to_set = {k: v for k, v in args_to_set.items() if v is not None}
     CommandLineArguments().set_args(**args_to_set)
@@ -137,8 +139,6 @@ def _run_testdoc(args_to_set: dict, configfile):
     # Read & expose TOML args
     if configfile:
         TOMLReader().load_from_config_file(Path(configfile))
-
-    TestDoc().main()
 
 
 @click.group(cls=DefaultCommandGroup, default_command="generate", context_settings=CONTEXT_SETTINGS)
@@ -194,7 +194,8 @@ def generate(  # noqa
         path,
         output,
     )
-    _run_testdoc(args_to_set, configfile)
+    _expose_cli_args(args_to_set, configfile)
+    TestDoc().main()
 
 
 @main.command("management")
@@ -244,9 +245,10 @@ def management(  # noqa
     )
     args_to_set["report_file"] = report_file
     args_to_set["database_file"] = database_file
-    _run_testdoc(args_to_set, configfile)
+    _expose_cli_args(args_to_set, configfile)
 
-    # TODO: implement management-specific logic (parse report_file / persist into database_file)
+    suite = RobotSuiteParser().parse_suite()
+    ManagementTool().run(suite, report_file, database_file, output)
 
 
 if __name__ == "__main__":
