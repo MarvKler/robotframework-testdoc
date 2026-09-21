@@ -3,6 +3,7 @@
 
   const DATA = JSON.parse(document.getElementById("management-data").textContent);
   const ROOT = DATA.root;
+  const SHOW_HISTORY = DATA.show_history !== false;
 
   const viewRoot = document.getElementById("view-root");
   const headerTitle = document.getElementById("header-title");
@@ -15,6 +16,12 @@
     page: "dashboard",
     repoPath: [ROOT],
     repoSelectedTest: null,
+    repoStatusFilter: null,
+    repoSearch: "",
+    repoTagFilters: [],
+    repoTagMenuOpen: false,
+    repoSuiteFilter: "",
+    repoSuiteMenuOpen: false,
     historyPath: [ROOT],
     historySelectedTest: null,
   };
@@ -51,8 +58,40 @@
     return counts;
   }
 
+  function tagCounts(tests) {
+    const counts = {};
+    for (const test of tests) {
+      const tags = new Set((test.test_case.tags || []).map((tag) => (typeof tag === "object" ? tag.name : tag)).filter(Boolean));
+      for (const tag of tags) counts[tag] = (counts[tag] || 0) + 1;
+    }
+    return Object.entries(counts).sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]));
+  }
+
+  function renderTagStatistics(tests) {
+    const tags = tagCounts(tests);
+    if (!tags.length) return '<div class="empty-state">No tags defined.</div>';
+
+    const maximum = tags[0][1];
+    return `<div class="tag-statistics">${tags
+      .map(([tag, count]) => {
+        const width = Math.max(4, Math.round((count / maximum) * 100));
+        return `<div class="tag-stat-row"><div class="tag-stat-label" title="${escapeHtml(tag)}">${escapeHtml(tag)}</div><div class="tag-stat-track"><div class="tag-stat-bar" style="width:${width}%"><span>${count}</span></div></div></div>`;
+      })
+      .join("")}</div>`;
+  }
+
   function latestHistoryEntry(test) {
     return test.history.length ? test.history[test.history.length - 1] : null;
+  }
+
+  function formatRecordedAt(value) {
+    if (!value) return "-";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value;
+    return new Intl.DateTimeFormat("de-DE", {
+      dateStyle: "medium",
+      timeStyle: "medium",
+    }).format(date);
   }
 
   function findTestByFullName(suite, fullName) {
@@ -76,27 +115,96 @@
     return null;
   }
 
-  function flattenSteps(body, depth) {
-    depth = depth || 0;
-    let lines = [];
-    for (const item of body || []) {
-      const indent = "  ".repeat(depth);
-      const assign = (item.assign || []).length ? `${item.assign.join(", ")} = ` : "";
-      const args = (item.args || []).join("    ");
-      lines.push(`${indent}${assign}${item.name || item.type}${args ? `    ${args}` : ""}`);
-      if (item.body && item.body.length) lines = lines.concat(flattenSteps(item.body, depth + 1));
-    }
-    return lines;
-  }
-
   function statusBadge(status) {
     const classMap = { PASS: "badge-pass", FAIL: "badge-fail", SKIP: "badge-skip" };
     const cssClass = classMap[status] || "badge-unknown";
     return `<span class="badge ${cssClass}">${escapeHtml(status || "UNKNOWN")}</span>`;
   }
 
-  function metricCard(value, label) {
-    return `<div class="metric"><div class="metric-value">${escapeHtml(value)}</div><div class="metric-label">${escapeHtml(label)}</div></div>`;
+  function metricCard(value, label, statusFilter) {
+    const attributes = statusFilter ? ` data-status-filter="${statusFilter}"` : "";
+    const className = statusFilter ? "metric metric-clickable" : "metric";
+    const tag = statusFilter ? "button" : "div";
+    const typeAttribute = statusFilter ? ' type="button"' : "";
+    return `<${tag} class="${className}"${attributes}${typeAttribute}><div class="metric-value">${escapeHtml(value)}</div><div class="metric-label">${escapeHtml(label)}</div></${tag}>`;
+  }
+
+  function filteredTests(suite) {
+    return allTests(suite).filter((test) => {
+      if (state.repoStatusFilter && test.latest_status !== state.repoStatusFilter) return false;
+      if (state.repoSuiteFilter && !test.full_name.startsWith(`${state.repoSuiteFilter}.`)) return false;
+
+      const tags = (test.test_case.tags || []).map((tag) => (typeof tag === "object" ? tag.name : tag));
+      if (state.repoTagFilters.some((tag) => !tags.includes(tag))) return false;
+
+      if (!state.repoSearch) return true;
+      const searchText = [test.test_case.name, test.full_name, ...tags].join(" ").toLowerCase();
+      return searchText.includes(state.repoSearch.toLowerCase());
+    });
+  }
+
+  function renderStatusFilter(suite) {
+    if (!state.repoStatusFilter) return "";
+
+    const tests = filteredTests(suite);
+    return `
+      <div class="filter-bar">
+        <span>Showing ${tests.length} ${state.repoStatusFilter.toLowerCase()} tests</span>
+        <button class="btn btn-secondary" type="button" data-clear-status-filter>Clear filter</button>
+      </div>
+    `;
+  }
+
+  function repositoryTags() {
+    const tags = new Set();
+    for (const test of allTests(ROOT)) {
+      for (const tag of test.test_case.tags || []) tags.add(typeof tag === "object" ? tag.name : tag);
+    }
+    return Array.from(tags).filter(Boolean).sort((left, right) => left.localeCompare(right));
+  }
+
+  function renderRepositoryFilter() {
+    const tags = repositoryTags();
+    const suites = allSuites(ROOT);
+    const selectedSuite = suites.find((suite) => suite.full_name === state.repoSuiteFilter);
+    const selectedTags = state.repoTagFilters.length ? state.repoTagFilters.join(", ") : "Tags";
+    const suggestions = Array.from(new Set([
+      ...allTests(ROOT).map((test) => test.test_case.name),
+      ...allSuites(ROOT).map((suite) => suite.suite.name),
+      ...tags,
+    ])).sort((left, right) => left.localeCompare(right));
+
+    return `
+      <div class="repository-filter" role="search" aria-label="Filter test cases">
+        <label class="repository-filter-search">
+          <span>Search tests or suites</span>
+          <input type="search" value="${escapeHtml(state.repoSearch)}" placeholder="Test name or suite name" data-repo-search list="repository-filter-suggestions" />
+          <datalist id="repository-filter-suggestions">
+            ${suggestions.map((suggestion) => `<option value="${escapeHtml(suggestion)}"></option>`).join("")}
+          </datalist>
+        </label>
+        <div class="repository-tag-filter repository-suite-filter">
+          <button class="repository-tag-toggle" type="button" data-repo-suite-toggle aria-haspopup="listbox" aria-expanded="${state.repoSuiteMenuOpen}">
+            <span>${escapeHtml(selectedSuite ? selectedSuite.suite.name : "Suites")}</span>
+            <span class="repository-tag-chevron" aria-hidden="true">⌄</span>
+          </button>
+          <div class="repository-tag-options" data-repo-suite-menu role="listbox" aria-label="Filter by suites" ${state.repoSuiteMenuOpen ? "" : "hidden"}>
+            <button class="repository-suite-option" type="button" data-repo-suite="">All suites</button>
+            ${suites.map((suite) => `<button class="repository-suite-option ${suite.full_name === state.repoSuiteFilter ? "selected" : ""}" type="button" data-repo-suite="${escapeHtml(suite.full_name)}">${escapeHtml(suite.suite.name)}</button>`).join("")}
+          </div>
+        </div>
+        <div class="repository-tag-filter">
+          <button class="repository-tag-toggle" type="button" data-repo-tag-toggle aria-haspopup="listbox" aria-expanded="${state.repoTagMenuOpen}">
+            <span>${escapeHtml(selectedTags)}</span>
+            <span class="repository-tag-chevron" aria-hidden="true">⌄</span>
+          </button>
+          <div class="repository-tag-options" data-repo-tag-menu role="listbox" aria-label="Filter by tags" ${state.repoTagMenuOpen ? "" : "hidden"}>
+            ${tags.length ? tags.map((tag) => `<label><input type="checkbox" value="${escapeHtml(tag)}" data-repo-tag ${state.repoTagFilters.includes(tag) ? "checked" : ""} /> ${escapeHtml(tag)}</label>`).join("") : '<span class="filter-empty">No tags found</span>'}
+          </div>
+        </div>
+        <button class="btn btn-secondary" type="button" data-clear-repository-filter>Clear</button>
+      </div>
+    `;
   }
 
   /* ---------------------------------------------------------------------
@@ -156,7 +264,7 @@
       return points
         .map(
           (point) =>
-            `<circle class="${cssClass}" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="3.5"><title>${escapeHtml(point.run.recorded_at)} - ${point.value}</title></circle>`
+            `<circle class="${cssClass}" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="3.5"><title>${escapeHtml(formatRecordedAt(point.run.recorded_at))} - ${point.value}</title></circle>`
         )
         .join("");
     }
@@ -207,6 +315,28 @@
     const tests = allTests(ROOT);
     const suiteFiles = allSuites(ROOT).filter((suite) => !suite.suite.is_folder);
     const counts = statusCounts(tests);
+    if (!SHOW_HISTORY) {
+      const documentedTests = tests.filter((test) => test.test_case.doc).length;
+      const tags = new Set(tests.flatMap((test) => (test.test_case.tags || []).map((tag) => (typeof tag === "object" ? tag.name : tag))));
+      viewRoot.innerHTML = `
+        <div class="grid-metrics">
+          ${metricCard(tests.length, "Total Test Cases")}
+          ${metricCard(suiteFiles.length, "Test Suites")}
+          ${metricCard(documentedTests, "Documented Test Cases")}
+          ${metricCard(tags.size, "Unique Tags")}
+        </div>
+        <div class="card">
+          <h2 class="card-title">Tests per Tag</h2>
+          ${renderTagStatistics(tests)}
+        </div>
+        <div class="card">
+          <h2 class="card-title">Test Documentation</h2>
+          <p>Browse the test case repository to inspect suites, test cases, documentation, tags, and implementation steps.</p>
+        </div>
+      `;
+      return;
+    }
+
     const allHistory = tests.flatMap((test) => test.history);
     const totalRuns = new Set(allHistory.map((entry) => entry.run_id)).size;
     const lastRun = allHistory.slice().sort((a, b) => b.run_id - a.run_id)[0];
@@ -218,17 +348,21 @@
         ${metricCard(ROOT.test_count, "Total Test Cases")}
         ${metricCard(suiteFiles.length, "Test Suites")}
         ${metricCard(totalRuns, "Recorded Runs")}
-        ${metricCard(counts.PASS || 0, "Passing (latest)")}
-        ${metricCard(counts.FAIL || 0, "Failing (latest)")}
-        ${metricCard(counts.SKIP || 0, "Skipped (latest)")}
+        ${metricCard(counts.PASS || 0, "Passing (latest)", "PASS")}
+        ${metricCard(counts.FAIL || 0, "Failing (latest)", "FAIL")}
+        ${metricCard(counts.SKIP || 0, "Skipped (latest)", "SKIP")}
       </div>
       <div class="card">
         <h2 class="card-title">Execution Trend</h2>
         ${renderExecutionTrendChart(executionSeries)}
       </div>
       <div class="card">
+        <h2 class="card-title">Tests per Tag</h2>
+        ${renderTagStatistics(tests)}
+      </div>
+      <div class="card">
         <h2 class="card-title">Last recorded run</h2>
-        ${lastRun ? `<p>${escapeHtml(lastRun.recorded_at)}</p>` : '<div class="empty-state">No results recorded yet. Run "testdoc management" with a --report-file to record results.</div>'}
+        ${lastRun ? `<p>${escapeHtml(formatRecordedAt(lastRun.recorded_at))}</p>` : '<div class="empty-state">No results recorded yet. Run "testdoc management" with a --report-file to record results.</div>'}
       </div>
       <div class="card">
         <h2 class="card-title">Currently failing tests</h2>
@@ -267,6 +401,21 @@
   }
 
   function renderSuiteChildrenList(suite, prefix, selectedTest) {
+    if ((state.repoStatusFilter || state.repoSearch || state.repoTagFilters.length || state.repoSuiteFilter) && (prefix === "repo" || prefix === "hist")) {
+      const tests = filteredTests(suite);
+      if (!tests.length) return '<div class="empty-state">No tests match the selected filters.</div>';
+
+      return `<ul class="tree-list">${tests
+        .map(
+          (test) => `
+        <li class="tree-item ${selectedTest === test.full_name ? "selected" : ""}" data-${prefix}-test="${encodeURIComponent(test.full_name)}">
+          <span class="tree-item-name">${escapeHtml(test.test_case.name)}</span>
+          ${SHOW_HISTORY ? `<span class="tree-item-meta">${statusBadge(test.latest_status)}</span>` : ""}
+        </li>`
+        )
+        .join("")}</ul>`;
+    }
+
     let html = "";
     if (suite.suites.length) {
       html += `<ul class="tree-list">${suite.suites
@@ -285,7 +434,7 @@
           (test) => `
         <li class="tree-item ${selectedTest === test.full_name ? "selected" : ""}" data-${prefix}-test="${encodeURIComponent(test.full_name)}">
           <span class="tree-item-name">${escapeHtml(test.test_case.name)}</span>
-          <span class="tree-item-meta">${statusBadge(test.latest_status)}</span>
+          ${SHOW_HISTORY ? `<span class="tree-item-meta">${statusBadge(test.latest_status)}</span>` : ""}
         </li>`
         )
         .join("")}</ul>`;
@@ -305,9 +454,9 @@
         ${suite.suite.doc ? `<p>${escapeHtml(suite.suite.doc)}</p>` : ""}
         <div class="grid-metrics">
           ${metricCard(suite.test_count, "Tests in suite directory")}
-          ${metricCard(counts.PASS || 0, "Passing (latest)")}
-          ${metricCard(counts.FAIL || 0, "Failing (latest)")}
-          ${metricCard(counts.SKIP || 0, "Skipped (latest)")}
+          ${SHOW_HISTORY ? metricCard(counts.PASS || 0, "Passing (latest)", "PASS") : ""}
+          ${SHOW_HISTORY ? metricCard(counts.FAIL || 0, "Failing (latest)", "FAIL") : ""}
+          ${SHOW_HISTORY ? metricCard(counts.SKIP || 0, "Skipped (latest)", "SKIP") : ""}
         </div>
       </div>
     `;
@@ -319,28 +468,21 @@
 
     const testCase = test.test_case;
     const tags = (testCase.tags || []).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
-    const steps = flattenSteps(testCase.body);
     const latestEntry = latestHistoryEntry(test);
 
     return `
       <div class="card">
         <h2 class="card-title">${escapeHtml(testCase.name)}</h2>
-        <div class="detail-row"><div class="detail-label">Status</div><div class="detail-value">${statusBadge(test.latest_status)}</div></div>
-        ${
-          test.latest_status === "FAIL" && latestEntry && latestEntry.message
-            ? `<div class="detail-row"><div class="detail-label">Error Message</div><div class="detail-value"><div class="error-message">${escapeHtml(latestEntry.message)}</div></div></div>`
-            : ""
-        }
+        ${SHOW_HISTORY ? `<div class="detail-row"><div class="detail-label">Status</div><div class="detail-value">${statusBadge(test.latest_status)}</div></div>` : ""}
+        ${SHOW_HISTORY && test.latest_status === "FAIL" && latestEntry && latestEntry.message ? `<div class="detail-row"><div class="detail-label">Error Message</div><div class="detail-value"><div class="error-message">${escapeHtml(latestEntry.message)}</div></div></div>` : ""}
         <div class="detail-row"><div class="detail-label">Documentation</div><div class="detail-value">${escapeHtml(testCase.doc || "-")}</div></div>
         <div class="detail-row"><div class="detail-label">Tags</div><div class="detail-value">${tags || "-"}</div></div>
         <div class="detail-row"><div class="detail-label">Source</div><div class="detail-value">${escapeHtml(testCase.custom_source || testCase.source || "-")}</div></div>
-        <div style="margin-top:12px;">
-          <button class="btn" data-goto-history="${encodeURIComponent(test.full_name)}">View Result Trend</button>
-        </div>
+        ${SHOW_HISTORY ? `<div style="margin-top:12px;"><button class="btn" data-goto-history="${encodeURIComponent(test.full_name)}">View Result Trend</button></div>` : ""}
       </div>
       <div class="card">
         <h2 class="card-title">Test Steps</h2>
-        ${steps.length ? `<ul class="step-list">${steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ul>` : '<div class="empty-state">No steps parsed.</div>'}
+        ${test.steps_html || '<div class="empty-state">No steps parsed.</div>'}
       </div>
     `;
   }
@@ -348,13 +490,19 @@
   function renderRepository() {
     const current = state.repoPath[state.repoPath.length - 1];
     viewRoot.innerHTML = `
-      <div class="repo-layout">
-        <div>
-          ${renderBreadcrumbs(state.repoPath, "repo")}
-          ${renderSuiteChildrenList(current, "repo", state.repoSelectedTest)}
+      <div class="repository-page">
+        <div class="repository-filter-container">
+          ${renderRepositoryFilter()}
         </div>
-        <div>
-          ${state.repoSelectedTest ? renderTestDetail(state.repoSelectedTest) : renderSuiteStats(current)}
+        <div class="repo-layout">
+          <div>
+          ${renderBreadcrumbs(state.repoPath, "repo")}
+          ${renderStatusFilter(current)}
+          ${renderSuiteChildrenList(current, "repo", state.repoSelectedTest)}
+          </div>
+          <div class="repository-results">
+            ${state.repoSelectedTest ? renderTestDetail(state.repoSelectedTest) : renderSuiteStats(current)}
+          </div>
         </div>
       </div>
     `;
@@ -365,7 +513,7 @@
    * ------------------------------------------------------------------- */
 
   function renderHistoryOverview(suite) {
-    const tests = allTests(suite);
+    const tests = filteredTests(suite);
     if (!tests.length) return '<div class="empty-state">No test cases in this suite.</div>';
 
     return `
@@ -403,7 +551,7 @@
       .map((entry) => {
         const cssClass = (entry.status || "unknown").toLowerCase().replace(/[^a-z0-9-]/g, "-");
         const height = Math.min(100, Math.max(8, entry.elapsed_time * 10));
-        return `<div class="trend-bar trend-bar-${cssClass}" style="height:${height}%" title="${escapeHtml(entry.status)} - ${escapeHtml(entry.recorded_at)}"></div>`;
+        return `<div class="trend-bar trend-bar-${cssClass}" style="height:${height}%" title="${escapeHtml(entry.status)} - ${escapeHtml(formatRecordedAt(entry.recorded_at))}"></div>`;
       })
       .join("");
     const rows = history
@@ -414,7 +562,7 @@
         return `
         <tr>
           <td>${entry.run_id}</td>
-          <td>${escapeHtml(entry.recorded_at)}</td>
+          <td>${escapeHtml(formatRecordedAt(entry.recorded_at))}</td>
           <td>${statusBadge(entry.status)}</td>
           <td>${entry.elapsed_time.toFixed(2)}s</td>
           <td class="message-cell ${messageClass}"><div class="message-scroll">${escapeHtml(entry.message || "-")}</div></td>
@@ -441,13 +589,19 @@
   function renderHistory() {
     const current = state.historyPath[state.historyPath.length - 1];
     viewRoot.innerHTML = `
-      <div class="repo-layout">
-        <div>
-          ${renderBreadcrumbs(state.historyPath, "hist")}
-          ${renderSuiteChildrenList(current, "hist", state.historySelectedTest)}
+      <div class="repository-page">
+        <div class="repository-filter-container">
+          ${renderRepositoryFilter()}
         </div>
-        <div>
-          ${state.historySelectedTest ? renderHistoryDetail(state.historySelectedTest) : renderHistoryOverview(current)}
+        <div class="repo-layout">
+          <div>
+            ${renderBreadcrumbs(state.historyPath, "hist")}
+            ${renderStatusFilter(current)}
+            ${renderSuiteChildrenList(current, "hist", state.historySelectedTest)}
+          </div>
+          <div class="repository-results">
+            ${state.historySelectedTest ? renderHistoryDetail(state.historySelectedTest) : renderHistoryOverview(current)}
+          </div>
         </div>
       </div>
     `;
@@ -467,8 +621,13 @@
     headerTitle.textContent = titles[page] || "Dashboard";
 
     if (page === "repository") renderRepository();
-    else if (page === "history") renderHistory();
+    else if (page === "history" && SHOW_HISTORY) renderHistory();
     else renderDashboard();
+  }
+
+  function renderCurrentPage() {
+    if (state.page === "history" && SHOW_HISTORY) renderHistory();
+    else renderRepository();
   }
 
   function route() {
@@ -499,8 +658,44 @@
     const histTest = event.target.closest("[data-hist-test]");
     const gotoHistory = event.target.closest("[data-goto-history]");
     const failingTest = event.target.closest("[data-test]");
+    const statusFilter = event.target.closest("[data-status-filter]");
+    const clearStatusFilter = event.target.closest("[data-clear-status-filter]");
+    const clearRepositoryFilter = event.target.closest("[data-clear-repository-filter]");
+    const tagToggle = event.target.closest("[data-repo-tag-toggle]");
+    const suiteToggle = event.target.closest("[data-repo-suite-toggle]");
+    const suiteOption = event.target.closest("[data-repo-suite]");
 
-    if (repoCrumb) {
+    if (suiteToggle) {
+      state.repoSuiteMenuOpen = !state.repoSuiteMenuOpen;
+      renderCurrentPage();
+    } else if (suiteOption) {
+      state.repoSuiteFilter = suiteOption.dataset.repoSuite;
+      state.repoSuiteMenuOpen = false;
+      state.repoSelectedTest = null;
+      renderCurrentPage();
+    } else if (tagToggle) {
+      state.repoTagMenuOpen = !state.repoTagMenuOpen;
+      renderCurrentPage();
+    } else if (statusFilter) {
+      state.repoStatusFilter = statusFilter.dataset.statusFilter;
+      state.repoPath = state.page === "dashboard" ? [ROOT] : state.repoPath;
+      state.repoSelectedTest = null;
+      if (state.page === "dashboard") location.hash = "#/repository";
+      else renderRepository();
+    } else if (clearStatusFilter) {
+      state.repoStatusFilter = null;
+      state.repoSelectedTest = null;
+      renderCurrentPage();
+    } else if (clearRepositoryFilter) {
+      state.repoSearch = "";
+      state.repoTagFilters = [];
+      state.repoStatusFilter = null;
+      state.repoTagMenuOpen = false;
+      state.repoSuiteFilter = "";
+      state.repoSuiteMenuOpen = false;
+      state.repoSelectedTest = null;
+      renderCurrentPage();
+    } else if (repoCrumb) {
       const index = parseInt(repoCrumb.dataset.repoCrumb, 10);
       state.repoPath = state.repoPath.slice(0, index + 1);
       state.repoSelectedTest = null;
@@ -533,6 +728,26 @@
     } else if (failingTest) {
       location.hash = `#/history?test=${failingTest.dataset.test}`;
     }
+  });
+
+  viewRoot.addEventListener("input", (event) => {
+    if (!event.target.matches("[data-repo-search]")) return;
+    state.repoSearch = event.target.value.trim();
+    state.repoSelectedTest = null;
+    renderCurrentPage();
+    const searchInput = viewRoot.querySelector("[data-repo-search]");
+    searchInput.focus();
+    searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+  });
+
+  viewRoot.addEventListener("change", (event) => {
+    if (!event.target.matches("[data-repo-tag]")) return;
+    const tag = event.target.value;
+    if (event.target.checked) state.repoTagFilters = [...state.repoTagFilters, tag];
+    else state.repoTagFilters = state.repoTagFilters.filter((selectedTag) => selectedTag !== tag);
+    state.repoTagMenuOpen = true;
+    state.repoSelectedTest = null;
+    renderCurrentPage();
   });
 
   sidebarToggle.addEventListener("click", () => {

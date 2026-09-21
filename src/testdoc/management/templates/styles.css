@@ -458,9 +458,27 @@ html, body {
   transition: box-shadow var(--transition-fast), transform var(--transition-fast);
 }
 
+.metric-clickable {
+  width: 100%;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
 .metric:hover {
   box-shadow: var(--shadow-sm);
   transform: translateY(-1px);
+}
+
+.metric-clickable:focus-visible,
+.btn:focus-visible,
+.sidebar-nav-item:focus-visible,
+.sidebar-toggle:focus-visible,
+.header-home:focus-visible,
+.header-theme-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
 }
 
 .metric::before {
@@ -483,6 +501,180 @@ html, body {
   color: var(--color-text-muted);
   margin-top: 4px;
   font-size: 12.5px;
+}
+
+.tag-statistics {
+  display: grid;
+  gap: 10px;
+}
+
+.tag-stat-row {
+  display: grid;
+  grid-template-columns: minmax(110px, 180px) minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.tag-stat-label {
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: 12.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tag-stat-track {
+  height: 24px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
+}
+
+.tag-stat-bar {
+  display: flex;
+  align-items: center;
+  min-width: 30px;
+  height: 100%;
+  padding: 0 8px;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-soft);
+  color: var(--color-text-muted);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.repository-filter {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.repository-filter-search {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 5px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.repository-filter-search input,
+.repository-tag-toggle {
+  min-height: 38px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  padding: 9px 11px;
+}
+
+.repository-filter-search input:focus,
+.repository-tag-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.repository-tag-filter {
+  position: relative;
+  min-width: 180px;
+}
+
+.repository-tag-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
+}
+
+.repository-tag-toggle:hover {
+  background: var(--color-surface-muted);
+  border-color: var(--color-primary);
+}
+
+.repository-tag-toggle > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.repository-tag-chevron {
+  color: var(--color-text-muted);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.repository-tag-options {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 3;
+  display: grid;
+  gap: 8px;
+  min-width: 220px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.repository-tag-options[hidden] {
+  display: none;
+}
+
+.repository-tag-options label {
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 12.5px;
+}
+
+.repository-suite-option {
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+  padding: 8px;
+  text-align: left;
+}
+
+.repository-suite-option:hover,
+.repository-suite-option.selected {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+}
+
+.filter-empty {
+  color: var(--color-text-muted);
+  font-size: 12px;
 }
 
 .badge {
@@ -552,6 +744,19 @@ html, body {
   grid-template-columns: 320px minmax(0, 1fr);
   gap: 18px;
   align-items: start;
+}
+
+.repository-page {
+  width: 100%;
+}
+
+.repository-filter-container {
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.repository-results {
+  min-width: 0;
 }
 
 .repo-layout > div {
@@ -675,30 +880,38 @@ html, body {
   color: var(--color-text-muted);
 }
 
-.step-list {
-  list-style: none;
+.robotframework {
   margin: 0;
-  padding: 0;
+  padding: 16px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.step-list li {
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-muted);
+  color: var(--color-text);
   font-family: "SFMono-Regular", Consolas, monospace;
   font-size: 12.5px;
-  background: var(--color-surface);
+  line-height: 1.6;
+  overflow-x: auto;
 }
 
-.step-list li:nth-child(even) {
-  background: var(--color-surface-muted);
-}
+.robotframework .k { color: var(--color-primary-dark); font-weight: 700; }
+.robotframework .nf,
+.robotframework .nc,
+.robotframework .n { color: #8a6418; }
+.robotframework .na { color: #a13f9b; font-weight: 700; }
+.robotframework .nv { color: #1976a8; }
+.robotframework .s { color: #a34530; }
+.robotframework .p,
+.robotframework .o { color: var(--color-text-muted); }
+.robotframework .c { color: var(--color-pass); font-style: italic; }
 
-.step-list li:last-child {
-  border-bottom: none;
-}
+:root[data-theme="dark"] .robotframework .k { color: #c586c0; }
+:root[data-theme="dark"] .robotframework .nf,
+:root[data-theme="dark"] .robotframework .nc,
+:root[data-theme="dark"] .robotframework .n { color: #dcdcaa; }
+:root[data-theme="dark"] .robotframework .na { color: #c586c0; }
+:root[data-theme="dark"] .robotframework .nv { color: #9cdcfe; }
+:root[data-theme="dark"] .robotframework .s { color: #ce9178; }
+:root[data-theme="dark"] .robotframework .c { color: #6a9955; }
 
 .history-table {
   width: 100%;
@@ -838,13 +1051,13 @@ html, body {
   display: flex;
   align-items: flex-end;
   gap: 6px;
-  height: 90px;
-  padding-top: 10px;
+  height: 48px;
+  padding-top: 4px;
 }
 
 .trend-bar {
   width: 20px;
-  min-height: 6px;
+  min-height: 10px;
   border-radius: 5px 5px 2px 2px;
 }
 

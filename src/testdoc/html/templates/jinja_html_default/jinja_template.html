@@ -89,6 +89,16 @@
 
     <!-- SIDEBAR -->
     <aside class="nav" id="sidebar">
+        <nav class="primary-nav" aria-label="Main navigation">
+            <button class="primary-nav-item" id="sidebarDashboard" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13h6V4H4v9Zm0 7h6v-5H4v5Zm10 0h6V11h-6v9Zm0-16v5h6V4h-6Z"/></svg>
+                <span>Dashboard</span>
+            </button>
+            <button class="primary-nav-item active" id="sidebarRepository" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.379a1.5 1.5 0 0 1 1.06.44L11 6.5H19.5A1.5 1.5 0 0 1 21 8v9.5A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5v-11Z"/></svg>
+                <span>Test Case Repository</span>
+            </button>
+        </nav>
         <div class="nav-tree">
             <ul class="tree-list">
                 {# Root suite entry #}

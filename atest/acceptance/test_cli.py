@@ -3,6 +3,7 @@ from pathlib import Path
 import shutil
 import tempfile
 from click.testing import CliRunner
+from robot import run as robot_run
 from testdoc.cli import main
 
 def test_cli_help():
@@ -22,6 +23,43 @@ def test_cli_cmd():
     assert "Generated" in result.output
     assert "output_classic.html" in result.output
     assert os.path.exists(output)
+    assert os.path.isfile(output)
+    assert os.path.exists(os.path.join(parent_dir, "styles.css"))
+    assert os.path.exists(os.path.join(parent_dir, "app.js"))
+    management_script = Path(parent_dir, "app.js").read_text(encoding="utf-8")
+    assert 'data-repo-search' in management_script
+    assert 'data-repo-tag' in management_script
+
+
+def test_cli_management_generates_web_app_and_documentation(tmp_path):
+    parent_dir = Path(__file__).parent.parent
+    robot = os.path.join(parent_dir, "testdata", "acceptance")
+    report = tmp_path / "output.xml"
+    database = tmp_path / "history.db"
+    output = tmp_path / "management"
+
+    assert robot_run(robot, output=str(report), log=None, report=None) == 0
+
+    runner = CliRunner()
+    result = runner.invoke(
+        main,
+        [
+            "management",
+            "--report-file",
+            str(report),
+            "--database-file",
+            str(database),
+            robot,
+            str(output),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert (output / "index.html").exists()
+    assert (output / "documentation.html").exists()
+    management_html = (output / "index.html").read_text(encoding="utf-8")
+    assert 'data-page="history"' in management_html
+    assert '<link rel="icon"' in management_html
 
 def test_cli_cmd_mkdocs():
     parent_dir = Path(__file__).parent.parent

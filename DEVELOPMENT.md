@@ -160,3 +160,17 @@ hatch run dev:lint
 ```shell
 hatch run dev:atest
 ```
+
+## Management Tool
+
+The management command combines generated test documentation with the results from a Robot Framework run. Reuse the same database file for every run to keep the result history.
+
+```shell
+robotcode robot --output build/test-results/output.xml atest/testdata/acceptance
+testdoc management \
+	--report-file build/test-results/output.xml \
+	--database-file build/testdoc/history.db \
+	atest/testdata/acceptance build/testdoc
+```
+
+The generated management web app is available at `build/testdoc/index.html`. Open this file in a browser. The generated test documentation is next to it at `build/testdoc/documentation.html`.

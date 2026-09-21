@@ -37,6 +37,27 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     })();
 
+    (function setupPrimaryNavigation() {
+        const dashboardButton = document.getElementById('sidebarDashboard');
+        const repositoryButton = document.getElementById('sidebarRepository');
+        const dashboardToggle = document.getElementById('dashboardToggle');
+        const firstSuite = document.querySelector('.tree-suite');
+        if (!dashboardButton || !repositoryButton || !dashboardToggle) return;
+
+        dashboardButton.addEventListener('click', function () {
+            if (!dashboardToggle.classList.contains('active')) dashboardToggle.click();
+            dashboardButton.classList.add('active');
+            repositoryButton.classList.remove('active');
+        });
+
+        repositoryButton.addEventListener('click', function () {
+            if (dashboardToggle.classList.contains('active')) dashboardToggle.click();
+            if (firstSuite) firstSuite.click();
+            repositoryButton.classList.add('active');
+            dashboardButton.classList.remove('active');
+        });
+    })();
+
     /* =========================================================
        Element references
        ========================================================= */
