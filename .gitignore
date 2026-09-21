@@ -25,3 +25,5 @@ docs/mkdocs/site/**
 .vscode/settings.json
 styles.css
 app.js
+atest/output_testdoc_custom_template.pdf
+atest/output_testdoc.pdf
