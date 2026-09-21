@@ -94,7 +94,8 @@ check = "mypy --install-types --non-interactive {args:src/Tables tests}"
 [tool.hatch.envs.dev]
 dependencies = [
   "ruff",
-  "pytest"
+  "pytest",
+  "robotframework-tablelibrary"
 ]
 [tool.hatch.envs.dev.scripts]
 lint = "ruff check --force-exclude"

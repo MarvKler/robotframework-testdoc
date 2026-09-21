@@ -88,5 +88,13 @@ class CommandLineArguments:
         return self._args.get("output_file", None)
 
     @property
+    def report_file(self):
+        return self._args.get("report_file", None)
+
+    @property
+    def database_file(self):
+        return self._args.get("database_file", None)
+
+    @property
     def all_as_dict(self):
         return self._args
