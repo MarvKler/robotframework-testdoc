@@ -33,7 +33,10 @@ Visit the [Examples](gettingstarted.md) page for some demo use cases & insights 
 - Displays amount of test cases in all (sub-)suite directories / suite files
 - Visualization of Keyword & Test Case Bodys in Robot Framework Suite File Syntax
 - Attach the Source Code Link of the current file to the Test Suite / Test Case Documentation - navigate directly to the file in GitLab, GitHub, etc...
-- Mkdocs & Jinja2 Compatible - create your own templates || use predefined templates provided by this tool
+- MkDocs, Jinja2, JSON and PDF output modes
+- TOML configuration and Robot Framework tag filtering
+- Management dashboard with persistent test result history from ``output.xml``
+- MkDocs & Jinja2 compatible - create your own templates or use predefined templates provided by this tool
 
 ## :simple-github: GitHub Project
 

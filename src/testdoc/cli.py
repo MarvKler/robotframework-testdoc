@@ -55,7 +55,7 @@ def common_options(f):
     f = click.option(
         "-f",
         "--output-format",
-        type=click.Choice(["html", "json", "pdf"], case_sensitive=False),
+        type=click.Choice(["html", "json", "md", "pdf"], case_sensitive=False),
         default="html",
         show_default=True,
         help="Output format for the test documentation",

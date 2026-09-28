@@ -3,6 +3,7 @@ from testdoc.parser.models import CustomTestSuite
 from ...helper.cliargs import CommandLineArguments
 from .jinja2 import JinjaIntegration
 from .json_renderer import JsonRenderer
+from .markdown_renderer import MarkdownRenderer
 from .mkdocs import MkdocsIntegration
 from .pdf_renderer import PdfRenderer
 
@@ -18,6 +19,8 @@ class TestDocHtmlRendering:
 
         if self.args.output_format.lower() == "json":
             JsonRenderer().render(suites, output_file)
+        elif self.args.output_format.lower() in {"md", "markdown"}:
+            MarkdownRenderer().render(suites, output_file)
         elif self.args.output_format.lower() == "pdf":
             PdfRenderer().render(suites, output_file)
         else:

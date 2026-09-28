@@ -75,7 +75,7 @@ class ManagementTool:
             documentation_output = output_dir / "documentation"
             documentation_output.mkdir(parents=True, exist_ok=True)
         else:
-            extension = {"json": ".json", "pdf": ".pdf"}.get(output_format, ".html")
+            extension = {"json": ".json", "md": ".md", "markdown": ".md", "pdf": ".pdf"}.get(output_format, ".html")
             documentation_output = output_dir / f"documentation{extension}"
 
         original_args = dict(args.all_as_dict)

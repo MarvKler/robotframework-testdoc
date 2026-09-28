@@ -215,6 +215,23 @@ def test_cli_cmd_json_output_format(tmp_path):
     assert isinstance(data["suites"], list)
 
 
+def test_cli_cmd_markdown_output_format(tmp_path):
+    parent_dir = Path(__file__).parent.parent
+    robot = os.path.join(parent_dir, "testdata", "acceptance")
+    output = tmp_path / "output_testdoc.md"
+    runner = CliRunner()
+
+    result = runner.invoke(main, ["-f", "md", robot, str(output)])
+
+    assert result.exit_code == 0, result.output
+    assert "Generated Test Documentation Markdown" in result.output
+    markdown = output.read_text(encoding="utf-8")
+    assert markdown.startswith("# ")
+    assert "## Suite:" in markdown
+    assert "### Test:" in markdown
+    assert "```robotframework" in markdown
+
+
 def _supported_output_formats() -> list[str]:
     """Read the --output-format choices directly from the CLI so this list can never go stale."""
     for param in generate.params:

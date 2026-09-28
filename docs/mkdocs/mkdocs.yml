@@ -54,6 +54,7 @@ nav:
     - Mkdocs: usage/mkdocs.md
     - PDF Output: usage/pdf.md
     - Output Formats (JSON): usage/output_formats.md
+    - Management: usage/management.md
   - VS Code Extension:
     - usage/vscode-extension.md
   - Advanced Usage:
