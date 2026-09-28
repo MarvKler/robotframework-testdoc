@@ -7,7 +7,7 @@ The following output formats and site generators are currently supported:
 1. [HTML via Jinja2](jinja2.md) (Default)
 2. [Mkdocs](mkdocs.md)
 3. [PDF Output](pdf.md)
-4. [JSON](output_formats.md)
+4. [JSON and Markdown](output_formats.md)
 5. [Management dashboard with result history](management.md)
 
 !!! warning "Output modes"

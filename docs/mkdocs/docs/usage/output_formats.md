@@ -7,6 +7,7 @@ The flag is compatible with all other options (tag filters, source prefix, title
 | ----- | ----------- |
 | ``html`` | Interactive HTML page (default) |
 | ``json`` | Machine-readable JSON of the full suite tree |
+| ``md`` | One AI-friendly Markdown document containing the complete suite tree |
 | ``pdf`` | PDF report with title page, contents and suite sections |
 
 ---
@@ -63,6 +64,21 @@ You can also set ``output_format = "json"`` in your TOML configuration file:
 ```toml
 [tool.testdoc]
 output_format = "json"
+```
+
+## Markdown
+
+Markdown output creates one consolidated document with suite and test headings, documentation, metadata, tags, source paths, fixtures and Robot Framework test bodies. It is suitable for code review, search and providing a complete test overview as context to an AI system.
+
+```shell
+testdoc -f md tests/ TestDocumentation.md
+```
+
+The format can also be selected through TOML:
+
+```toml
+[tool.testdoc]
+output_format = "md"
 ```
 
 ---

@@ -31,7 +31,7 @@ The command creates:
 - ``documentation/`` - the regular test documentation output
 - ``testdoc-history.sqlite`` - when the database path points below the output directory, the persistent result database
 
-The documentation inside ``documentation/`` follows the selected common output options. By default it is an HTML document. With ``--mkdocs`` it is a MkDocs site directory; with ``-f json`` or ``-f pdf`` the corresponding JSON or PDF documentation is generated.
+The documentation inside ``documentation/`` follows the selected common output options. By default it is an HTML document. With ``--mkdocs`` it is a MkDocs site directory; with ``-f json``, ``-f md`` or ``-f pdf`` the corresponding JSON, Markdown or PDF documentation is generated.
 
 ## Dashboard views
 
@@ -69,7 +69,7 @@ testdoc management \
   tests/ management-output/
 ```
 
-Use ``--mkdocs`` and ``--mkdocs-template-dir`` to control the documentation copy, or ``-f json`` / ``-f pdf`` for another documentation format. The management dashboard itself remains a dependency-free static HTML application.
+Use ``--mkdocs`` and ``--mkdocs-template-dir`` to control the documentation copy, or ``-f json`` / ``-f md`` / ``-f pdf`` for another documentation format. The management dashboard itself remains a dependency-free static HTML application.
 
 !!! note "Test identity"
     Result matching uses the normalized source path and Robot Framework's local test identifier. Changing the suite source path or test identity can prevent historical records from matching the new documentation entry.
