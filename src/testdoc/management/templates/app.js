@@ -129,8 +129,23 @@
     return `<${tag} class="${className}"${attributes}${typeAttribute}><div class="metric-value">${escapeHtml(value)}</div><div class="metric-label">${escapeHtml(label)}</div></${tag}>`;
   }
 
+  function normalizeSearchText(value) {
+    return String(value || "")
+      .toLocaleLowerCase()
+      .trim()
+      .replace(/\s+/g, " ");
+  }
+
+  function testsWithSuiteNames(suite, suiteNames = []) {
+    const names = suiteNames.concat([suite.suite.name]);
+    let tests = suite.tests.map((test) => ({ test, suiteNames: names }));
+    for (const subSuite of suite.suites) tests = tests.concat(testsWithSuiteNames(subSuite, names));
+    return tests;
+  }
+
   function filteredTests(suite) {
-    return allTests(suite).filter((test) => {
+    return testsWithSuiteNames(suite)
+      .filter(({ test, suiteNames }) => {
       if (state.repoStatusFilter && test.latest_status !== state.repoStatusFilter) return false;
       if (state.repoSuiteFilter && !test.full_name.startsWith(`${state.repoSuiteFilter}.`)) return false;
 
@@ -138,9 +153,10 @@
       if (state.repoTagFilters.some((tag) => !tags.includes(tag))) return false;
 
       if (!state.repoSearch) return true;
-      const searchText = [test.test_case.name, test.full_name, ...tags].join(" ").toLowerCase();
-      return searchText.includes(state.repoSearch.toLowerCase());
-    });
+      const searchText = normalizeSearchText([test.test_case.name, test.full_name, ...suiteNames, ...tags].join(" "));
+        return searchText.includes(normalizeSearchText(state.repoSearch));
+      })
+      .map(({ test }) => test);
   }
 
   function renderStatusFilter(suite) {
@@ -732,7 +748,7 @@
 
   viewRoot.addEventListener("input", (event) => {
     if (!event.target.matches("[data-repo-search]")) return;
-    state.repoSearch = event.target.value.trim();
+    state.repoSearch = event.target.value;
     state.repoSelectedTest = null;
     renderCurrentPage();
     const searchInput = viewRoot.querySelector("[data-repo-search]");
