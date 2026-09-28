@@ -709,6 +709,8 @@
       
         
       
+        
+      
     
     
     
@@ -865,6 +867,34 @@
     
   
     Output Formats (JSON)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="management.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Management
   
 
     
@@ -6272,18 +6302,18 @@
 
 
 <h1 id="usage">Usage</h1>
-<p>This section will provide you details about using different static site generator in combination with <code>robotframework-testdoc</code>.</p>
+<p>This section provides details about the output modes and integrations available in <code>robotframework-testdoc</code>.</p>
 <p>The following output formats and site generators are currently supported:</p>
 <ol>
 <li><a href="jinja2.html">HTML via Jinja2</a> (Default)</li>
 <li><a href="mkdocs.html">Mkdocs</a></li>
 <li><a href="pdf.html">PDF Output</a></li>
-<li><a href="output_formats.html">JSON</a></li>
+<li><a href="output_formats.html">JSON and Markdown</a></li>
+<li><a href="management.html">Management dashboard with result history</a></li>
 </ol>
 <div class="admonition warning">
-<p class="admonition-title">Plugin Usage is Mutual Exclusive</p>
-<p>The CLI arguments for the plugins are mutually exclusive - you cannot combine them or use them in the same command. </p>
-<p>Means: you can either use the argument to attach an external jinja2 template or the argument to use internal / external mkdocs templates!</p>
+<p class="admonition-title">Output modes</p>
+<p><code>--custom-jinja-template</code> and <code>--mkdocs</code> select different renderers and should not be used together. <code>--custom-pdf-template</code> is used with <code>-f pdf</code>. The <code>management</code> command always creates its management dashboard and can additionally create the selected documentation output.</p>
 </div>
 <h2 id="examples">Examples</h2>
 <p>See some examples how to use <code>testdoc</code>:</p>
@@ -6294,10 +6324,10 @@ testdoc<span class="w"> </span>tests/<span class="w"> </span>TestDocumentation.h
 testdoc<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>tests/<span class="w"> </span>TestDocumentation.json
 
 <span class="c1"># Generating docu with new title, new root suite name, new root suite documentation text &amp; new metadata</span>
-testdoc<span class="w"> </span>-t<span class="w"> </span><span class="s2">&quot;Robot Framework Test Automation&quot;</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;System Tests&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;Root Suite Documentation&quot;</span><span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Root Suite Metadata&quot;</span><span class="w"> </span>tests/<span class="w"> </span>TestDocumentation.html
+testdoc<span class="w"> </span>-t<span class="w"> </span><span class="s2">"Robot Framework Test Automation"</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"System Tests"</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">"Root Suite Documentation"</span><span class="w"> </span>-m<span class="w"> </span><span class="s2">"Root Suite Metadata"</span><span class="w"> </span>tests/<span class="w"> </span>TestDocumentation.html
 
 <span class="c1"># Generating docu with source prefix to navigate directly to its gitlab file path</span>
-testdoc<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://gitlab.com/myrepository&quot;</span><span class="w"> </span>tests/<span class="w"> </span>TestDocumentation.html
+testdoc<span class="w"> </span>-s<span class="w"> </span><span class="s2">"https://gitlab.com/myrepository"</span><span class="w"> </span>tests/<span class="w"> </span>TestDocumentation.html
 
 <span class="c1"># Generating docu only with specific mentioned tags to include &amp; exclude </span>
 testdoc<span class="w"> </span>-i<span class="w"> </span>ManagementUI<span class="w"> </span>-e<span class="w"> </span>LongTime<span class="w"> </span>tests/<span class="w"> </span>TestDocumentation.html
@@ -6308,26 +6338,14 @@ testdoc<span class="w"> </span>-i<span class="w"> </span>ManagementUI<span class
 <span class="c1"># Generating docu only with new metadata for root suite object</span>
 testdoc<span class="w"> </span>-m<span class="w"> </span><span class="nv">Version</span><span class="o">=</span><span class="m">0</span>.1.1-dev<span class="w"> </span>-m<span class="w"> </span><span class="nv">Tester</span><span class="o">=</span>RobotExpert<span class="w"> </span>tests/<span class="w"> </span>TestDocumentation.html
 
-<span class="c1"># Generating docu - hide tags information</span>
-testdoc<span class="w"> </span>--hide-tags<span class="w"> </span>tests/<span class="w"> </span>TestDocumentation.html
-
-<span class="c1"># Generating docu - hide test case documentation texts</span>
-testdoc<span class="w"> </span>--hide-test-doc<span class="w"> </span>tests/<span class="w"> </span>TestDocumentation.html
-
-<span class="c1"># Generating docu - hide test suite documentation texts</span>
-testdoc<span class="w"> </span>--hide-suite-doc<span class="w"> </span>tests/<span class="w"> </span>TestDocumentation.html
-
-<span class="c1"># Generating docu - hide source information</span>
-testdoc<span class="w"> </span>--hide-source<span class="w"> </span>tests/<span class="w"> </span>TestDocumentation.html
-
-<span class="c1"># Generating docu - hide keyword information (keyword calls in tests)</span>
-testdoc<span class="w"> </span>--hide-keywords<span class="w"> </span>tests/<span class="w"> </span>TestDocumentation.html
-
 <span class="c1"># Generating docu using the internal predefined mkdocs template</span>
 testdoc<span class="w"> </span>--mkdocs<span class="w"> </span>tests/<span class="w"> </span>output-dir/
 
 <span class="c1"># Generating docu using a custom mkdocs template stored on your local system</span>
 testdoc<span class="w"> </span>--mkdocs<span class="w"> </span>--mkdocs-template-dir<span class="w"> </span>templates/my-mkdocs-template/<span class="w"> </span>tests/<span class="w"> </span>/output-dir/
+
+<span class="c1"># Generating a management dashboard and storing result history</span>
+testdoc<span class="w"> </span>management<span class="w"> </span>--report-file<span class="w"> </span>results/output.xml<span class="w"> </span>--database-file<span class="w"> </span>results/history.sqlite<span class="w"> </span>tests/<span class="w"> </span>management-output/
 </code></pre></div>
 
 

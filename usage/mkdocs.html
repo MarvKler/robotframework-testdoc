@@ -709,6 +709,8 @@
       
         
       
+        
+      
     
     
     
@@ -1051,6 +1053,34 @@
     
   
     Output Formats (JSON)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="management.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Management
   
 
     
@@ -6643,10 +6673,16 @@ plugins:
 extra_css:
   - stylesheets/pygments-myrobot.css
 
+theme:
+  name: material
+  features:
+    - navigation.prune
+
 exclude_docs: |
   _partials/
   generated/_resolve_suite.md
 </code></pre></div>
+<p>For large repositories, <code>navigation.prune</code> is recommended. Testdoc generates one page per suite; pruning prevents the complete suite tree from being embedded into every generated HTML page.</p>
 <h4 id="indexmd">index.md</h4>
 <p>The <code>index.md</code> file is the landing page of your documentation and its fully customizable, but it must exist.</p>
 <h4 id="suite_pagemd">suite_page.md</h4>

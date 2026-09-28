@@ -12,7 +12,7 @@
         <link rel="prev" href="pdf.html">
       
       
-        <link rel="next" href="vscode-extension.html">
+        <link rel="next" href="management.html">
       
       
         
@@ -709,6 +709,8 @@
       
         
       
+        
+      
     
     
     
@@ -939,6 +941,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#markdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Markdown
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#combining-with-other-options" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -949,10 +962,49 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#toml-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TOML configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="management.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -6338,10 +6390,32 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#markdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Markdown
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#combining-with-other-options" class="md-nav__link">
     <span class="md-ellipsis">
       
         Combining with other options
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#toml-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TOML configuration
       
     </span>
   </a>
@@ -6392,6 +6466,14 @@ The flag is compatible with all other options (tag filters, source prefix, title
 <td><code>json</code></td>
 <td>Machine-readable JSON of the full suite tree</td>
 </tr>
+<tr>
+<td><code>md</code></td>
+<td>One AI-friendly Markdown document containing the complete suite tree</td>
+</tr>
+<tr>
+<td><code>pdf</code></td>
+<td>PDF report with title page, contents and suite sections</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -6410,37 +6492,56 @@ This makes the output easy to consume in dashboards, CI quality gates, or any cu
 </code></pre></div>
 <p><strong>Example output structure:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s1&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Testcases&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;is_folder&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/path/to/tests&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;directory&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;doc&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;test_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">17</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;tests&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">  </span><span class="nt">&quot;suites&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s1"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Testcases"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"is_folder"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/path/to/tests"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"directory"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"doc"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"test_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">17</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"tests"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">  </span><span class="nt">"suites"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Component A&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;tests&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Component A"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"tests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">],</span>
 <span class="w">      </span><span class="err">...</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;user_keywords&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="w">  </span><span class="nt">"user_keywords"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>You can also set <code>output_format = "json"</code> in your TOML configuration file:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.testdoc]</span>
-<span class="n">output_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;json&quot;</span>
+<span class="n">output_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"json"</span>
+</code></pre></div>
+<h2 id="markdown">Markdown</h2>
+<p>Markdown output creates one consolidated document with suite and test headings, documentation, metadata, tags, source paths, fixtures and Robot Framework test bodies. It is suitable for code review, search and providing a complete test overview as context to an AI system.</p>
+<div class="highlight"><pre><span></span><code>testdoc<span class="w"> </span>-f<span class="w"> </span>md<span class="w"> </span>tests/<span class="w"> </span>TestDocumentation.md
+</code></pre></div>
+<p>The format can also be selected through TOML:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.testdoc]</span>
+<span class="n">output_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"md"</span>
 </code></pre></div>
 <hr />
 <h2 id="combining-with-other-options">Combining with other options</h2>
 <p>The output format flag works with the full set of <code>testdoc</code> options:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># JSON with tag filter and custom title</span>
-testdoc<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>-t<span class="w"> </span><span class="s2">&quot;Nightly Suite&quot;</span><span class="w"> </span>-i<span class="w"> </span>Regression<span class="w"> </span>tests/<span class="w"> </span>nightly.json
+testdoc<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>-t<span class="w"> </span><span class="s2">"Nightly Suite"</span><span class="w"> </span>-i<span class="w"> </span>Regression<span class="w"> </span>tests/<span class="w"> </span>nightly.json
 
 <span class="c1"># JSON with source prefix</span>
-testdoc<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;github::https://github.com/myorg/myrepo&quot;</span><span class="w"> </span>tests/<span class="w"> </span>docs.json
+testdoc<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>-s<span class="w"> </span><span class="s2">"github::https://github.com/myorg/myrepo"</span><span class="w"> </span>tests/<span class="w"> </span>docs.json
+</code></pre></div>
+<h2 id="toml-configuration">TOML configuration</h2>
+<p>All common generation options can be supplied through a TOML file. A <code>pyproject.toml</code> uses the <code>[tool.testdoc]</code> table; a standalone TOML file uses the options at its root.</p>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.testdoc]</span>
+<span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Nightly Test Documentation"</span>
+<span class="n">output_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"json"</span>
+<span class="n">include</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"Regression"</span><span class="p">]</span>
+<span class="n">sourceprefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"https://github.com/example/project/blob/main/"</span>
+</code></pre></div>
+<p>Use it with <code>--configfile</code>:</p>
+<div class="highlight"><pre><span></span><code>testdoc<span class="w"> </span>--configfile<span class="w"> </span>pyproject.toml<span class="w"> </span>tests/<span class="w"> </span>documentation.json
 </code></pre></div>
 
 
@@ -6496,13 +6597,13 @@ testdoc<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </
         
         
           
-          <a href="vscode-extension.html" class="md-footer__link md-footer__link--next" aria-label="Next: VS Code Extension">
+          <a href="management.html" class="md-footer__link md-footer__link--next" aria-label="Next: Management">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                VS Code Extension
+                Management
               </div>
             </div>
             <div class="md-footer__button md-icon">

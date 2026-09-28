@@ -642,6 +642,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -760,6 +771,8 @@
       
         
           
+        
+      
         
       
         
@@ -923,6 +936,34 @@
     
   
     Output Formats (JSON)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/management.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Management
   
 
     
@@ -6304,6 +6345,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -6390,6 +6442,12 @@
 <td><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/274c.svg" title=":x:" /></td>
 </tr>
 <tr>
+<td><code>--custom-pdf-template</code></td>
+<td>Define a custom Jinja2 template for PDF overview and suite pages</td>
+<td>Only used with <code>-f pdf</code></td>
+<td><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/274c.svg" title=":x:" /></td>
+</tr>
+<tr>
 <td><code>--include</code>, <code>-i</code></td>
 <td>Define Robot Framework tags to include only specific tests</td>
 <td>Can be used multiple times</td>
@@ -6403,7 +6461,7 @@
 </tr>
 <tr>
 <td><code>--output-format</code>, <code>-f</code></td>
-<td>Choose the output format: <code>html</code> or <code>json</code></td>
+<td>Choose the output format: <code>html</code>, <code>json</code>, <code>md</code> or <code>pdf</code></td>
 <td>Default: <code>html</code>. See <a href="../usage/output_formats.html">Output Formats</a></td>
 <td><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/274c.svg" title=":x:" /></td>
 </tr>
@@ -6427,12 +6485,25 @@
 </tr>
 <tr>
 <td><code>OUTPUT</code></td>
-<td>Define path to the output HTML file</td>
-<td>Becomes directory path in combination with <code>--mkdocs</code></td>
+<td>Define the output file or output directory</td>
+<td>File for HTML/JSON/PDF, directory for MkDocs and Management</td>
 <td><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/2705.svg" title=":white_check_mark:" /></td>
 </tr>
 </tbody>
 </table>
+<h2 id="commands">Commands</h2>
+<p>The legacy command remains supported:</p>
+<div class="highlight"><pre><span></span><code>testdoc<span class="w"> </span>tests/<span class="w"> </span>TestDocumentation.html
+</code></pre></div>
+<p>It is equivalent to the explicit <code>generate</code> command:</p>
+<div class="highlight"><pre><span></span><code>testdoc<span class="w"> </span>generate<span class="w"> </span>tests/<span class="w"> </span>TestDocumentation.html
+</code></pre></div>
+<p>The <code>management</code> command adds execution-result history to the generated documentation. It requires a Robot Framework <code>output.xml</code> report and a reusable SQLite database file. See <a href="../usage/management.html">Management</a>.</p>
+<div class="highlight"><pre><span></span><code>testdoc<span class="w"> </span>management<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--report-file<span class="w"> </span>results/output.xml<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--database-file<span class="w"> </span>results/testdoc-history.sqlite<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>tests/<span class="w"> </span>management-output/
+</code></pre></div>
 
 
 

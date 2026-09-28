@@ -17,6 +17,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 [data-md-color-scheme="default"] .md-typeset .highlight .cpf { color: #008000; font-style: italic } /* Comment.PreprocFile */
 [data-md-color-scheme="default"] .md-typeset .highlight .c1 { color: #008000; font-style: italic } /* Comment.Single */
 [data-md-color-scheme="default"] .md-typeset .highlight .cs { color: #008000; font-style: italic } /* Comment.Special */
+[data-md-color-scheme="default"] .md-typeset .highlight .gh { color: #00F; font-weight: bold } /* Generic.Heading */
+[data-md-color-scheme="default"] .md-typeset .highlight .gu { color: #795E26 } /* Generic.Subheading */
 [data-md-color-scheme="default"] .md-typeset .highlight .kc { color: #AF00DB; font-weight: bold } /* Keyword.Constant */
 [data-md-color-scheme="default"] .md-typeset .highlight .kd { color: #AF00DB; font-weight: bold } /* Keyword.Declaration */
 [data-md-color-scheme="default"] .md-typeset .highlight .kn { color: #00F; font-weight: bold; text-decoration: underline } /* Keyword.Namespace */
@@ -87,6 +89,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 [data-md-color-scheme="slate"] .md-typeset .highlight .cpf { color: #6A9955; font-style: italic } /* Comment.PreprocFile */
 [data-md-color-scheme="slate"] .md-typeset .highlight .c1 { color: #6A9955; font-style: italic } /* Comment.Single */
 [data-md-color-scheme="slate"] .md-typeset .highlight .cs { color: #6A9955; font-style: italic } /* Comment.Special */
+[data-md-color-scheme="slate"] .md-typeset .highlight .gh { color: #569CD6; font-weight: bold } /* Generic.Heading */
+[data-md-color-scheme="slate"] .md-typeset .highlight .gu { color: #DCDCAA } /* Generic.Subheading */
 [data-md-color-scheme="slate"] .md-typeset .highlight .kc { color: #C586C0; font-weight: bold } /* Keyword.Constant */
 [data-md-color-scheme="slate"] .md-typeset .highlight .kd { color: #C586C0; font-weight: bold } /* Keyword.Declaration */
 [data-md-color-scheme="slate"] .md-typeset .highlight .kn { color: #4FC1FF; font-weight: bold; text-decoration: underline } /* Keyword.Namespace */
