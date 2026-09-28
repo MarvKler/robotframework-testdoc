@@ -1,3 +1,5 @@
+import re
+from html import unescape
 from datetime import timedelta
 from pathlib import Path
 from types import SimpleNamespace
@@ -8,6 +10,7 @@ from testdoc.management.models import TestResultEntry as ResultEntry
 from testdoc.management.result_parser import _ResultCollector
 from testdoc.management.result_parser import TestResultRecord as ResultRecord
 from testdoc.management.webapp import ManagementWebRenderer
+from testdoc.html.rendering.webapp import _serialize_test
 from testdoc.parser.models import CustomTestCase, CustomTestSuite
 
 
@@ -113,3 +116,16 @@ def test_web_renderer_can_render_documentation_without_result_history(tmp_path):
     assert 'data-page="repository"' in html
     assert 'data-page="history"' not in html
     assert '"show_history": false' in html
+
+
+def test_management_test_steps_include_robot_test_case_syntax():
+    test_case = _test_case(name="Visible Test")
+    test_case.body = [SimpleNamespace(type="KEYWORD", name="Log", args=["hello"])]
+    management_test = SimpleNamespace(full_name="Root.Visible Test", latest_status="UNKNOWN", history=[], test_case=test_case)
+
+    serialized = _serialize_test(management_test)
+    visible_steps = unescape(re.sub(r"<[^>]+>", "", serialized["steps_html"]))
+
+    assert "*** Test Cases ***" in serialized["steps_html"]
+    assert "Visible Test" in serialized["steps_html"]
+    assert "    Log    hello" in visible_steps

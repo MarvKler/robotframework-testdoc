@@ -18,7 +18,9 @@ _TEMPLATE_DIR = Path(__file__).parent.parent / ".." / "management" / "templates"
 def _serialize_test(management_test: Any) -> dict:
     test_case = dataclasses.asdict(management_test.test_case)
     step_lines = TestCaseParser()._keyword_parser(management_test.test_case.body) if management_test.test_case.body else []
-    step_code = "\n".join(step_lines) if step_lines else ""
+    step_code = ""
+    if step_lines:
+        step_code = "\n".join(["*** Test Cases ***", management_test.test_case.name, *(f"    {line}" for line in step_lines)])
     return {
         "full_name": management_test.full_name,
         "latest_status": management_test.latest_status,
