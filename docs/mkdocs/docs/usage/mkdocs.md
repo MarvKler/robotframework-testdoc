@@ -71,10 +71,17 @@ plugins:
 extra_css:
   - stylesheets/pygments-myrobot.css
 
+theme:
+  name: material
+  features:
+    - navigation.prune
+
 exclude_docs: |
   _partials/
   generated/_resolve_suite.md
 ```
+
+For large repositories, ``navigation.prune`` is recommended. Testdoc generates one page per suite; pruning prevents the complete suite tree from being embedded into every generated HTML page.
 
 #### index.md
 

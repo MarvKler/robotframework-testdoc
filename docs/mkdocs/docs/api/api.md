@@ -23,7 +23,7 @@ class CustomTestSuite:
     name: str
     is_folder: bool    # customized helper key
     source: str
-    metadata: dict | None
+    metadata: dict
     type: str
 
     doc: str | None = None
@@ -50,7 +50,7 @@ class CustomTestCase:
 
     doc: str | None = None
     custom_source: str | None = None    # customized helper key
-    tags: list[str] = field(default_factory=list)
+    tags: list[str] | None = None
 ```
 
 ### Test Case Body Model

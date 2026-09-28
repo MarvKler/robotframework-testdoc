@@ -40,6 +40,7 @@ Copy the following content into your local ``mkdocs.yml``:
       features:
         - navigation.tabs
         - navigation.top
+        - navigation.prune
         - content.code.annotate
         - content.code.copy
       palette:
@@ -82,6 +83,8 @@ Copy the following content into your local ``mkdocs.yml``:
       _partials/
       generated/_resolve_suite.md
     ```
+
+For large repositories, keep ``navigation.prune`` enabled. Testdoc generates one page per suite and this setting avoids repeating the full suite navigation in every generated HTML page.
 
 ## Configuration - index.md
 
