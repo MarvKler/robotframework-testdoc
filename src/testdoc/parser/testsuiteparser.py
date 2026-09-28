@@ -29,6 +29,8 @@ class RobotSuiteParser(SuiteVisitor):
         self.tests = []
         self.args = CommandLineArguments()
         self.suite: CustomTestSuite | None = None
+        # Shared across all (sub-)suites so its keyword-docs cache is actually reused.
+        self._tc_parser = TestCaseParser()
 
         self.robot_suite_model: running.TestSuite = None
 
@@ -78,7 +80,7 @@ class RobotSuiteParser(SuiteVisitor):
         )
 
         # Parse Test Cases and suite-level fixtures
-        _tc_parser = TestCaseParser()
+        _tc_parser = self._tc_parser
         suite_info = _tc_parser.parse_test(suite, suite_info)
         suite_info = _tc_parser.parse_suite_fixtures(suite, suite_info)
 
