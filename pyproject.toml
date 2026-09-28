@@ -102,6 +102,8 @@ lint = "ruff check --force-exclude"
 format = "ruff format --force-exclude"
 atest = "pytest atest/acceptance"
 perftest = "pytest atest/performance"
+perftest-mkdocs = "pytest atest/performance/test_performance.py"
+perftest-html = "pytest atest/performance/test_performance_html.py"
 alltest = "pytest atest"
 
 

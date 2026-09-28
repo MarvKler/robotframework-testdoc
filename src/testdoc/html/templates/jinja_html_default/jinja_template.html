@@ -174,25 +174,6 @@
 
     <!-- MAIN CONTENT -->
     <main class="content" id="mainContent">
-        {# ------------------------------------------------------------
-           PoC: Keyword documentation metadata
-
-           We keep the lexer + Pygments highlighting unchanged.
-           Instead, we embed resolved keyword docs (already available in the
-           parsed model) as NDJSON per test block. The frontend can then add
-           a small info button next to each keyword call line.
-           ------------------------------------------------------------ #}
-        {% macro emit_kw_doc_ndjson(items) %}
-            {% for item in (items or []) %}
-                {% if item.type == 'KEYWORD' and item.keyword_doc %}
-{{ {'name': item.name, 'owner': item.keyword_owner, 'doc': item.keyword_doc, 'args': item.args} | dump_json }}
-                {% endif %}
-                {% if item.body %}
-{{ emit_kw_doc_ndjson(item.body) }}
-                {% endif %}
-            {% endfor %}
-        {% endmacro %}
-
         {% macro render_suite_block(s, level) %}
         <section class="suite-block" data-suite-id="{{ s.id }}" data-suite-name="{{ s.name }}" data-suite-depth="{{ level }}" data-test-count="{{ s.test_count }}">
 
@@ -264,14 +245,6 @@
                         <span class="section-title">Suite Setup &amp; Teardown</span>
                         <span class="section-subtitle">Lifecycle keywords for this suite</span>
                     </div>
-                    <script type="application/x-ndjson" class="kw-doc-ndjson" data-test-target="suite-fixture-{{ s.id }}">
-{% if s.setup and s.setup.keyword_doc %}
-{{ {'name': s.setup.name, 'owner': s.setup.keyword_owner, 'doc': s.setup.keyword_doc, 'args': s.setup.args, 'fixture': 'setup'} | dump_json }}
-{% endif %}
-{% if s.teardown and s.teardown.keyword_doc %}
-{{ {'name': s.teardown.name, 'owner': s.teardown.keyword_owner, 'doc': s.teardown.keyword_doc, 'args': s.teardown.args, 'fixture': 'teardown'} | dump_json }}
-{% endif %}
-                    </script>
                     <div class="code-wrapper">
                         <button class="code-toggle">
                             <span>Show / Hide Code</span>
@@ -381,15 +354,6 @@
                                 <div class="test-subsection">
                                     <div class="kv-label">Body</div>
                                     {% if test.body or test.setup or test.teardown %}
-                                    <script type="application/x-ndjson" class="kw-doc-ndjson" data-test-target="test-{{ s.id }}-{{ loop.index0 }}">
-{% if test.setup and test.setup.keyword_doc %}
-{{ {'name': test.setup.name, 'owner': test.setup.keyword_owner, 'doc': test.setup.keyword_doc, 'args': test.setup.args, 'fixture': 'setup'} | dump_json }}
-{% endif %}
-{% if test.teardown and test.teardown.keyword_doc %}
-{{ {'name': test.teardown.name, 'owner': test.teardown.keyword_owner, 'doc': test.teardown.keyword_doc, 'args': test.teardown.args, 'fixture': 'teardown'} | dump_json }}
-{% endif %}
-{{ emit_kw_doc_ndjson(test.body) }}
-                                    </script>
                                     <div class="code-wrapper">
                                         <button class="code-toggle">
                                             <span>Show / Hide Code</span>

@@ -131,25 +131,10 @@ class MkdocsIntegration:
 
         self._ensure_suite_ids(suites)
 
-        # Resolver template: finds the suite object for suite_id and includes the users template
+        # Resolver template: O(1) lookup via suites_by_id (precomputed in main.py) instead of
+        # recursively searching the whole suite tree for every page (was O(n^2) for n suites).
         (gen_dir / "_resolve_suite.md").write_text(
-            "{% macro find(items, target) %}\n"
-            "  {% if items is mapping %}\n"
-            "    {# items is a single dict #}\n"
-            "    {% if items.id == target %}{% set ns.found = items %}{% endif %}\n"
-            "    {% if not ns.found and items.suites %}{{ find(items.suites, target) }}{% endif %}\n"
-            "  {% else %}\n"
-            "    {# items is a list #}\n"
-            "    {% for s in items %}\n"
-            "      {% if s.id == target %}{% set ns.found = s %}{% endif %}\n"
-            "      {% if not ns.found and s.suites %}{{ find(s.suites, target) }}{% endif %}\n"
-            "    {% endfor %}\n"
-            "  {% endif %}\n"
-            "{% endmacro %}\n\n"
-            "{% set ns = namespace(found=None) %}\n"
-            "{{ find(suites, suite_id) }}\n"
-            "{% set suite = ns.found %}\n"
-            "{% include '" + user_suite_template + "' %}\n",
+            "{% set suite = suites_by_id[suite_id] %}\n{% include '" + user_suite_template + "' %}\n",
             encoding="utf-8",
         )
 

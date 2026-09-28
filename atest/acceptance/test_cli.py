@@ -2,9 +2,11 @@ import os
 from pathlib import Path
 import shutil
 import tempfile
+import json
+import pytest
 from click.testing import CliRunner
 from robot import run as robot_run
-from testdoc.cli import main
+from testdoc.cli import main, generate
 
 def test_cli_help():
     runner = CliRunner()
@@ -195,3 +197,42 @@ def test_cli_cmd_pdf_output_format_with_custom_template():
         with open(output, "rb") as file:
                 header = file.read(4)
         assert header == b"%PDF"
+
+
+def test_cli_cmd_json_output_format(tmp_path):
+    parent_dir = Path(__file__).parent.parent
+    robot = os.path.join(parent_dir, "testdata", "acceptance")
+    output = tmp_path / "output_testdoc.json"
+    runner = CliRunner()
+    result = runner.invoke(main, ["-f", "json", robot, str(output)])
+    assert result.exit_code == 0, result.output
+    assert "Generated Test Documentation JSON" in result.output
+    assert output.exists()
+
+    data = json.loads(output.read_text(encoding="utf-8"))
+    assert data["name"]
+    assert isinstance(data["tests"], list)
+    assert isinstance(data["suites"], list)
+
+
+def _supported_output_formats() -> list[str]:
+    """Read the --output-format choices directly from the CLI so this list can never go stale."""
+    for param in generate.params:
+        if param.name == "output_format":
+            return list(param.type.choices)
+    raise AssertionError("Could not find --output-format option on the 'generate' command")
+
+
+@pytest.mark.parametrize("output_format", _supported_output_formats())
+def test_cli_cmd_all_output_formats_are_generated(output_format, tmp_path):
+    """Guards against silently broken/unlisted output formats: every choice must produce a non-empty file."""
+    parent_dir = Path(__file__).parent.parent
+    robot = os.path.join(parent_dir, "testdata", "acceptance")
+    output = tmp_path / f"output_testdoc.{output_format}"
+
+    runner = CliRunner()
+    result = runner.invoke(main, ["-f", output_format, robot, str(output)])
+
+    assert result.exit_code == 0, result.output
+    assert output.exists()
+    assert output.stat().st_size > 0

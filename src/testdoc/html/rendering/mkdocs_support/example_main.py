@@ -35,11 +35,23 @@ def _generate_pygments_css() -> str:
     return f"/* Robot Framework Pygments - light mode */\n{light_css}\n\n/* Robot Framework Pygments - dark mode */\n{dark_css}\n"
 
 
+def _flatten_suites_by_id(suite: dict, out: dict) -> None:
+    out[suite["id"]] = suite
+    for child in suite.get("suites") or []:
+        _flatten_suites_by_id(child, out)
+
+
 def define_env(env):
     _register_custom_robot_lexer()
 
     data_file = Path(__file__).parent / "suites.json"
-    env.variables["suites"] = json.loads(data_file.read_text(encoding="utf-8"))
+    suites = json.loads(data_file.read_text(encoding="utf-8"))
+    env.variables["suites"] = suites
+
+    # O(1) lookup by suite id instead of recursively searching the tree per page
+    suites_by_id: dict = {}
+    _flatten_suites_by_id(suites, suites_by_id)
+    env.variables["suites_by_id"] = suites_by_id
 
     env.filters["format_test_body"] = TestCaseParser()._keyword_parser
 
