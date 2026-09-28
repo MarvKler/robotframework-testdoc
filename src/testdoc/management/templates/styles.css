@@ -8,9 +8,9 @@
   --color-text-muted: #6b7183;
   --color-text-soft: #8a90a3;
 
-  --color-primary: #4f46e5;
-  --color-primary-dark: #4338ca;
-  --color-primary-soft: #eef0ff;
+  --color-primary: #00936a;
+  --color-primary-dark: #007a59;
+  --color-primary-soft: #e4f5ef;
   --color-primary-contrast: #ffffff;
 
   --color-pass: #157a42;
@@ -49,10 +49,10 @@
   --color-text-muted: #9aa1b5;
   --color-text-soft: #767e94;
 
-  --color-primary: #7b81f7;
-  --color-primary-dark: #9297f9;
-  --color-primary-soft: rgba(123, 129, 247, 0.16);
-  --color-primary-contrast: #101322;
+  --color-primary: #00936a;
+  --color-primary-dark: #35c99a;
+  --color-primary-soft: rgba(0, 147, 106, 0.18);
+  --color-primary-contrast: #071b15;
 
   --color-pass: #3ed488;
   --color-pass-bg: rgba(62, 212, 136, 0.14);
@@ -128,7 +128,7 @@ html, body {
   height: 34px;
   flex-shrink: 0;
   border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, var(--color-primary), #7c73f0);
+  background: linear-gradient(135deg, var(--color-primary), #35c99a);
   color: #ffffff;
   box-shadow: var(--shadow-sm);
 }
@@ -488,7 +488,7 @@ html, body {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--color-primary), #8b83f5);
+  background: linear-gradient(90deg, var(--color-primary), #35c99a);
 }
 
 .metric-value {
