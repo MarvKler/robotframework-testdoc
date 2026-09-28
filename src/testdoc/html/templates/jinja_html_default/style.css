@@ -14,8 +14,8 @@
 
     /* Sidebar */
     --nav-bg:            #ffffff;
-    --nav-bg-hover:      rgba(2,132,199,0.08);
-    --nav-bg-active:     rgba(2,132,199,0.14);
+    --nav-bg-hover:      rgba(0,147,106,0.08);
+    --nav-bg-active:     rgba(0,147,106,0.14);
     --nav-text:          #64748b;
     --nav-text-active:   #0f172a;
     --nav-border:        #e2e8f0;
@@ -27,10 +27,10 @@
     --topbar-muted:      #64748b;
 
     /* Accent */
-    --accent:            #0284c7;
-    --accent-hover:      #0369a1;
-    --accent-soft:       rgba(2,132,199,0.08);
-    --accent-border:     rgba(2,132,199,0.3);
+    --accent:            #00936a;
+    --accent-hover:      #007a59;
+    --accent-soft:       rgba(0,147,106,0.09);
+    --accent-border:     rgba(0,147,106,0.32);
 
     /* Text */
     --text:              #0f172a;
@@ -49,9 +49,9 @@
     --success:           #10b981;
     --success-soft:      rgba(16,185,129,0.1);
     --success-border:    rgba(16,185,129,0.35);
-    --tag-bg:            rgba(2,132,199,0.08);
-    --tag-text:          #0369a1;
-    --tag-border:        rgba(2,132,199,0.3);
+    --tag-bg:            rgba(0,147,106,0.09);
+    --tag-text:          #007a59;
+    --tag-border:        rgba(0,147,106,0.32);
 
     /* Layout */
     --topbar-h:          52px;
@@ -70,8 +70,8 @@
     --surface-sunken:    #0a1120;
 
     --nav-bg:            #0d1117;
-    --nav-bg-hover:      rgba(56,189,248,0.14);
-    --nav-bg-active:     rgba(56,189,248,0.22);
+    --nav-bg-hover:      rgba(0,147,106,0.16);
+    --nav-bg-active:     rgba(0,147,106,0.24);
     --nav-text:          #8b949e;
     --nav-text-active:   #f0f6fc;
     --nav-border:        rgba(255,255,255,0.05);
@@ -82,10 +82,10 @@
     --topbar-text:       #f0f6fc;
     --topbar-muted:      #8b949e;
 
-    --accent:            #38bdf8;
-    --accent-hover:      #0ea5e9;
-    --accent-soft:       rgba(56,189,248,0.12);
-    --accent-border:     rgba(56,189,248,0.35);
+    --accent:            #00936a;
+    --accent-hover:      #35c99a;
+    --accent-soft:       rgba(0,147,106,0.17);
+    --accent-border:     rgba(0,147,106,0.45);
 
     --text:              #f1f5f9;
     --text-2:            #cbd5e1;
@@ -98,9 +98,9 @@
     --shadow-sm:         0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.2);
     --shadow-md:         0 4px 12px rgba(0,0,0,0.4), 0 1px 4px rgba(0,0,0,0.2);
 
-    --tag-bg:            rgba(56,189,248,0.12);
-    --tag-text:          #7dd3fc;
-    --tag-border:        rgba(56,189,248,0.35);
+    --tag-bg:            rgba(0,147,106,0.17);
+    --tag-text:          #35c99a;
+    --tag-border:        rgba(0,147,106,0.45);
 }
 
 /* ============================================================
@@ -480,13 +480,13 @@ body {
 
 .tree-icon.suite-folder {
     background: rgba(2,132,199,0.12);
-    color: #0284c7;
+    color: #00936a;
     box-shadow: 0 0 0 1px rgba(2,132,199,0.3);
 }
 
 .tree-icon.suite-file {
     background: rgba(14,165,233,0.10);
-    color: #0369a1;
+    color: #007a59;
     box-shadow: 0 0 0 1px rgba(14,165,233,0.3);
 }
 
