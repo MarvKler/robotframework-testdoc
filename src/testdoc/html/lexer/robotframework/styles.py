@@ -1,5 +1,5 @@
 from pygments.style import Style
-from pygments.token import Comment, Keyword, Name, Number, Operator, Punctuation, String, Text
+from pygments.token import Comment, Generic, Keyword, Name, Number, Operator, Punctuation, String, Text
 
 
 class MyRobotStyle(Style):
@@ -13,6 +13,8 @@ class MyRobotStyle(Style):
         Punctuation: "#D4D4D4",
         Operator: "#D4D4D4",
         Comment: "italic #6A9955",
+        Generic.Heading: "bold #569CD6",
+        Generic.Subheading: "#DCDCAA",
         Keyword.Namespace: "bold underline #4FC1FF",
         Keyword: "bold #C586C0",
         # Test case names / user keywords
@@ -48,6 +50,8 @@ class MyRobotStyleLight(Style):
         Punctuation: "#1E1E1E",
         Operator: "#1E1E1E",
         Comment: "italic #008000",
+        Generic.Heading: "bold #0000FF",
+        Generic.Subheading: "#795E26",
         Keyword.Namespace: "bold underline #0000FF",
         Keyword: "bold #AF00DB",
         # Test case names / user keywords

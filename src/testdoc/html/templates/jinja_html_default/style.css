@@ -1596,14 +1596,15 @@ body {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 12px;
     line-height: 1.65;
-    background: #0d1b2a;
-    color: #e2e8f0;
-    border: 1px solid rgba(2,132,199,0.25);
+    background: var(--surface-sunken);
+    color: var(--text-2);
+    border: 1px solid var(--accent-border);
     border-radius: var(--radius-md);
     padding: 12px 14px;
     white-space: pre-wrap;
     word-break: break-word;
     overflow-wrap: anywhere;
+    overflow-x: auto;
     counter-reset: rf-line-num;
 }
 

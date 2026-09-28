@@ -891,19 +891,28 @@ html, body {
   font-size: 12.5px;
   line-height: 1.6;
   overflow-x: auto;
+  white-space: pre;
 }
 
-.robotframework .k { color: var(--color-primary-dark); font-weight: 700; }
+.robotframework .gh { color: #005cc5; font-weight: 700; }
+.robotframework .gu { color: #795e26; font-weight: 700; }
+.robotframework .kn,
+.robotframework .k { color: #af00db; font-weight: 700; }
 .robotframework .nf,
 .robotframework .nc,
-.robotframework .n { color: #8a6418; }
-.robotframework .na { color: #a13f9b; font-weight: 700; }
-.robotframework .nv { color: #1976a8; }
-.robotframework .s { color: #a34530; }
+.robotframework .n { color: #795e26; }
+.robotframework .na { color: #af00db; font-weight: 700; }
+.robotframework .nv { color: #001080; }
+.robotframework .s { color: #a31515; }
 .robotframework .p,
 .robotframework .o { color: var(--color-text-muted); }
 .robotframework .c { color: var(--color-pass); font-style: italic; }
+.robotframework .m,
+.robotframework .mi { color: #098658; }
 
+:root[data-theme="dark"] .robotframework .gh { color: #569cd6; }
+:root[data-theme="dark"] .robotframework .gu { color: #dcdcdc; }
+:root[data-theme="dark"] .robotframework .kn,
 :root[data-theme="dark"] .robotframework .k { color: #c586c0; }
 :root[data-theme="dark"] .robotframework .nf,
 :root[data-theme="dark"] .robotframework .nc,
@@ -912,6 +921,8 @@ html, body {
 :root[data-theme="dark"] .robotframework .nv { color: #9cdcfe; }
 :root[data-theme="dark"] .robotframework .s { color: #ce9178; }
 :root[data-theme="dark"] .robotframework .c { color: #6a9955; }
+:root[data-theme="dark"] .robotframework .m,
+:root[data-theme="dark"] .robotframework .mi { color: #b5cea8; }
 
 .history-table {
   width: 100%;

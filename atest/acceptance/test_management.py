@@ -129,3 +129,6 @@ def test_management_test_steps_include_robot_test_case_syntax():
     assert "*** Test Cases ***" in serialized["steps_html"]
     assert "Visible Test" in serialized["steps_html"]
     assert "    Log    hello" in visible_steps
+    assert 'class="gh"' in serialized["steps_html"]
+    assert 'class="gu"' in serialized["steps_html"]
+    assert 'class="nf"' in serialized["steps_html"]
