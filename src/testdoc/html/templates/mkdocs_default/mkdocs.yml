@@ -10,6 +10,7 @@ theme:
   features:
     - navigation.tabs
     - navigation.top
+    - navigation.prune
     - content.code.annotate
     - content.code.copy
     # - header.autohide
