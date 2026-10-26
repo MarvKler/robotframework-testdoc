@@ -72,17 +72,38 @@ def test_handle_keyword_types_unknown_type_falls_back_to_its_body():
     assert formatted == ["Log    nested"]
 
 
-def test_kw_post_processing_drops_redundant_end_before_finally():
-    # TRY/EXCEPT/FINALLY blocks are sibling entries, each carrying their own nested body.
+def test_handle_keyword_types_unknown_nested_block_preserves_indentation():
     body = [
+        {
+            "type": "FOR",
+            "assign": ["${item}"],
+            "values": ["${items}"],
+            "body": [
+                {
+                    "type": "SOME_FUTURE_BLOCK",
+                    "body": [{"type": "KEYWORD", "name": "Log", "args": ["nested"]}],
+                }
+            ],
+        }
+    ]
+
+    formatted = TestCaseParser()._keyword_parser(body)
+    assert formatted[1] == "    Log    nested"
+
+
+def test_try_except_finally_blocks_are_closed_independently():
+    branch = [
         {"type": "TRY", "body": [{"type": "KEYWORD", "name": "Log", "args": ["try body"]}]},
         {"type": "EXCEPT", "patterns": ["Some Error"], "body": [{"type": "KEYWORD", "name": "Log", "args": ["handled"]}]},
         {"type": "FINALLY", "body": [{"type": "KEYWORD", "name": "Log", "args": ["cleanup"]}]},
     ]
+    body = [{"type": "TRY/EXCEPT ROOT", "body": branch}, {"type": "TRY/EXCEPT ROOT", "body": branch}]
+
     formatted = TestCaseParser()._keyword_parser(body)
-    # EXCEPT and FINALLY each auto-append an END; the redundant one right before FINALLY must be dropped.
     formatted_text = "\n".join(formatted)
-    assert formatted_text.count("END") == 1
+    assert formatted_text.count("END") == 2
+    assert formatted_text.index("FINALLY") < formatted_text.index("END")
+    assert formatted_text.index("END") < formatted_text.rindex("TRY")
 
 
 def test_keyword_parser_returns_fallback_for_empty_body():

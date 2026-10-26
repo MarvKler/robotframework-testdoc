@@ -65,8 +65,6 @@ class TestCaseParser:
         for kw in test_body:
             _keyword_object.extend(self._handle_keyword_types(kw))
 
-        _keyword_object = self._kw_post_processing(_keyword_object)
-
         # Fallback in case of no keywords
         if len(_keyword_object) == 0:
             return ["No Keyword Calls in Test"]
@@ -163,21 +161,20 @@ class TestCaseParser:
             result.append(f"{_indent}END\n" if indent == 0 else f"{_indent}END")
 
         # TRY/EXCEPT/FINALLY
-        elif kw_type in ("TRY", "EXCEPT", "FINALLY"):
-            header = f"{_indent}{kw_type}"
-            patterns = self._get_value(kw, "patterns", [])
-            if self._get_value(kw, "patterns") and patterns:
-                header += f"    {'    '.join(patterns)}"
-            condition = self._get_value(kw, "condition", "")
-            if self._get_value(kw, "condition") and condition:
-                header += f"    {condition}"
-            result.append(header)
-            body = self._get_value(kw, "body", [])
-            if self._get_value(kw, "body"):
-                for subkw in body:
+        elif kw_type == "TRY/EXCEPT ROOT":
+            for branch in self._get_value(kw, "body", []):
+                branch_type = self._get_value(branch, "type", "")
+                header = f"{_indent}{branch_type}"
+                patterns = self._get_value(branch, "patterns", [])
+                if patterns:
+                    header += f"    {'    '.join(patterns)}"
+                condition = self._get_value(branch, "condition", "")
+                if condition:
+                    header += f"    {condition}"
+                result.append(header)
+                for subkw in self._get_value(branch, "body", []):
                     result.extend(self._handle_keyword_types(subkw, indent=indent + 1))
-            if kw_type in ("EXCEPT", "FINALLY"):
-                result.append(f"{_indent}END\n" if indent == 0 else f"{_indent}END")
+            result.append(f"{_indent}END\n" if indent == 0 else f"{_indent}END")
 
         # BREAK, CONTINUE, RETURN, ERROR
         elif kw_type in ("BREAK", "CONTINUE", "RETURN", "ERROR"):
@@ -191,21 +188,9 @@ class TestCaseParser:
         elif self._get_value(kw, "body"):
             body = self._get_value(kw, "body", [])
             for subkw in body:
-                result.extend(self._handle_keyword_types(subkw))
+                result.extend(self._handle_keyword_types(subkw, indent=indent))
 
         return result
-
-    def _kw_post_processing(self, kw: list):
-        """Post-processing of generated keyword list to handle special cases"""
-        # TRY/EXCEPT/FINALLY
-        # post-process list for specific handling
-        for i in range(len(kw) - 1):
-            _cur = str(kw[i]).replace(" ", "").strip("\n")
-            _next = str(kw[i + 1]).replace(" ", "").strip("\n")
-            if _cur == "END" and _next == "FINALLY":
-                kw.pop(i)
-                break
-        return kw
 
     def _get_value(self, obj: CustomTestCaseBody | CustomKeywordCall | dict, key: str, default=None) -> Any:
         """
