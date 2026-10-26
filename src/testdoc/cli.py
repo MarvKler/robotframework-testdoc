@@ -111,7 +111,7 @@ def _collect_common_args(  # noqa
     path,
     output,
 ):
-    return {
+    args = {
         "title": title,
         "name": name,
         "doc": doc,
@@ -128,6 +128,22 @@ def _collect_common_args(  # noqa
         "verbose_mode": verbose,
         "suite_file": list(path),
         "output_file": output,
+    }
+    ctx = click.get_current_context(silent=True)
+    if ctx is None:
+        return args
+
+    parameter_names = {
+        "mkdocs_usage": "mkdocs",
+        "verbose_mode": "verbose",
+        "suite_file": "path",
+        "output_file": "output",
+        "config_file": "configfile",
+    }
+    return {
+        key: value
+        for key, value in args.items()
+        if ctx.get_parameter_source(parameter_names.get(key, key)) != click.core.ParameterSource.DEFAULT
     }
 
 

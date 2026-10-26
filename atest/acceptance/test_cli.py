@@ -7,6 +7,8 @@ import pytest
 from click.testing import CliRunner
 from robot import run as robot_run
 from testdoc.cli import main, generate
+from testdoc.helper.cliargs import CommandLineArguments
+from testdoc.testdoc import TestDoc
 
 def test_cli_help():
     runner = CliRunner()
@@ -14,6 +16,26 @@ def test_cli_help():
     assert result.exit_code == 0
     assert "Usage" in result.output
     assert "Welcome" in result.output
+
+
+def test_cli_defaults_do_not_override_toml_and_explicit_options_override_toml(tmp_path, monkeypatch):
+    config = tmp_path / "testdoc.toml"
+    config.write_text('include = ["from-config"]\noutput_format = "json"\n', encoding="utf-8")
+    received_args = []
+    monkeypatch.setattr(TestDoc, "main", lambda self: received_args.append(CommandLineArguments().all_as_dict.copy()))
+    runner = CliRunner()
+
+    result = runner.invoke(main, ["--configfile", str(config), "suite.robot", "output"])
+
+    assert result.exit_code == 0, result.output
+    assert received_args[-1]["include"] == ["from-config"]
+    assert received_args[-1]["output_format"] == "json"
+
+    result = runner.invoke(main, ["--configfile", str(config), "--include", "from-cli", "--output-format", "md", "suite.robot", "output"])
+
+    assert result.exit_code == 0, result.output
+    assert received_args[-1]["include"] == ["from-cli"]
+    assert received_args[-1]["output_format"] == "md"
 
 def test_cli_cmd():
     parent_dir = Path(__file__).parent.parent
