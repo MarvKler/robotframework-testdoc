@@ -15,6 +15,7 @@
 | ``--custom-pdf-template`` | Define a custom Jinja2 template for PDF overview and suite pages | Only used with ``-f pdf`` | :x: |
 | ``--include``, ``-i`` | Define Robot Framework tags to include only specific tests | Can be used multiple times | :x: |
 | ``--exclude``, ``-e`` | Define Robot Framework tags to exclude specific tests | Can be used multiple times | :x: |
+| ``--dashboard-by`` | Comma-separated breakdowns shown on the dashboard: ``tags`` (Tests per Tag), ``subdirectories`` (Tests per Subdirectory) | Default: ``tags``. Cards are shown in the given order, e.g. ``--dashboard-by=tags,subdirectories``. TOML: ``dashboard_by = ["tags", "subdirectories"]`` | :x: |
 | ``--output-format``, ``-f`` | Choose the output format: ``html``, ``json``, ``md`` or ``pdf`` | Default: ``html``. See [Output Formats](../usage/output_formats.md) | :x: |
 | ``--configfile``, ``-c`` | Define a path to a ``.toml`` configuration file | - | :x: |
 | ``--verbose``, ``-v`` | Print debug output | - | :x: |

@@ -19,6 +19,18 @@ ENTRYPOINT_MSG = """
    ╚═╝   ╚══════╝╚══════╝   ╚═╝   ╚═════╝ ╚══════╝ ╚═════╝
       """
 
+DASHBOARD_SECTIONS = ("tags", "subdirectories")
+
+
+def _parse_dashboard_by(ctx, param, value):
+    if value is None:
+        return None
+    sections = [item.strip().lower() for item in value.split(",") if item.strip()]
+    invalid = [item for item in sections if item not in DASHBOARD_SECTIONS]
+    if not sections or invalid:
+        raise click.BadParameter(f"expected a comma-separated list of {', '.join(DASHBOARD_SECTIONS)} - got '{value}'")
+    return sections
+
 
 class DefaultCommandGroup(click.Group):
     """Group that falls back to `default_command` when the first arg is not a known subcommand.
@@ -59,6 +71,13 @@ def common_options(f):
         default="html",
         show_default=True,
         help="Output format for the test documentation",
+    )(f)
+    f = click.option(
+        "--dashboard-by",
+        default="tags",
+        show_default=True,
+        callback=_parse_dashboard_by,
+        help="Comma-separated breakdowns shown on the dashboard: tags, subdirectories (e.g. --dashboard-by=tags,subdirectories)",
     )(f)
     f = click.option("-e", "--exclude", multiple=True, required=False, help="Exclude test cases with given tags")(f)
     f = click.option("-i", "--include", multiple=True, required=False, help="Include test cases with given tags")(f)
@@ -105,6 +124,7 @@ def _collect_common_args(  # noqa
     mkdocs_template_dir,
     include,
     exclude,
+    dashboard_by,
     output_format,
     configfile,
     verbose,
@@ -123,6 +143,7 @@ def _collect_common_args(  # noqa
         "mkdocs_template_dir": mkdocs_template_dir,
         "include": list(include),
         "exclude": list(exclude),
+        "dashboard_by": dashboard_by,
         "output_format": output_format,
         "config_file": configfile,
         "verbose_mode": verbose,
@@ -183,6 +204,7 @@ def generate(  # noqa
     mkdocs_template_dir,
     include,
     exclude,
+    dashboard_by,
     output_format,
     configfile,
     verbose,
@@ -204,6 +226,7 @@ def generate(  # noqa
         mkdocs_template_dir,
         include,
         exclude,
+        dashboard_by,
         output_format,
         configfile,
         verbose,
@@ -230,6 +253,7 @@ def management(  # noqa
     mkdocs_template_dir,
     include,
     exclude,
+    dashboard_by,
     output_format,
     configfile,
     verbose,
@@ -253,6 +277,7 @@ def management(  # noqa
         mkdocs_template_dir,
         include,
         exclude,
+        dashboard_by,
         output_format,
         configfile,
         verbose,
