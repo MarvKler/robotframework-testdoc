@@ -21,7 +21,7 @@ class MarkdownRenderer:
         lines.append(f"{'#' * level} Suite: {suite.name}")
         lines.append("")
         self._append_value(lines, "Type", suite.type)
-        self._append_value(lines, "Source", suite.custom_source or suite.source)
+        self._append_value(lines, "Source", suite.custom_source or suite.relative_source or suite.source)
         self._append_value(lines, "Test count", suite.test_count)
 
         if suite.metadata:
@@ -47,7 +47,7 @@ class MarkdownRenderer:
 
     def _append_test(self, lines: list[str], test: CustomTestCase, level: int) -> None:
         lines.extend(["", f"{'#' * level} Test: {test.name}", ""])
-        self._append_value(lines, "Source", test.custom_source or test.source)
+        self._append_value(lines, "Source", test.custom_source or test.relative_source or test.source)
 
         if test.tags:
             self._append_value(lines, "Tags", ", ".join(str(tag) for tag in test.tags))

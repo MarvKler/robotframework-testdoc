@@ -59,6 +59,7 @@ class RobotSuiteParser(SuiteVisitor):
         suite.visit(self)
 
         self.suite = self.get_customized_suite_model(self.robot_suite_model)
+        self._set_relative_sources(self.suite, [Path(item).resolve() for item in self.args.suite_file])
 
         # Modify the source path for the test documentation
         if self.args.sourceprefix:
@@ -155,6 +156,24 @@ class RobotSuiteParser(SuiteVisitor):
                     continue
                 suite_keywords.append(kw.name)
         return suite_keywords
+
+    def _set_relative_sources(self, suite_info: CustomTestSuite, roots: list[Path]) -> None:
+        """Set the display source of all suites & tests relative to the given paths, keeping their root folder name."""
+        suite_info.relative_source = self._relative_source(suite_info.source, roots)
+        for test in suite_info.tests:
+            test.relative_source = self._relative_source(test.source, roots)
+        for sub_suite in suite_info.suites:
+            self._set_relative_sources(sub_suite, roots)
+
+    @staticmethod
+    def _relative_source(source: str | None, roots: list[Path]) -> str | None:
+        if not source or source == "None":
+            return None
+        source_path = Path(source).resolve()
+        for root in roots:
+            if source_path == root or root in source_path.parents:
+                return source_path.relative_to(root.parent).as_posix()
+        return None
 
     def _is_directory(self, suite) -> bool:
         suite_path = suite.source if suite.source else ""

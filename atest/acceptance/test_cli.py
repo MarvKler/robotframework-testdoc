@@ -237,6 +237,28 @@ def test_cli_cmd_json_output_format(tmp_path):
     assert isinstance(data["suites"], list)
 
 
+def test_cli_sources_are_relative_to_given_path_including_its_root(tmp_path):
+    parent_dir = Path(__file__).parent.parent
+    robot = os.path.join(parent_dir, "testdata", "acceptance")
+    output = tmp_path / "output_testdoc.json"
+    runner = CliRunner()
+    result = runner.invoke(main, ["-f", "json", robot, str(output)])
+    assert result.exit_code == 0, result.output
+
+    data = json.loads(output.read_text(encoding="utf-8"))
+    assert data["relative_source"] == "acceptance"
+    suite = data["suites"][0]
+    assert suite["relative_source"].startswith("acceptance/")
+
+    def first_test(node):
+        return node["tests"][0] if node["tests"] else next(filter(None, map(first_test, node["suites"])), None)
+
+    test = first_test(data)
+    assert test["relative_source"].startswith("acceptance/")
+    assert test["relative_source"].endswith(".robot")
+    assert Path(test["source"]).is_absolute()
+
+
 def test_cli_cmd_markdown_output_format(tmp_path):
     parent_dir = Path(__file__).parent.parent
     robot = os.path.join(parent_dir, "testdata", "acceptance")

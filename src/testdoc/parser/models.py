@@ -24,6 +24,7 @@ class CustomTestSuite:
 
     doc: str | None = None
     custom_source: str | None = None
+    relative_source: str | None = None
     test_count: int = 0
     setup: CustomKeywordCall | None = None
     teardown: CustomKeywordCall | None = None
@@ -41,6 +42,7 @@ class CustomTestCase:
 
     doc: str | None = None
     custom_source: str | None = None
+    relative_source: str | None = None
     tags: list[str] | None = field(default_factory=list)
     setup: CustomKeywordCall | None = None
     teardown: CustomKeywordCall | None = None

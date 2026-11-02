@@ -493,7 +493,7 @@
         ${SHOW_HISTORY && test.latest_status === "FAIL" && latestEntry && latestEntry.message ? `<div class="detail-row"><div class="detail-label">Error Message</div><div class="detail-value"><div class="error-message">${escapeHtml(latestEntry.message)}</div></div></div>` : ""}
         <div class="detail-row"><div class="detail-label">Documentation</div><div class="detail-value">${escapeHtml(testCase.doc || "-")}</div></div>
         <div class="detail-row"><div class="detail-label">Tags</div><div class="detail-value">${tags || "-"}</div></div>
-        <div class="detail-row"><div class="detail-label">Source</div><div class="detail-value">${escapeHtml(testCase.custom_source || testCase.source || "-")}</div></div>
+        <div class="detail-row"><div class="detail-label">Source</div><div class="detail-value">${escapeHtml(testCase.custom_source || testCase.relative_source || testCase.source || "-")}</div></div>
         ${SHOW_HISTORY ? `<div style="margin-top:12px;"><button class="btn" data-goto-history="${encodeURIComponent(test.full_name)}">View Result Trend</button></div>` : ""}
       </div>
       <div class="card">
