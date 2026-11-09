@@ -517,13 +517,32 @@
     return html;
   }
 
+  function suiteSourceLink(suite) {
+    const source = suite.suite.source || "";
+    const sourceUrl = suite.suite.custom_source || "";
+    if (suite.suite.is_folder || !/\.robot$/i.test(source) || !sourceUrl) return "";
+
+    let url;
+    try {
+      url = new URL(sourceUrl);
+    } catch {
+      return "";
+    }
+    if (url.protocol !== "http:" && url.protocol !== "https:") return "";
+
+    const fileName = source.split(/[\\/]/).pop();
+    return `<a class="suite-source-link" href="${escapeHtml(url.href)}" target="_blank" rel="noopener noreferrer" title="Open source in a new tab">${escapeHtml(fileName)}<span aria-hidden="true">↗</span></a>`;
+  }
+
   function renderSuiteStats(suite) {
     const tests = allTests(suite);
     const counts = statusCounts(tests);
+    const sourceLink = suiteSourceLink(suite);
     return `
       <div class="card">
         <h2 class="card-title">${escapeHtml(suite.suite.name)}</h2>
         ${suite.suite.doc ? `<p>${escapeHtml(suite.suite.doc)}</p>` : ""}
+        ${sourceLink ? `<div class="detail-row"><div class="detail-label">Source</div><div class="detail-value">${sourceLink}</div></div>` : ""}
         <div class="grid-metrics">
           ${metricCard(suite.test_count, "Tests in suite directory")}
           ${SHOW_HISTORY ? metricCard(counts.PASS || 0, "Passing (latest)", "PASS") : ""}
@@ -722,6 +741,8 @@
    * ------------------------------------------------------------------- */
 
   viewRoot.addEventListener("click", (event) => {
+    if (event.target.closest(".suite-source-link")) return;
+
     const repoCrumb = event.target.closest("[data-repo-crumb]");
     const histCrumb = event.target.closest("[data-hist-crumb]");
     const repoNavigate = event.target.closest("[data-repo-navigate]");

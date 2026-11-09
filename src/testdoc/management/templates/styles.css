@@ -871,6 +871,33 @@ html, body {
   flex-shrink: 0;
 }
 
+.suite-source-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  padding: 5px 9px;
+  border: 1px solid var(--color-primary-soft);
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  font-size: 11.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.suite-source-link:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+}
+
+.suite-source-link:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
 .detail-row {
   display: flex;
   gap: 10px;
