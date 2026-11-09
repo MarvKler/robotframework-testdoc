@@ -142,17 +142,26 @@ def test_cli_cmd_mkdocs():
     assert output in result.stdout
     assert os.path.exists(os.path.join(output, "testdoc_output"))
 
-def test_cli_cmd_github_prefix():
+def test_cli_cmd_github_prefix(tmp_path):
     parent_dir = Path(__file__).parent.parent
     robot = os.path.join(parent_dir, "testdata", "acceptance")
-    output = os.path.join(parent_dir, "output_big.html")
+    output = tmp_path / "output.html"
     runner = CliRunner()
-    result = runner.invoke(main, ["-s", "github::https://github.com/project-name", "--verbose", robot, output])
+    result = runner.invoke(main, ["-s", "github::https://github.com/project-name", "--verbose", robot, str(output)])
     assert result.exit_code == 0
     assert "Using Prefix for Source" in result.stdout
     assert "github::" in result.stdout
-    assert output in result.stdout
-    assert os.path.exists(output)
+    assert str(output) in result.stdout
+    html = output.read_text(encoding="utf-8")
+    app_script = (output.parent / "app.js").read_text(encoding="utf-8")
+    assert '"custom_source": "https://github.com/project-name/blob/' in html
+    assert 'class="suite-source-link"' in app_script
+    assert 'target="_blank" rel="noopener noreferrer"' in app_script
+    suite_list = app_script.split("function renderSuiteChildrenList(suite, prefix, selectedTest) {", 1)[1].split("function suiteSourceLink", 1)[0]
+    assert "suiteSourceLink(" not in suite_list
+    suite_stats = app_script.split("function renderSuiteStats(suite) {", 1)[1].split("function renderTestDetail", 1)[0]
+    assert "const sourceLink = suiteSourceLink(suite);" in suite_stats
+    assert "${sourceLink ? `<div class=\"detail-row\">" in suite_stats
 
 def test_cli_cmd_gitlab_prefix():
     parent_dir = Path(__file__).parent.parent
@@ -278,6 +287,28 @@ def test_cli_cmd_json_output_format(tmp_path):
     assert data["name"]
     assert isinstance(data["tests"], list)
     assert isinstance(data["suites"], list)
+
+
+def test_cli_sources_are_relative_to_given_path_including_its_root(tmp_path):
+    parent_dir = Path(__file__).parent.parent
+    robot = os.path.join(parent_dir, "testdata", "acceptance")
+    output = tmp_path / "output_testdoc.json"
+    runner = CliRunner()
+    result = runner.invoke(main, ["-f", "json", robot, str(output)])
+    assert result.exit_code == 0, result.output
+
+    data = json.loads(output.read_text(encoding="utf-8"))
+    assert data["relative_source"] == "acceptance"
+    suite = data["suites"][0]
+    assert suite["relative_source"].startswith("acceptance/")
+
+    def first_test(node):
+        return node["tests"][0] if node["tests"] else next(filter(None, map(first_test, node["suites"])), None)
+
+    test = first_test(data)
+    assert test["relative_source"].startswith("acceptance/")
+    assert test["relative_source"].endswith(".robot")
+    assert Path(test["source"]).is_absolute()
 
 
 def test_cli_cmd_markdown_output_format(tmp_path):
