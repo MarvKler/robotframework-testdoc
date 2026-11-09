@@ -28,3 +28,5 @@ docs/mkdocs/site/**
 /app.js
 atest/output_testdoc_custom_template.pdf
 atest/output_testdoc.pdf
+atest/styles.css
+atest/app.js
