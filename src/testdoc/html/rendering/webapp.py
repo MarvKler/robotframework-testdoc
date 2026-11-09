@@ -9,6 +9,7 @@ from typing import Any
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+from ...helper.cliargs import CommandLineArguments
 from ...parser.testcaseparser import TestCaseParser
 from .jinja2_support.lexer_support import highlight_robot_in_pre
 
@@ -72,6 +73,7 @@ class TestDocWebRenderer:
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "root": _serialize_suite(management_suite),
             "show_history": show_history,
+            "dashboard_by": CommandLineArguments().dashboard_by,
         }
         data_json = json.dumps(data).replace("</", "<\\/")
 

@@ -68,6 +68,13 @@ class CommandLineArguments:
         return self._args.get("exclude", [])
 
     @property
+    def dashboard_by(self):
+        value = self._args.get("dashboard_by", ["tags"])
+        if isinstance(value, str):
+            value = value.split(",")
+        return [item.strip().lower() for item in value if item.strip()]
+
+    @property
     def config_file(self):
         return self._args.get("config_file", None)
 

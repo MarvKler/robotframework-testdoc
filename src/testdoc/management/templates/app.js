@@ -4,6 +4,7 @@
   const DATA = JSON.parse(document.getElementById("management-data").textContent);
   const ROOT = DATA.root;
   const SHOW_HISTORY = DATA.show_history !== false;
+  const DASHBOARD_BY = Array.isArray(DATA.dashboard_by) ? DATA.dashboard_by : ["tags"];
 
   const viewRoot = document.getElementById("view-root");
   const headerTitle = document.getElementById("header-title");
@@ -67,17 +68,78 @@
     return Object.entries(counts).sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]));
   }
 
-  function renderTagStatistics(tests) {
-    const tags = tagCounts(tests);
-    if (!tags.length) return '<div class="empty-state">No tags defined.</div>';
+  function directoryName(suite) {
+    return String(suite.suite.source || "").split(/[\\/]/).filter(Boolean).pop() || suite.suite.name;
+  }
 
-    const maximum = tags[0][1];
-    return `<div class="tag-statistics">${tags
-      .map(([tag, count]) => {
+  function sortSuitesByTestCount(suites, getLabel) {
+    return suites
+      .map((suite) => ({ suite, label: getLabel(suite), count: allTests(suite).length }))
+      .sort((left, right) => right.count - left.count || left.label.localeCompare(right.label))
+      .map(({ suite }) => suite);
+  }
+
+  function subdirectoryCounts(suite, parentPath = []) {
+    let counts = [];
+    const subdirectories = sortSuitesByTestCount(
+      suite.suites.filter((subSuite) => subSuite.suite.is_folder),
+      directoryName
+    );
+    for (const subSuite of subdirectories) {
+      const path = parentPath.concat([directoryName(subSuite)]);
+      const count = allTests(subSuite).length;
+      if (count) counts.push({ label: path[path.length - 1], title: path.join("/"), depth: parentPath.length, count });
+      counts = counts.concat(subdirectoryCounts(subSuite, path));
+    }
+    return counts;
+  }
+
+  function suiteCounts(suite) {
+    return allSuites(suite)
+      .filter((item) => !item.suite.is_folder)
+      .map((item) => ({ label: item.suite.name, count: allTests(item).length }))
+      .sort((left, right) => right.count - left.count || left.label.localeCompare(right.label));
+  }
+
+  function renderStatisticBars(rows, emptyMessage) {
+    if (!rows.length) return `<div class="empty-state">${escapeHtml(emptyMessage)}</div>`;
+
+    const maximum = Math.max(1, ...rows.map((row) => row.count));
+    return `<div class="tag-statistics">${rows
+      .map(({ label, title, depth, count }) => {
         const width = Math.max(4, Math.round((count / maximum) * 100));
-        return `<div class="tag-stat-row"><div class="tag-stat-label" title="${escapeHtml(tag)}">${escapeHtml(tag)}</div><div class="tag-stat-track"><div class="tag-stat-bar" style="width:${width}%"><span>${count}</span></div></div></div>`;
+        const indent = depth ? ` style="padding-left:${depth * 14}px"` : "";
+        return `<div class="tag-stat-row"><div class="tag-stat-label" title="${escapeHtml(title || label)}"${indent}>${escapeHtml(label)}</div><div class="tag-stat-track"><div class="tag-stat-bar" style="width:${width}%"><span>${count}</span></div></div></div>`;
       })
       .join("")}</div>`;
+  }
+
+  function renderTagStatistics(tests) {
+    return renderStatisticBars(
+      tagCounts(tests).map(([tag, count]) => ({ label: tag, count })),
+      "No tags defined."
+    );
+  }
+
+  function renderSubdirectoryStatistics(suite) {
+    return renderStatisticBars(subdirectoryCounts(suite), "No subdirectories found.");
+  }
+
+  function renderSuiteStatistics(suite) {
+    return renderStatisticBars(suiteCounts(suite), "No suites found.");
+  }
+
+  function renderDashboardBreakdown(title, content) {
+    return `<details class="card dashboard-breakdown" open><summary class="card-title">${escapeHtml(title)}</summary>${content}</details>`;
+  }
+
+  function renderDashboardBreakdowns(tests) {
+    return DASHBOARD_BY.map((section) => {
+      if (section === "tags") return renderDashboardBreakdown("Tests per Tag", renderTagStatistics(tests));
+      if (section === "subdirectories") return renderDashboardBreakdown("Tests per Subdirectory", renderSubdirectoryStatistics(ROOT));
+      if (section === "suites") return renderDashboardBreakdown("Tests per Suite", renderSuiteStatistics(ROOT));
+      return "";
+    }).join("");
   }
 
   function latestHistoryEntry(test) {
@@ -341,10 +403,7 @@
           ${metricCard(documentedTests, "Documented Test Cases")}
           ${metricCard(tags.size, "Unique Tags")}
         </div>
-        <div class="card">
-          <h2 class="card-title">Tests per Tag</h2>
-          ${renderTagStatistics(tests)}
-        </div>
+        ${renderDashboardBreakdowns(tests)}
         <div class="card">
           <h2 class="card-title">Test Documentation</h2>
           <p>Browse the test case repository to inspect suites, test cases, documentation, tags, and implementation steps.</p>
@@ -372,10 +431,7 @@
         <h2 class="card-title">Execution Trend</h2>
         ${renderExecutionTrendChart(executionSeries)}
       </div>
-      <div class="card">
-        <h2 class="card-title">Tests per Tag</h2>
-        ${renderTagStatistics(tests)}
-      </div>
+      ${renderDashboardBreakdowns(tests)}
       <div class="card">
         <h2 class="card-title">Last recorded run</h2>
         ${lastRun ? `<p>${escapeHtml(formatRecordedAt(lastRun.recorded_at))}</p>` : '<div class="empty-state">No results recorded yet. Run "testdoc management" with a --report-file to record results.</div>'}
