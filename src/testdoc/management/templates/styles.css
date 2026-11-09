@@ -353,6 +353,37 @@ html, body {
   letter-spacing: -0.01em;
 }
 
+.dashboard-breakdown > .card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.dashboard-breakdown > .card-title::-webkit-details-marker {
+  display: none;
+}
+
+.dashboard-breakdown > .card-title::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--color-text-muted);
+  border-bottom: 2px solid var(--color-text-muted);
+  transform: rotate(45deg);
+  transition: transform var(--transition-fast);
+}
+
+.dashboard-breakdown[open] > .card-title {
+  margin-bottom: 14px;
+}
+
+.dashboard-breakdown[open] > .card-title::after {
+  transform: rotate(225deg);
+}
+
 .grid-metrics {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));

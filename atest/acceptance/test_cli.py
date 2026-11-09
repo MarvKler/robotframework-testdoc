@@ -42,10 +42,10 @@ def test_cli_dashboard_by_is_parsed_and_validated(monkeypatch):
     monkeypatch.setattr(TestDoc, "main", lambda self: received_args.append(CommandLineArguments().all_as_dict.copy()))
     runner = CliRunner()
 
-    result = runner.invoke(main, ["--dashboard-by", "Tags, subdirectories", "suite.robot", "output"])
+    result = runner.invoke(main, ["--dashboard-by", "Tags, subdirectories, SUITES", "suite.robot", "output"])
 
     assert result.exit_code == 0, result.output
-    assert received_args[-1]["dashboard_by"] == ["tags", "subdirectories"]
+    assert received_args[-1]["dashboard_by"] == ["tags", "subdirectories", "suites"]
 
     result = runner.invoke(main, ["--dashboard-by", "tags,owners", "suite.robot", "output"])
 
@@ -55,8 +55,8 @@ def test_cli_dashboard_by_is_parsed_and_validated(monkeypatch):
 
 def test_dashboard_by_accepts_toml_string_or_list():
     args = CommandLineArguments()
-    args.set_args(dashboard_by="subdirectories, tags")
-    assert args.dashboard_by == ["subdirectories", "tags"]
+    args.set_args(dashboard_by="subdirectories, tags, suites")
+    assert args.dashboard_by == ["subdirectories", "tags", "suites"]
     args.set_args(dashboard_by=["Subdirectories"])
     assert args.dashboard_by == ["subdirectories"]
     args.set_args()
@@ -69,11 +69,15 @@ def test_cli_dashboard_by_is_embedded_in_web_app(tmp_path):
     output = tmp_path / "dashboard.html"
     runner = CliRunner()
 
-    result = runner.invoke(main, ["--dashboard-by=tags,subdirectories", robot, str(output)])
+    result = runner.invoke(main, ["--dashboard-by=tags,subdirectories,suites", robot, str(output)])
 
     assert result.exit_code == 0, result.output
-    assert '"dashboard_by": ["tags", "subdirectories"]' in output.read_text(encoding="utf-8")
-    assert "Tests per Subdirectory" in (tmp_path / "app.js").read_text(encoding="utf-8")
+    assert '"dashboard_by": ["tags", "subdirectories", "suites"]' in output.read_text(encoding="utf-8")
+    app_script = (tmp_path / "app.js").read_text(encoding="utf-8")
+    assert "Tests per Subdirectory" in app_script
+    assert "Tests per Suite" in app_script
+    assert "Tests per Tag" in app_script
+    assert '<details class="card dashboard-breakdown" open><summary class="card-title">' in app_script
 
 
 def test_cli_cmd():

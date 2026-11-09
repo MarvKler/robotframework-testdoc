@@ -72,10 +72,20 @@
     return String(suite.suite.source || "").split(/[\\/]/).filter(Boolean).pop() || suite.suite.name;
   }
 
+  function sortSuitesByTestCount(suites, getLabel) {
+    return suites
+      .map((suite) => ({ suite, label: getLabel(suite), count: allTests(suite).length }))
+      .sort((left, right) => right.count - left.count || left.label.localeCompare(right.label))
+      .map(({ suite }) => suite);
+  }
+
   function subdirectoryCounts(suite, parentPath = []) {
     let counts = [];
-    for (const subSuite of suite.suites) {
-      if (!subSuite.suite.is_folder) continue;
+    const subdirectories = sortSuitesByTestCount(
+      suite.suites.filter((subSuite) => subSuite.suite.is_folder),
+      directoryName
+    );
+    for (const subSuite of subdirectories) {
       const path = parentPath.concat([directoryName(subSuite)]);
       const count = allTests(subSuite).length;
       if (count) counts.push({ label: path[path.length - 1], title: path.join("/"), depth: parentPath.length, count });
@@ -84,10 +94,17 @@
     return counts;
   }
 
+  function suiteCounts(suite) {
+    return allSuites(suite)
+      .filter((item) => !item.suite.is_folder)
+      .map((item) => ({ label: item.suite.name, count: allTests(item).length }))
+      .sort((left, right) => right.count - left.count || left.label.localeCompare(right.label));
+  }
+
   function renderStatisticBars(rows, emptyMessage) {
     if (!rows.length) return `<div class="empty-state">${escapeHtml(emptyMessage)}</div>`;
 
-    const maximum = Math.max(...rows.map((row) => row.count));
+    const maximum = Math.max(1, ...rows.map((row) => row.count));
     return `<div class="tag-statistics">${rows
       .map(({ label, title, depth, count }) => {
         const width = Math.max(4, Math.round((count / maximum) * 100));
@@ -108,10 +125,19 @@
     return renderStatisticBars(subdirectoryCounts(suite), "No subdirectories found.");
   }
 
+  function renderSuiteStatistics(suite) {
+    return renderStatisticBars(suiteCounts(suite), "No suites found.");
+  }
+
+  function renderDashboardBreakdown(title, content) {
+    return `<details class="card dashboard-breakdown" open><summary class="card-title">${escapeHtml(title)}</summary>${content}</details>`;
+  }
+
   function renderDashboardBreakdowns(tests) {
     return DASHBOARD_BY.map((section) => {
-      if (section === "tags") return `<div class="card"><h2 class="card-title">Tests per Tag</h2>${renderTagStatistics(tests)}</div>`;
-      if (section === "subdirectories") return `<div class="card"><h2 class="card-title">Tests per Subdirectory</h2>${renderSubdirectoryStatistics(ROOT)}</div>`;
+      if (section === "tags") return renderDashboardBreakdown("Tests per Tag", renderTagStatistics(tests));
+      if (section === "subdirectories") return renderDashboardBreakdown("Tests per Subdirectory", renderSubdirectoryStatistics(ROOT));
+      if (section === "suites") return renderDashboardBreakdown("Tests per Suite", renderSuiteStatistics(ROOT));
       return "";
     }).join("");
   }

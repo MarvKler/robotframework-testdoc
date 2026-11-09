@@ -19,7 +19,7 @@ ENTRYPOINT_MSG = """
    ╚═╝   ╚══════╝╚══════╝   ╚═╝   ╚═════╝ ╚══════╝ ╚═════╝
       """
 
-DASHBOARD_SECTIONS = ("tags", "subdirectories")
+DASHBOARD_SECTIONS = ("tags", "subdirectories", "suites")
 
 
 def _parse_dashboard_by(ctx, param, value):
@@ -77,7 +77,7 @@ def common_options(f):
         default="tags",
         show_default=True,
         callback=_parse_dashboard_by,
-        help="Comma-separated breakdowns shown on the dashboard: tags, subdirectories (e.g. --dashboard-by=tags,subdirectories)",
+        help="Comma-separated breakdowns shown on the dashboard: tags, subdirectories, suites (e.g. --dashboard-by=tags,subdirectories,suites)",
     )(f)
     f = click.option("-e", "--exclude", multiple=True, required=False, help="Exclude test cases with given tags")(f)
     f = click.option("-i", "--include", multiple=True, required=False, help="Include test cases with given tags")(f)
